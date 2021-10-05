@@ -6,7 +6,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\新しいフォルダー\**" />
+    <EmbeddedResource Remove="Views\新しいフォルダー\**" />
+    <None Remove="Views\新しいフォルダー\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />  
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\CalcPoint.xaml.cs">
+      <DependentUpon>CalcPoint.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
