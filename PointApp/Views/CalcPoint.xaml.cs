@@ -1,9 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+
+
 
 namespace PointApp.Views
 {
@@ -14,7 +20,9 @@ namespace PointApp.Views
 		public Player m_user;
 		public ObservableCollection<Player> m_startDefPlayers;
 		public ObservableCollection<Player> m_finishDefPlayers;
+		public static List<Player>  m_allPlayers;
 		private bool m_isEditing { get; set; }
+
 		public CalcPoint()
 		{
 			InitializeComponent();
@@ -23,28 +31,60 @@ namespace PointApp.Views
 
 		public void SetUp()
         {
-			m_tournament = new Tournament();
-			m_startDefPlayers = new ObservableCollection<Player>();
+			m_tournament       = new Tournament();
+			m_startDefPlayers  = new ObservableCollection<Player>();
 			m_finishDefPlayers = new ObservableCollection<Player>();
-			m_isEditing = false;
-			StartTopList.ItemsSource = m_startDefPlayers;
+			m_allPlayers       = new List<Player>();
+			m_isEditing        = false;
+
+			var strjson = ReadPointList();
+			if (strjson is string)
+			{
+				var listPlayers = JsonSerializer.Deserialize<List<Player>>(strjson);
+				if (listPlayers is List<Player>)
+                {
+					m_allPlayers = listPlayers;
+                }
+			}
+			//StartTopList.ItemsSource = m_startDefPlayers;
+		}
+
+		private string ReadPointList()
+		{
+			// リソースを一覧取得
+			var assembly = Assembly.GetExecutingAssembly();
+			var jsonResource = from res in assembly.GetManifestResourceNames()
+							   where res.EndsWith("json")
+							   select res;
+			if (jsonResource is null)
+            {
+				return string.Empty;
+            }
+
+			var file = assembly.GetManifestResourceStream(jsonResource.First());
+			string strJson;
+			using (var sr = new StreamReader(file))
+            {
+				strJson = sr.ReadToEnd();
+            }
+			return strJson;
 		}
 		public void UpdateControl()
         {
 			if (m_isEditing)
             {
 				PlayerEntry.IsVisible = true;
-				ButtonAdd.IsVisible = false;
+				ButtonAdd.IsVisible   = false;
             }
             else
             {
 				PlayerEntry.IsVisible = false;
-				ButtonAdd.IsVisible = true;
+				ButtonAdd.IsVisible   = true;
 
 			}
 			StartTopList.IsVisible = m_startDefPlayers.Count > 0 ? true : false;
-
 		}
+
 		public class Player : INotifyPropertyChanged
 		{
 			public event PropertyChangedEventHandler PropertyChanged;
@@ -52,42 +92,49 @@ namespace PointApp.Views
             {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
-			private int Idx { get; set; }
-			private string _Name { get; set; }
-			public string Name
-			{
-				get => _Name;
-				set
-				{
-					_Name = value;
-					NotifyPropertyChanged();
-				}
-			}
-			public string DisplayName 
-			{
-				get { return Idx.ToString() + "人目：" + Name; }
-			}
-			public DateTime Time { get; set; }
-			public double FisDh { get; set; }
-			public double SajDh { get; set; }
-			public double FisSg { get; set; }
-			public double SajSg { get; set; }
-			public double FisGs { get; set; }
-			public double SajGs { get; set; }
-			public double FisSl { get; set; }
-			public double SajSl { get; set; }
+			
+			public  string SajNo { get; set; }
+			public  string FisNo { get; set; }
+			public string EnglishName { get; set; }
+			public string JapaneseName { get; set; }
+			public  string Country { get; set; }
+			public  string Prefecture { get; set; }
+			public  DateTime Time { get; set; }
+			public  string FisDh { get; set; }
+			public  string SajDh { get; set; }
+			public  string FisSg { get; set; }
+			public  string SajSg { get; set; }
+			public  string FisSc { get; set; }
+			public  string SajSc { get; set; }
+			public  string FisGs { get; set; }
+			public  string SajGs { get; set; }
+			public  string FisSl { get; set; }
+			public  string SajSl { get; set; }
+			public  string TeamName { get; set; }
+			public  string  BirthOfDate { get; set; }
+			public  string KanaName { get; set; }
 			public Player()
 			{
-				Name  = string.Empty;
-				Time  = DateTime.MinValue;
-				FisDh = double.MinValue;
-				SajDh = double.MinValue;
-				FisSg = double.MinValue;
-				SajSg = double.MinValue;
-				FisGs = double.MinValue;
-				SajGs = double.MinValue;
-				FisSl = double.MinValue;
-				SajSl = double.MinValue;
+				SajNo         = string.Empty;
+				FisNo         = string.Empty;
+				EnglishName   = string.Empty;
+				JapaneseName  = string.Empty;
+				Country       = string.Empty;
+				Prefecture    = string.Empty;
+				Time          = DateTime.MinValue;
+				FisDh         = string.Empty;
+				SajDh         = string.Empty;
+				FisSg         = string.Empty;
+				SajSg         = string.Empty;
+				FisSc         = string.Empty;
+				SajSc         = string.Empty;
+				FisGs         = string.Empty;
+				SajGs         = string.Empty;
+				FisSl         = string.Empty;
+				SajSl         = string.Empty;
+				TeamName      = string.Empty;
+				BirthOfDate   = string.Empty;
+				KanaName      = string.Empty;
 			}
 			
 		}
@@ -113,7 +160,7 @@ namespace PointApp.Views
 
         private void RadioButton_CheckedChanged(object sender, CheckedChangedEventArgs e)
         {
-			if (e.Value is false)
+			if (!e.Value)
             {
 				return;
             }
@@ -160,7 +207,7 @@ namespace PointApp.Views
 				return;
 			}
 			Player addedPlayer = m_startDefPlayers[m_startDefPlayers.Count - 1];
-			addedPlayer.Name = entry.Text;
+			addedPlayer.JapaneseName = entry.Text;
 			m_isEditing = false;
 			UpdateControl();
 		}
@@ -171,5 +218,5 @@ namespace PointApp.Views
 			UpdateControl();
 			m_startDefPlayers.Add(new Player());
         }
-    }
+	}
 }

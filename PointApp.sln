@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PointApp.Android", "PointAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PointApp.iOS", "PointApp.iOS\PointApp.iOS.csproj", "{B6705D58-515D-4ED7-82DE-643840FA1E18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PointApp", "PointApp\PointApp.csproj", "{05D675C7-0A6F-4B3B-B224-28CBA3C3E05E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PointApp", "PointApp\PointApp.csproj", "{05D675C7-0A6F-4B3B-B224-28CBA3C3E05E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
