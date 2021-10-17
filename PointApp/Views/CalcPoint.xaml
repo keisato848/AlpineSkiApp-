@@ -50,7 +50,14 @@
                     <ListView x:Name="StartTopList" IsVisible="false">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <TextCell Text="{Binding Name, Mode=TwoWay}" />
+                                <TextCell Text="{Binding JapaneseName, Mode=TwoWay}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <ListView x:Name="PlayerList" IsVisible="true">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Label Text="{Binding JapaneseName, Mode=TwoWay}"/>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
