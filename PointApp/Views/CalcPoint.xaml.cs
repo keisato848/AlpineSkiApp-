@@ -16,7 +16,7 @@ namespace PointApp.Views
     public partial class CalcPoint : ContentPage
     {
         public enum PlayersCount { DEFAULT = 5 }
-        public enum ViewCellRowStyle { Height = 70 }
+        public enum ViewCellRowStyle { Height = 67 }
 
         public enum Association { FIS = 0, SAJ = 1 }
 
@@ -26,17 +26,14 @@ namespace PointApp.Views
         public ObservableCollection<Player> m_finishDefPlayers;
         public static List<Player> m_allPlayers;
         
-        private bool m_isEditing { get; set; }
-
         public CalcPoint()
         {
             InitializeComponent();
 
-            m_tournament = new Tournament();
-            m_startDefPlayers = new ObservableCollection<Player>();
+            m_tournament       = new Tournament();
+            m_startDefPlayers  = new ObservableCollection<Player>();
             m_finishDefPlayers = new ObservableCollection<Player>();
-            m_allPlayers = new List<Player>();
-            m_isEditing = false;
+            m_allPlayers       = new List<Player>();
 
             SetUp();
         }
@@ -381,12 +378,12 @@ namespace PointApp.Views
             if (matchedPlayers.Count > 0)
             {
                 allList.ItemsSource = matchedPlayers;
-                allList.HeightRequest = 100;
+                //allList.HeightRequest = 100;
                 allList.IsVisible = true;
             }
             else
             {
-                allList.HeightRequest = 0;
+                //allList.HeightRequest = 0;
                 allList.IsVisible = false;
             }
             allList.SelectedItem = null;
@@ -443,26 +440,10 @@ namespace PointApp.Views
                                                     select player);
         }
 
-        private void Button_Clicked(object sender, EventArgs e)
-        {
-            Player selectedPlayer = new Player();
-            if (StartAllList.SelectedItem != null)
-            {
-                selectedPlayer = StartAllList.SelectedItem as Player;
-                m_startDefPlayers.Add(selectedPlayer);
-                SetStartDefPlayers();
-            }
-            if (FinishAllList.SelectedItem != null)
-            {
-                selectedPlayer = FinishAllList.SelectedItem as Player;
-                m_finishDefPlayers.Add(selectedPlayer);
-                SetFinishDefPlayers();
-            }
-        }
 
-        private void StartAllList_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        private void AllList_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            Player selectedPlayer = new Player();
+            var selectedPlayer = new Player();
             if (StartAllList.SelectedItem != null)
             {
                 selectedPlayer = StartAllList.SelectedItem as Player;
@@ -479,7 +460,7 @@ namespace PointApp.Views
         private void SetStartDefPlayers()
         {
             SetDisplayPoint(m_tournament.Types, m_startDefPlayers);
-            StartTopList.IsVisible = m_startDefPlayers.Count > 0 ? true : false;
+            StartTopList.IsVisible = m_startDefPlayers.Count > 0;
             StartTopList.ItemsSource = m_startDefPlayers;
             StartTopList.HeightRequest = m_startDefPlayers.Count * (int)ViewCellRowStyle.Height;
             StartPlayerEntry.Text = string.Empty;
@@ -498,7 +479,6 @@ namespace PointApp.Views
         {
             if (players.Count > 0)
             {
-                int ID = 1;
                 foreach (var player in players)
                 {
                     switch (m_tournament.Types)
@@ -507,29 +487,42 @@ namespace PointApp.Views
                             player.DisplayPoint = player.JapaneseName;
                             break;
                         case Tournament.EventTypes.DH:
-                            player.DisplayPoint = $"{ID}. {player.JapaneseName}__FIS:{player.FisDh}  SAJ:{player.SajDh}";
+                            player.DisplayPoint = $"{player.JapaneseName} FIS:{player.FisDh}  SAJ:{player.SajDh}";
                             break;
 
                         case Tournament.EventTypes.SG:
-                            player.DisplayPoint = $"{ID}. {player.JapaneseName}__FIS:{player.FisSg}  SAJ:{player.SajSg}";
+                            player.DisplayPoint = $"{player.JapaneseName} FIS:{player.FisSg}  SAJ:{player.SajSg}";
                             break;
 
                         case Tournament.EventTypes.GS:
-                            player.DisplayPoint = $"{ID}. {player.JapaneseName}__FIS:{player.FisGs}  SAJ:{player.SajGs}";
+                            player.DisplayPoint = $"{player.JapaneseName} FIS:{player.FisGs}  SAJ:{player.SajGs}";
                             break;
 
                         case Tournament.EventTypes.SL:
-                            player.DisplayPoint = $"{ID}. {player.JapaneseName}__FIS:{player.FisSl}  SAJ:{player.SajSl}";
+                            player.DisplayPoint = $"{player.JapaneseName} FIS:{player.FisSl}  SAJ:{player.SajSl}";
                             break;
                     }
-                    ++ID;
                 }
             }
         }
 
-        private void Btn_Calc_Clicked(object sender, EventArgs e)
+        async void Btn_Calc_Clicked(object sender, EventArgs e)
         {
-            double[] penaltyPoints = GetPenaltyPoints();
+            try
+            {
+                double[] penaltyPoints = GetPenaltyPoints();
+                if (penaltyPoints != null && double.IsNaN(penaltyPoints[(int)Association.FIS]) && double.IsNaN(penaltyPoints[(int)Association.SAJ]))
+                {
+                    FisResult_Label.Text = penaltyPoints[(int)Association.FIS].ToString();
+                    SajResult_Label.Text = penaltyPoints[(int)Association.SAJ].ToString();
+                    PopupLayout.IsVisible = true;
+                }
+                await DisplayAlert("計算エラー", "入力値を確認してください", "OK");
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         private double GetRacePoints(Player targetPlayer, Player winner)
@@ -541,7 +534,6 @@ namespace PointApp.Views
                 switch (m_tournament.Types)
                 {
                     case Tournament.EventTypes.DH:
-                        //fValue = FValue;
                         break;
 
                     case Tournament.EventTypes.SG:
@@ -563,7 +555,7 @@ namespace PointApp.Views
 
         private double[] GetPenaltyPoints()
         {
-            //  A + B - C
+            //   A + B - C
             // （A)上位10名の中のポイントトップ5の所持ポイントの合計
             // （B)スタート時のトップ5の所持ポイント合計
             //  (C)上位10名の中のポイントトップ5 のレースポイントの合計　/ 10
@@ -574,45 +566,24 @@ namespace PointApp.Views
             }
 
             
-            var penaltyPoints = new double[] { Enum.GetNames(typeof(Association)).Length };
-            double fisA = double.MinValue;
-            double sajA = double.MinValue;
-            double fisB = double.MinValue;
-            double sajB = double.MinValue;
-            double fisC = double.MinValue;
-            double sajC = double.MinValue;
-
-            foreach (var player in m_startDefPlayers)
-            {
-                switch (m_tournament.Types)
-                {
-                    case Tournament.EventTypes.GS:
-                        fisB += player.FisGs;
-                        break;
-
-                    case Tournament.EventTypes.SL:
-                        fisB += player.FisSl;
-                        sajB += player.SajSl;
-                        break;
-                }
-            }
-
+            var penaltyPoints = new double[Enum.GetNames(typeof(Association)).Length];
+            double fisA, sajA, fisB, sajB, fisC, sajC;
 
             var fisFinishTopfive = (from player in m_finishDefPlayers
-                              orderby player.FisSl
-                              select player).Take(5);
-
-            var sajFinishTopfive = (from player in m_finishDefPlayers
-                              orderby player.SajSl
-                              select player).Take(5);
-
-            var fisStartTopfive = (from player in m_startDefPlayers
                                     orderby player.FisSl
                                     select player).Take(5);
 
-            var sajStartTopfive = (from player in m_startDefPlayers
+            var sajFinishTopfive = (from player in m_finishDefPlayers
                                     orderby player.SajSl
                                     select player).Take(5);
+
+            var fisStartTopfive = (from player in m_startDefPlayers
+                                   orderby player.FisSl
+                                   select player).Take(5);
+
+            var sajStartTopfive = (from player in m_startDefPlayers
+                                   orderby player.SajSl
+                                   select player).Take(5);
 
             var winner = m_finishDefPlayers.OrderBy(player => player.Time).First();
 
@@ -641,7 +612,7 @@ namespace PointApp.Views
 
         private double SumRacePoint(IEnumerable<Player> listPlayer, Player winner)
         {
-            double sumRacePoint = double.MaxValue;
+            double sumRacePoint = 0;
             foreach (var player in listPlayer)
             {
                 sumRacePoint += GetRacePoints(player, winner);
@@ -651,7 +622,7 @@ namespace PointApp.Views
 
         private double[] SumPoints(IEnumerable<Player> listPlayer)
         {
-            double[] sumPoints = new double[] { Enum.GetNames(typeof(Association)).Length };
+            double[] sumPoints = new double[Enum.GetNames(typeof(Association)).Length];
             foreach (var player in listPlayer)
             {
                 var points = GetPoints(player);
@@ -663,7 +634,7 @@ namespace PointApp.Views
 
         private double[] GetPoints(Player player)
         {
-            double[] points = new double[] { Enum.GetNames(typeof(Association)).Length };
+            double[] points = new double[Enum.GetNames(typeof(Association)).Length];
             if (m_tournament.Types != Tournament.EventTypes.NONE)
             {
                 switch (m_tournament.Types)
@@ -688,20 +659,9 @@ namespace PointApp.Views
                         points[(int)Association.SAJ] = player.SajSl;
                         break;
                 }
-
             }
             return points;
         }
-
-        //private double SumPoints(IEnumerable<double> points)
-        //{
-        //    double sumPoints = double.MinValue;
-        //    foreach (var point in points)
-        //    {
-        //        sumPoints += point;
-        //    }
-        //    return sumPoints;
-        //}
 
         public enum FValue
         {
