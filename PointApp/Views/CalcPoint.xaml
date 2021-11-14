@@ -2,78 +2,144 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PointApp.Views.CalcPoint"
-             xmlns:vm="clr-namespace:PointApp.ViewModels"
              Title="FIS/SAJ ポイント計算">
-    
-    <ContentPage.BindingContext>
-        <vm:AboutViewModel />
-    </ContentPage.BindingContext>
-    
+
     <ContentPage.Resources>
         <ResourceDictionary>
             <Color x:Key="Accent">#96d1ff</Color>
+            <Color x:Key="Alert">#ff6347</Color>
+            <Style x:Key="Heading" TargetType="Label">
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="TextColor" Value="{StaticResource Primary}"/>
+            </Style>
+            <DataTemplate x:Key="AllList_ItemTemplate" >
+                <TextCell Text="{Binding JapaneseName, Mode=TwoWay}"/>
+            </DataTemplate>
+            <Style x:Key="AllList" TargetType="ListView">
+                <Setter Property="ItemTemplate" Value="{StaticResource AllList_ItemTemplate}"/>
+                <Setter Property="IsVisible" Value="False"/>
+                <Setter Property="HasUnevenRows" Value="False"/>
+            </Style>
+            <DataTemplate x:Key="TopListView_Items">
+                <ViewCell AutomationProperties.IsInAccessibleTree="True">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Text="{Binding DisplayPoint, Mode=TwoWay}"/>
+                        <Grid Grid.Row="1" HorizontalOptions="Start">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Text="2本合計タイム（秒）"/>
+                            <Entry Grid.Column="1" Text="{Binding Time, Mode=TwoWay}"/>
+                        </Grid>
+                    </Grid>
+                </ViewCell>
+            </DataTemplate>
+            <Style x:Key="TopListView" TargetType="ListView">
+                <Setter Property="ItemTemplate" Value="{StaticResource TopListView_Items}"/>
+                <Setter Property="IsVisible" Value="False"/>
+                <Setter Property="SeparatorColor" Value="{StaticResource Accent}"/>
+            </Style>
+            <Style x:Key="PlayerEntry" TargetType="Entry">
+                <Setter Property="WidthRequest" Value="250"/>
+                <Setter Property="Placeholder" Value="選手名を入力"/>
+                <Setter Property="MaxLength" Value="30"/>
+            </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
-
-    <Grid>
+    
+    <Grid Margin="40">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="300*"/>
         </Grid.RowDefinitions>
-        <StackLayout BackgroundColor="{StaticResource Accent}" VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center">
-                <ContentView Padding="0,40,0,40" VerticalOptions="FillAndExpand">
-                    <Image Source="xamarin_logo.png" VerticalOptions="Center" HeightRequest="64" />
-                </ContentView>
-            </StackLayout>
-        </StackLayout>
-        <ScrollView Grid.Row="1">
-            <StackLayout Orientation="Vertical" Padding="30,24,30,24" Spacing="10">
-                <Label Text="最新のポイントリストから、ポイントを計算できます。" FontSize="14" Padding="0,0,0,0"/>
-                <StackLayout RadioButtonGroup.GroupName="EventTypes" RadioButtonGroup.SelectedValue="{Binding m_tournament.Types}">
-                    <Label Text="種目"/>
-                    <RadioButton Content="DH" CheckedChanged="RadioButton_CheckedChanged"/>
-                    <RadioButton Content="SG" CheckedChanged="RadioButton_CheckedChanged"/>
-                    <RadioButton Content="GS" CheckedChanged="RadioButton_CheckedChanged"/>
-                    <RadioButton Content="SL" CheckedChanged="RadioButton_CheckedChanged"/>
-                </StackLayout>
-                <StackLayout>
-                    <Label Text="スタート時のポイントTop5の選手（順不同）"/>
-                    <ContentView>
-                        <ListView x:Name="AllList" HasUnevenRows="False" RowHeight="30">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <TextCell Text="{Binding JapaneseName, Mode=TwoWay}"/>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </ContentView>
-                    <Entry x:Name="PlayerEntry" Placeholder="(例)山田太郎" MaxLength="30" IsVisible="true" PropertyChanged="PlayerEntry_PropertyChanged"/>
-                </StackLayout>
-                <StackLayout>
-                    <ListView x:Name="StartTopList" IsVisible="false">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <TextCell Text="{Binding JapaneseName, Mode=TwoWay}" />
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </StackLayout>
-                <StackLayout>
-                    <Label FontSize="14" Padding="0,24,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <ScrollView Grid.Row="0" Grid.Column="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Text="1. 種目" Style="{StaticResource Heading}"/>
+                    <Grid Grid.Row="1" RadioButtonGroup.GroupName="EventTypes" RadioButtonGroup.SelectedValue="{Binding m_tournament.Types}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <RadioButton Grid.Column="0" Content="DH" CheckedChanged="RadioButton_CheckedChanged"/>
+                        <RadioButton Grid.Column="1" Content="SG" CheckedChanged="RadioButton_CheckedChanged"/>
+                        <RadioButton Grid.Column="2" Content="GS" CheckedChanged="RadioButton_CheckedChanged"/>
+                        <RadioButton Grid.Column="3" Content="SL" CheckedChanged="RadioButton_CheckedChanged"/>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Text="2. スタート時のポイントTop5" Style="{StaticResource Heading}"/>
+                        <Entry Grid.Row="1" x:Name="StartPlayerEntry" Style="{StaticResource PlayerEntry}" PropertyChanged="PlayerEntry_PropertyChanged"/>
+                        <ListView Grid.Row="2" x:Name="StartAllList" Style="{StaticResource AllList}" ItemSelected="AllList_ItemSelected"/>
+                        <ListView Grid.Row="3" x:Name="StartTopList" Style="{StaticResource TopListView}"/>
+                    </Grid>
+                    <!--<Label Text="※タイムは小数点以下第2位まで入力してください。"/>-->
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Text="3. 上位10名の選手" Style="{StaticResource Heading}"/>
+                        <Entry Grid.Row="1" x:Name="FinishPlayerEntry" Style="{StaticResource PlayerEntry}" PropertyChanged="PlayerEntry_PropertyChanged"/>
+                        <ListView Grid.Row="2" x:Name="FinishAllList" Style="{StaticResource AllList}" ItemSelected="AllList_ItemSelected"/>
+                        <ListView Grid.Row="3" x:Name="FinishTopList" Style="{StaticResource TopListView}" IsVisible="False"/>
+                    </Grid>
+                        <!--
                         <Label.FormattedText>
                             <FormattedString>
                                 <Span Text="本サイトの利用規約に同意いただいた上で、ご利用ください。("/>
                                 <Span Text="https://aka.ms/xamarin-quickstart)" FontAttributes="Bold"/>
                             </FormattedString>
                         </Label.FormattedText>
-                    </Label>
-                </StackLayout>
-                <Button Margin="0,10,0,0" Text="計算する"
-                        Command="{Binding OpenWebCommand}"
-                        BackgroundColor="{StaticResource Primary}"
-                        TextColor="White" />
-            </StackLayout>
+                        -->
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Button Grid.Row="1" x:Name="Btn_Calc" VerticalOptions="Center" Text="計算する" BackgroundColor="{StaticResource Primary}" TextColor="White" Clicked="Btn_Calc_Clicked"/>
+                </Grid>
+                <Grid Grid.Row="3" x:Name="PopupLayout" IsVisible="false">
+                    <Label Text="ペナルティポイント"/>
+                    <Grid>
+                        <Label Text="FISポイント"/>
+                        <Label x:Name="FisResult_Label"/>
+                        <Label Text="SAJポイント"/>
+                        <Label x:Name="SajResult_Label"/>
+                    </Grid>
+                </Grid>
+            </Grid>
         </ScrollView>
     </Grid>
 

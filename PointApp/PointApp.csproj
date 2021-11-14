@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Result.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="GettingStarted.txt" />
   </ItemGroup>
 
@@ -29,6 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Remove="Views\Result.xaml" />
   </ItemGroup>
 
   <ItemGroup>
