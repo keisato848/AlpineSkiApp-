@@ -4,14 +4,11 @@
 <dict>
 	<key>UIDeviceFamily</key>
 	<array>
-    <integer>1</integer>
-		<integer>2</integer>
+		<integer>1</integer>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
@@ -32,16 +29,20 @@
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
 	<string>PointApp</string>
-	<key>XSAppIconAssets</key>
-	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleTypeName</key>
 			<string>ドキュメントの種類 1</string>
 		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>ドキュメントの種類 2</string>
+		</dict>
 	</array>
 	<key>UIStatusBarStyle</key>
 	<string>UIStatusBarStyleLightContent</string>
+	<key>XSAppIconAssets</key>
+	<string>Assets.xcassets/AppIcon.appiconset</string>
 </dict>
 </plist>
