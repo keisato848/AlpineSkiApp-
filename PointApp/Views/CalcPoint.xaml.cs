@@ -15,7 +15,7 @@ namespace PointApp.Views
 {
     public partial class CalcPoint : ContentPage
     {
-        private enum ViewCellRowStyle { Height = 67 }
+        private enum ViewCellRowStyle { Height = 80 }
 
         private enum Association { FIS = 0, SAJ = 1 }
 
@@ -37,6 +37,8 @@ namespace PointApp.Views
         {
             UserDuplicated = 0,
             OverUserCount  = 1,
+            LackStartUser = 2,
+            LackFinishUser = 3,
             CalcError = 10
         }
 
@@ -213,7 +215,7 @@ namespace PointApp.Views
             Player selectedPlayer;
             if (StartAllList.SelectedItem != null)
             {
-                if (m_startDefPlayers.Count > 5)
+                if (m_startDefPlayers.Count == 5)
                 {
                     DisplayErrorMessage(ErrorCode.OverUserCount);
                     return;
@@ -227,9 +229,9 @@ namespace PointApp.Views
                 m_startDefPlayers.Add(selectedPlayer);
                 SetStartDefPlayers();
             }
-            if (FinishAllList.SelectedItem != null)
+            else if (FinishAllList.SelectedItem != null)
             {
-                if (m_finishDefPlayers.Count > 10)
+                if (m_finishDefPlayers.Count == 10)
                 {
                     DisplayErrorMessage(ErrorCode.OverUserCount);
                 }
@@ -248,6 +250,17 @@ namespace PointApp.Views
         {
             try
             {
+                if (m_startDefPlayers.Count() < 5)
+                {
+                    DisplayErrorMessage(ErrorCode.LackStartUser);
+                    return;
+                }
+                if (m_finishDefPlayers.Count() < 5)
+                {
+                    DisplayErrorMessage(ErrorCode.LackFinishUser);
+                    return;
+                }
+
                 double[] penaltyPoints = GetPenaltyPoints();
                 if (penaltyPoints != null && double.IsNaN(penaltyPoints[(int)Association.FIS]) && double.IsNaN(penaltyPoints[(int)Association.SAJ]))
                 {
@@ -255,7 +268,6 @@ namespace PointApp.Views
                     SajResult_Label.Text = penaltyPoints[(int)Association.SAJ].ToString();
                     PopupLayout.IsVisible = true;
                 }
-                DisplayErrorMessage(ErrorCode.UserDuplicated);
             }
             catch(Exception ex)
             {
@@ -322,6 +334,7 @@ namespace PointApp.Views
             StartTopList.ItemsSource = m_startDefPlayers;
             StartTopList.HeightRequest = m_startDefPlayers.Count * (int)ViewCellRowStyle.Height;
             StartPlayerEntry.Text = string.Empty;
+            StartAllList.SelectedItem = null;
         }
 
         private void SetFinishDefPlayers()
@@ -331,6 +344,7 @@ namespace PointApp.Views
             FinishTopList.ItemsSource = m_finishDefPlayers;
             FinishTopList.HeightRequest = m_finishDefPlayers.Count * (int)ViewCellRowStyle.Height;
             FinishPlayerEntry.Text = string.Empty;
+            StartAllList.SelectedItem = null;
         }
 
         private void SetDisplayPoint(Tournament.EventTypes eventType, ObservableCollection<Player> players)
@@ -534,15 +548,23 @@ namespace PointApp.Views
             switch(errorCode)
             {
                 case ErrorCode.UserDuplicated:
-                    await DisplayAlert("エラー", "選手が重複しています", "OK");
+                    await DisplayAlert("エラー", "選手が重複しています。", "OK");
                     break;
 
                 case ErrorCode.OverUserCount:
-                    await DisplayAlert("エラー", "これ以上選択できません", "OK");
+                    await DisplayAlert("エラー", "これ以上選択できません。", "OK");
+                    break;
+
+                case ErrorCode.LackStartUser:
+                    await DisplayAlert("エラー", "項番２は５人選択してください。", "OK");
+                    break;
+
+                case ErrorCode.LackFinishUser:
+                    await DisplayAlert("エラー", "項番３は５人以上選択してください。", "OK");
                     break;
 
                 case ErrorCode.CalcError:
-                    await DisplayAlert("計算エラー", "入力値を確認してください", "OK");
+                    await DisplayAlert("計算エラー", "管理者に報告してください。", "OK");
                     break;
             }
         }

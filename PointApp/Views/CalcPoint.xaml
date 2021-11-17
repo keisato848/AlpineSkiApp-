@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PointApp.Views.CalcPoint"
-             Title="FIS/SAJ ポイント計算">
+             Title="FIS/SAJ ポイント計算アプリ"
+             >
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -19,23 +20,25 @@
                 <Setter Property="ItemTemplate" Value="{StaticResource AllList_ItemTemplate}"/>
                 <Setter Property="IsVisible" Value="False"/>
                 <Setter Property="HasUnevenRows" Value="False"/>
+                <Setter Property="RowHeight" Value="40"/>
             </Style>
             <DataTemplate x:Key="TopListView_Items">
-                <ViewCell AutomationProperties.IsInAccessibleTree="True">
-                    <Grid>
+                <ViewCell AutomationProperties.IsInAccessibleTree="False">
+                    <Grid VerticalOptions="Center" Padding="5">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Label Grid.Row="0" Text="{Binding DisplayPoint, Mode=TwoWay}"/>
-                        <Grid Grid.Row="1" HorizontalOptions="Start">
+                        <Grid Grid.Row="1" VerticalOptions="Center">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Text="タイム"/>
-                            <Label Grid.Column="1" Text="{Binding Time, Mode=TwoWay}"/>
-                            <Label Text="秒"/>
+                            <Label Grid.Column="0" Text="タイム" VerticalOptions="Center"/>
+                            <Entry Grid.Column="1" Text="{Binding Time, Mode=TwoWay}" VerticalOptions="Center"/>
+                            <Label Grid.Column="2" Text="秒" VerticalOptions="Center"/>
                         </Grid>
                     </Grid>
                 </ViewCell>
@@ -43,7 +46,11 @@
             <Style x:Key="TopListView" TargetType="ListView">
                 <Setter Property="ItemTemplate" Value="{StaticResource TopListView_Items}"/>
                 <Setter Property="IsVisible" Value="False"/>
-                <Setter Property="SeparatorColor" Value="{StaticResource Accent}"/>
+                <Setter Property="SeparatorVisibility" Value="None"/>
+                <Setter Property="SelectionMode" Value="None"/>
+                <Setter Property="HasUnevenRows" Value="True"/>
+                <Setter Property="HorizontalScrollBarVisibility" Value="Never"/>
+                <Setter Property="VerticalScrollBarVisibility" Value="Never"/>
             </Style>
             <Style x:Key="PlayerEntry" TargetType="Entry">
                 <Setter Property="WidthRequest" Value="250"/>
@@ -53,39 +60,29 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     
-    <Grid Margin="40">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="300*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <ScrollView Grid.Row="0" Grid.Column="1">
-            <Grid>
+    <ScrollView Padding="40">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!--性別・種目選択-->
+            <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                
-                <!--性別・種目選択-->
+
+                <!--性別選択-->
                 <Grid Grid.Row="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-
-                    <!--性別選択-->
-                    <Grid Grid.Row="0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Text="1. 性別" Style="{StaticResource Heading}"/>
-                        <Grid Grid.Row="1" RadioButtonGroup.GroupName="EventSex" RadioButtonGroup.SelectedValue="{Binding m_tournament.Sex}">
+                    <Label Grid.Row="0" Text="1. 性別" Style="{StaticResource Heading}"/>
+                    <Grid Grid.Row="1" RadioButtonGroup.GroupName="EventSex" RadioButtonGroup.SelectedValue="{Binding m_tournament.Sex}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
@@ -93,105 +90,104 @@
                         <RadioButton Grid.Column="0" ClassId="0" Content="男子" CheckedChanged="EventSex_RadioButton_CheckedChanged"/>
                         <RadioButton Grid.Column="1" ClassId="1" Content="女子" CheckedChanged="EventSex_RadioButton_CheckedChanged"/>
                     </Grid>
-                    </Grid>
-                    <!--性別選択-->
-                    
-                    <!--種目選択-->
-                    <Grid Grid.Row="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Text="2. 種目" Style="{StaticResource Heading}"/>
-                        <Grid Grid.Row="1" RadioButtonGroup.GroupName="EventTypes" RadioButtonGroup.SelectedValue="{Binding m_tournament.Types}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <RadioButton Grid.Column="0" Content="DH" CheckedChanged="RadioButton_CheckedChanged"/>
-                            <RadioButton Grid.Column="1" Content="SG" CheckedChanged="RadioButton_CheckedChanged"/>
-                            <RadioButton Grid.Column="2" Content="GS" CheckedChanged="RadioButton_CheckedChanged"/>
-                            <RadioButton Grid.Column="3" Content="SL" CheckedChanged="RadioButton_CheckedChanged"/>
-                        </Grid>
-                    </Grid>
-                    <!--種目選択-->
                 </Grid>
-                <!--性別・種目選択-->
-                
-                <!--選手選択-->
+                <!--性別選択-->
+
+                <!--種目選択-->
                 <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    
-                    <!--スタート時のポイント上位5名-->
-                    <Grid Grid.Row="0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Text="3. スタート時のポイント上位5名" Style="{StaticResource Heading}"/>
-                        <Entry Grid.Row="1" x:Name="StartPlayerEntry" Style="{StaticResource PlayerEntry}" PropertyChanged="PlayerEntry_PropertyChanged"/>
-                        <ListView Grid.Row="2" x:Name="StartAllList" Style="{StaticResource AllList}" ItemSelected="AllList_ItemSelected"/>
-                        <ListView Grid.Row="3" x:Name="StartTopList" Style="{StaticResource TopListView}"/>
+                    <Label Grid.Row="0" Text="2. 種目" Style="{StaticResource Heading}"/>
+                    <Grid Grid.Row="1" RadioButtonGroup.GroupName="EventTypes" RadioButtonGroup.SelectedValue="{Binding m_tournament.Types}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <RadioButton Grid.Column="0" Content="DH" CheckedChanged="RadioButton_CheckedChanged"/>
+                        <RadioButton Grid.Column="1" Content="SG" CheckedChanged="RadioButton_CheckedChanged"/>
+                        <RadioButton Grid.Column="2" Content="GS" CheckedChanged="RadioButton_CheckedChanged"/>
+                        <RadioButton Grid.Column="3" Content="SL" CheckedChanged="RadioButton_CheckedChanged"/>
                     </Grid>
-                    <!--スタート時のポイント上位5名-->
-
-                    <!--合計タイム上位10名-->
-                    <Grid Grid.Row="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Text="4. 合計タイム上位10名" Style="{StaticResource Heading}"/>
-                        <Entry Grid.Row="1" x:Name="FinishPlayerEntry" Style="{StaticResource PlayerEntry}" PropertyChanged="PlayerEntry_PropertyChanged"/>
-                        <ListView Grid.Row="2" x:Name="FinishAllList" Style="{StaticResource AllList}" ItemSelected="AllList_ItemSelected"/>
-                        <ListView Grid.Row="3" x:Name="FinishTopList" Style="{StaticResource TopListView}" IsVisible="False"/>
-                    </Grid>
-                    <!--合計タイム上位10名-->
-                        
                 </Grid>
-                <!--選手選択-->
-                
-                <!--計算ボタン-->
-                <Button Grid.Row="2" x:Name="Btn_Calc" VerticalOptions="Center" Text="計算する" BackgroundColor="{StaticResource Primary}" TextColor="White" Clicked="Btn_Calc_Clicked"/>
-                <!--計算ボタン-->
-                
-                <!--結果表示エリア-->
-                <Grid Grid.Row="3" x:Name="PopupLayout">
+                <!--種目選択-->
+            </Grid>
+            <!--性別・種目選択-->
+
+            <!--選手選択-->
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!--スタート時のポイント上位5名-->
+                <Grid Grid.Row="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Text="ペナルティポイント"/>
-                    <Grid Grid.Row="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Text="FISポイント"/>
-                        <Label Grid.Column="1" x:Name="FisResult_Label" Text="fispoint"/>
-                    </Grid>
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Text="SAJポイント"/>
-                        <Label Grid.Column="1" x:Name="SajResult_Label" Text="sajpoint"/>
-                    </Grid>
+                    <Label Grid.Row="0" Text="3. スタート時のポイント上位5名" Style="{StaticResource Heading}"/>
+                    <Entry Grid.Row="1" x:Name="StartPlayerEntry" Style="{StaticResource PlayerEntry}" PropertyChanged="PlayerEntry_PropertyChanged"/>
+                    <ListView Grid.Row="2" x:Name="StartAllList" Style="{StaticResource AllList}" ItemSelected="AllList_ItemSelected"/>
+                    <ListView Grid.Row="3" x:Name="StartTopList" Style="{StaticResource TopListView}"/>
                 </Grid>
-                <!--結果表示エリア-->
+                <!--スタート時のポイント上位5名-->
+
+                <!--合計タイム上位10名-->
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Text="4. 合計タイム上位10名" Style="{StaticResource Heading}"/>
+                    <Entry Grid.Row="1" x:Name="FinishPlayerEntry" Style="{StaticResource PlayerEntry}" PropertyChanged="PlayerEntry_PropertyChanged"/>
+                    <ListView Grid.Row="2" x:Name="FinishAllList" Style="{StaticResource AllList}" ItemSelected="AllList_ItemSelected"/>
+                    <ListView Grid.Row="3" x:Name="FinishTopList" Style="{StaticResource TopListView}"/>
+                </Grid>
+                <!--合計タイム上位10名-->
+
             </Grid>
-        </ScrollView>
-    </Grid>
+            <!--選手選択-->
+
+            <!--計算ボタン-->
+            <Button Grid.Row="2" x:Name="Btn_Calc" VerticalOptions="Center" Text="計算する" BackgroundColor="{StaticResource Primary}" TextColor="White" Clicked="Btn_Calc_Clicked"/>
+            <!--計算ボタン-->
+
+            <!--結果表示エリア-->
+            <Grid Grid.Row="3" x:Name="PopupLayout">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Text="ペナルティポイント"/>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Text="FISポイント"/>
+                    <Label Grid.Column="1" x:Name="FisResult_Label" Text="fispoint"/>
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Text="SAJポイント"/>
+                    <Label Grid.Column="1" x:Name="SajResult_Label" Text="sajpoint"/>
+                </Grid>
+            </Grid>
+            <!--結果表示エリア-->
+        </Grid>
+    </ScrollView>
 
 </ContentPage>
