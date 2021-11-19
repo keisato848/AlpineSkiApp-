@@ -52,6 +52,8 @@
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchLink>None</MtouchLink>
     <MtouchInterpreter>-all</MtouchInterpreter>
+    <MtouchFastDev>false</MtouchFastDev>
+    <OptimizePNGs>false</OptimizePNGs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -151,6 +153,9 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Npgsql">
+      <Version>5.0.2</Version>
+    </PackageReference>
     <PackageReference Include="System.Text.Json">
       <Version>5.0.2</Version>
     </PackageReference>

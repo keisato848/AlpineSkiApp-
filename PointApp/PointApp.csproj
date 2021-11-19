@@ -17,16 +17,21 @@
 
   <ItemGroup>
     <None Remove="GettingStarted.txt" />
+    <None Remove="outline_clear_black_18dp.png" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="GettingStarted.txt" />
+    <EmbeddedResource Include="outline_clear_black_18dp.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
 	<EmbeddedResource Include="PointList.json">
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Npgsql" Version="5.0.2" />
     <PackageReference Include="System.Text.Json" Version="5.0.2" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />  
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
@@ -40,5 +45,11 @@
     <Compile Update="Views\CalcPoint.xaml.cs">
       <DependentUpon>CalcPoint.xaml</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Settings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
