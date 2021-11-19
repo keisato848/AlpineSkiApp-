@@ -103,7 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PointApp\PointApp.csproj">
-      <Project>{6A70D8E5-40F4-41AD-B458-B781674121EB}</Project>
+      <Project>{05D675C7-0A6F-4B3B-B224-28CBA3C3E05E}</Project>
       <Name>PointApp</Name>
     </ProjectReference>
   </ItemGroup>

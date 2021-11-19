@@ -17,14 +17,10 @@
 
   <ItemGroup>
     <None Remove="GettingStarted.txt" />
-    <None Remove="outline_clear_black_18dp.png" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="GettingStarted.txt" />
-    <EmbeddedResource Include="outline_clear_black_18dp.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
 	<EmbeddedResource Include="PointList.json">
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</EmbeddedResource>

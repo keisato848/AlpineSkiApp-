@@ -54,6 +54,7 @@
     <MtouchInterpreter>-all</MtouchInterpreter>
     <MtouchFastDev>false</MtouchFastDev>
     <OptimizePNGs>false</OptimizePNGs>
+    <CodesignProvision>iOS Team Provisioning Profile: ksato.PointApp</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
