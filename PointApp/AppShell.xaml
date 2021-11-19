@@ -21,10 +21,10 @@
                 <Setter Property="Shell.UnselectedColor" Value="#95FFFFFF" />
                 <Setter Property="Shell.TabBarBackgroundColor" Value="{StaticResource Primary}" />
                 <Setter Property="Shell.TabBarForegroundColor" Value="White"/>
-                <Setter Property="Shell.TabBarUnselectedColor" Value="#95FFFFFF"/>
+                <Setter Property="Shell.TabBarUnselectedColor" Value="{StaticResource Primary}"/>
                 <Setter Property="Shell.TabBarTitleColor" Value="White"/>
             </Style>
-            <Style TargetType="TabBar" BasedOn="{StaticResource BaseStyle}" />
+            <Style TargetType="TabBar" BasedOn="{StaticResource BaseStyle}"/>
             <Style TargetType="FlyoutItem" BasedOn="{StaticResource BaseStyle}" />
 
             <!--
@@ -78,7 +78,7 @@
         FlyoutDisplayOptions="AsMultipleItems" will create a separate flyout item for each child element    
         https://docs.microsoft.com/dotnet/api/xamarin.forms.shellgroupitem.flyoutdisplayoptions?view=xamarin-forms
     -->
-    <FlyoutItem Title="About" Icon="icon_about.png">
+    <FlyoutItem Title="ポイントを計算" Icon="icon_about.png">
         <ShellContent Route="CalcPoint" ContentTemplate="{DataTemplate local:CalcPoint}" />
     </FlyoutItem>
     <FlyoutItem Title="Browse" Icon="icon_feed.png">
@@ -101,15 +101,16 @@
     </TabBar>
 
     <!-- Optional Templates 
+    <Shell.FlyoutHeaderTemplate>
+        <DataTemplate>
+            <Grid>
+            </Grid>
+        </DataTemplate>
+    </Shell.FlyoutHeaderTemplate>
     // These may be provided inline as below or as separate classes.
 
     // This header appears at the top of the Flyout.
     // https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/shell/flyout#flyout-header
-    <Shell.FlyoutHeaderTemplate>
-        <DataTemplate>
-            <Grid>ContentHere</Grid>
-        </DataTemplate>
-    </Shell.FlyoutHeaderTemplate>
 
     // ItemTemplate is for ShellItems as displayed in a Flyout
     // https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/shell/flyout#define-flyoutitem-appearance

@@ -1,0 +1,5 @@
+[
+  {
+    "ConnectInfo": "Server=localhost; Port=5432; User Id=postgres; Password=satoke; Database=test;"
+  }
+]
