@@ -72,6 +72,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <!--性別・種目選択-->
@@ -208,8 +209,10 @@
             
             <!--計算ボタン-->
             <Button Grid.Row="6" x:Name="Btn_Calc" Margin="0,30" VerticalOptions="Center" Text="計算する" 
-                    BackgroundColor="{StaticResource Primary}" TextColor="White" FontSize="Medium" Clicked="Btn_Calc_Clicked"/>
+                    BackgroundColor="{StaticResource Primary}" TextColor="WhiteSmoke" FontSize="Medium" Clicked="Btn_Calc_Clicked"/>
             <!--計算ボタン-->
+
+            <Label Grid.Row="8" Text="© Kei Sato" FontSize="Micro" TextColor="WhiteSmoke" HorizontalOptions="Center"/>
         </Grid>
     </ScrollView>
 
