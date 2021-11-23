@@ -4,11 +4,33 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
+             Title="ログイン"
              x:Class="PointApp.Views.LoginPage"
-             Shell.NavBarIsVisible="False">
+             BackgroundColor="#005080"
+             >
     <ContentPage.Content>
-        <StackLayout Padding="10,0,10,0" VerticalOptions="Center">
-            <Button VerticalOptions="Center" Text="Login" Command="{Binding LoginCommand}"/>
-        </StackLayout>
+        <ScrollView Margin="40">
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" Text="新規登録はこちら" TextDecorations="Underline" FontSize="Medium" Margin="0,0,0,20">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+                    </Label.GestureRecognizers>
+                </Label>
+
+                <Label Grid.Row="1" Text="メールアドレス" Style="{StaticResource Heading}"/>
+                <Entry Grid.Row="2" x:Name="Entry_Mail"/>
+                <Label Grid.Row="3" Text="パスワード" Style="{StaticResource Heading}"/>
+                <Entry Grid.Row="4" x:Name="Entry_Pwd" MaxLength="16" IsPassword="True"/>
+                <Button Grid.Row="5" Margin="0,40" VerticalOptions="Center" Text="ログイン" Clicked="Button_Clicked"/>
+            </Grid>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

@@ -140,6 +140,20 @@ namespace PointApp.Views
             return isValid;
         }
 
+        private void Switch_Share_Toggled(object sender, ToggledEventArgs e)
+        {
+            object loginUserId;
+            Application.Current.Resources.TryGetValue("LoginUserId", out loginUserId);
+            if (loginUserId == null)
+            {
+                var switchToggle = sender as Switch;
+                if (switchToggle != null)
+                {
+                    PopupLayout_Share.IsVisible = switchToggle.IsToggled;
+                }
+            }
+        }
+
         private void Btn_Calc_Clicked(object sender, EventArgs e)
         {
             try

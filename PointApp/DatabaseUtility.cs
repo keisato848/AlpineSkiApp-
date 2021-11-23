@@ -127,6 +127,31 @@ namespace PointApp.Views
                 throw ex;
             }
         }
+
+        public static void ExecuteScalar(string sql, NpgsqlConnection connection)
+        {
+            NpgsqlDataReader reader = null;
+            try
+            {
+                using (NpgsqlCommand command = new NpgsqlCommand(sql, connection))
+                {
+                    command.ExecuteScalar();
+                }
+            }
+            catch (Exception ex)
+            {
+                if (connection != null)
+                {
+                    connection.Close();
+                }
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+                throw ex;
+            }
+        }
+
         public static string GetSalt()
         {
             string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";

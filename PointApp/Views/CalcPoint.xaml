@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PointApp.Views.CalcPoint"
              Title="ポイント計算"
+             BackgroundColor="#005080"
              >
 
     <ContentPage.Resources>
@@ -171,10 +172,10 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <StackLayout Grid.Row="0" Orientation="Horizontal">
-                    <Switch x:Name="Switch_Share" IsToggled="False"/>
+                    <Switch x:Name="Switch_Share" IsToggled="False" Toggled="Switch_Share_Toggled"/>
                     <Label Text="結果を共有する" VerticalOptions="Center" FontSize="Subtitle"/>
                 </StackLayout>
-                <Grid Grid.Row="1" IsVisible="{Binding Source={x:Reference Switch_Share}, Path=IsToggled}" Margin="10,0">
+                <Grid Grid.Row="1" x:Name="PopupLayout_Share" Margin="10,0" IsVisible="False">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
