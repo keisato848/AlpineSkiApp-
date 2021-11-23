@@ -15,6 +15,5 @@ namespace PointApp.Views
             await Browser.OpenAsync("https://forms.gle/w8AN33mY2B3dLrW27");
             await Shell.Current.GoToAsync("//CalcPoint");
         }
-        public ICommand OpenWebCommand { get; }
     }
 }
