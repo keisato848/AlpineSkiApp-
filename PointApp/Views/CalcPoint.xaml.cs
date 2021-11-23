@@ -26,8 +26,6 @@ namespace PointApp.Views
 
         private Tournament m_tournament;
 
-        private Player m_user;
-
         public CalcPoint()
         {
             InitializeComponent();
@@ -76,7 +74,7 @@ namespace PointApp.Views
 
         public void UpdateControl()
         {
-            StartTopList.IsVisible = m_startDefPlayers.Count > 0 ? true : false;
+            StartTopList.IsVisible = m_startDefPlayers.Count > 0;
         }
 
         private void AllList_ItemSelected(object sender, SelectedItemChangedEventArgs e)
@@ -126,8 +124,10 @@ namespace PointApp.Views
                     return;
                 }
                 var copyPlayer = selectedPlayer.DeepCopy();
-                var searchedPlayer = new ObservableCollection<Player>();
-                searchedPlayer.Add(copyPlayer);
+                var searchedPlayer = new ObservableCollection<Player>
+                {
+                    copyPlayer
+                };
                 SetTopListViewLayout(searchedPlayer, TopList, PlayerEntry);
                 TopList.ScrollTo(copyPlayer, ScrollToPosition.Center, true);
             }
@@ -138,8 +138,7 @@ namespace PointApp.Views
             var switchToggle = sender as Switch;
             if (switchToggle != null)
             {
-                object loginUserId;
-                Application.Current.Resources.TryGetValue("LoginUserId", out loginUserId);
+                Application.Current.Resources.TryGetValue("LoginUserId", out object loginUserId);
                 if (loginUserId != null)
                 {
                     PopupLayout_Share.IsVisible = switchToggle.IsToggled;
@@ -600,7 +599,7 @@ namespace PointApp.Views
 
         private void SetTopListViewLayout(ObservableCollection<Player> players, ListView listView, Entry entry)
         {
-            listView.IsVisible = players.Count > 0 ? true : false;
+            listView.IsVisible = players.Count > 0;
             listView.ItemsSource = players;
             listView.HeightRequest = players.Count * (int)ViewCellRowStyle.Height;
             listView.SelectedItem = null;
@@ -656,187 +655,8 @@ namespace PointApp.Views
             return sumRacePoint;
         }
 
-        public override bool Equals(object obj)
+        public class Player
         {
-            return obj is CalcPoint point &&
-                   EqualityComparer<IDispatcher>.Default.Equals(Dispatcher, point.Dispatcher) &&
-                   EqualityComparer<object>.Default.Equals(BindingContext, point.BindingContext) &&
-                   AutomationId == point.AutomationId &&
-                   ClassId == point.ClassId &&
-                   EqualityComparer<IList<Effect>>.Default.Equals(Effects, point.Effects) &&
-                   Id.Equals(point.Id) &&
-                   EqualityComparer<VisualElement>.Default.Equals(ParentView, point.ParentView) &&
-                   StyleId == point.StyleId &&
-                   EqualityComparer<ReadOnlyCollection<Element>>.Default.Equals(LogicalChildren, point.LogicalChildren) &&
-                   EqualityComparer<Element>.Default.Equals(RealParent, point.RealParent) &&
-                   EqualityComparer<Element>.Default.Equals(Parent, point.Parent) &&
-                   EqualityComparer<IEffectControlProvider>.Default.Equals(EffectControlProvider, point.EffectControlProvider) &&
-                   EqualityComparer<IPlatform>.Default.Equals(Platform, point.Platform) &&
-                   EqualityComparer<INavigation>.Default.Equals(Navigation, point.Navigation) &&
-                   EqualityComparer<Style>.Default.Equals(Style, point.Style) &&
-                   EqualityComparer<IList<string>>.Default.Equals(StyleClass, point.StyleClass) &&
-                   EqualityComparer<IList<string>>.Default.Equals(@class, point.@class) &&
-                   EqualityComparer<NavigationProxy>.Default.Equals(NavigationProxy, point.NavigationProxy) &&
-                   EqualityComparer<IVisual>.Default.Equals(Visual, point.Visual) &&
-                   FlowDirection == point.FlowDirection &&
-                   AnchorX == point.AnchorX &&
-                   AnchorY == point.AnchorY &&
-                   EqualityComparer<Color>.Default.Equals(BackgroundColor, point.BackgroundColor) &&
-                   EqualityComparer<Brush>.Default.Equals(Background, point.Background) &&
-                   EqualityComparer<IList<Behavior>>.Default.Equals(Behaviors, point.Behaviors) &&
-                   EqualityComparer<Xamarin.Forms.Rectangle>.Default.Equals(Bounds, point.Bounds) &&
-                   Height == point.Height &&
-                   HeightRequest == point.HeightRequest &&
-                   InputTransparent == point.InputTransparent &&
-                   IsEnabled == point.IsEnabled &&
-                   IsFocused == point.IsFocused &&
-                   IsVisible == point.IsVisible &&
-                   MinimumHeightRequest == point.MinimumHeightRequest &&
-                   MinimumWidthRequest == point.MinimumWidthRequest &&
-                   Opacity == point.Opacity &&
-                   Rotation == point.Rotation &&
-                   RotationX == point.RotationX &&
-                   RotationY == point.RotationY &&
-                   Scale == point.Scale &&
-                   ScaleX == point.ScaleX &&
-                   ScaleY == point.ScaleY &&
-                   TabIndex == point.TabIndex &&
-                   IsTabStop == point.IsTabStop &&
-                   TranslationX == point.TranslationX &&
-                   TranslationY == point.TranslationY &&
-                   EqualityComparer<IList<TriggerBase>>.Default.Equals(Triggers, point.Triggers) &&
-                   Width == point.Width &&
-                   WidthRequest == point.WidthRequest &&
-                   X == point.X &&
-                   Y == point.Y &&
-                   EqualityComparer<Geometry>.Default.Equals(Clip, point.Clip) &&
-                   Batched == point.Batched &&
-                   DisableLayout == point.DisableLayout &&
-                   IsInNativeLayout == point.IsInNativeLayout &&
-                   IsNativeStateConsistent == point.IsNativeStateConsistent &&
-                   IsPlatformEnabled == point.IsPlatformEnabled &&
-                   EqualityComparer<ResourceDictionary>.Default.Equals(Resources, point.Resources) &&
-                   BackgroundImage == point.BackgroundImage &&
-                   EqualityComparer<ImageSource>.Default.Equals(BackgroundImageSource, point.BackgroundImageSource) &&
-                   EqualityComparer<FileImageSource>.Default.Equals(Icon, point.Icon) &&
-                   EqualityComparer<ImageSource>.Default.Equals(IconImageSource, point.IconImageSource) &&
-                   IsBusy == point.IsBusy &&
-                   EqualityComparer<Thickness>.Default.Equals(Padding, point.Padding) &&
-                   Title == point.Title &&
-                   EqualityComparer<IList<ToolbarItem>>.Default.Equals(ToolbarItems, point.ToolbarItems) &&
-                   EqualityComparer<Xamarin.Forms.Rectangle>.Default.Equals(ContainerArea, point.ContainerArea) &&
-                   IgnoresContainerArea == point.IgnoresContainerArea &&
-                   EqualityComparer<ObservableCollection<Element>>.Default.Equals(InternalChildren, point.InternalChildren) &&
-                   EqualityComparer<ControlTemplate>.Default.Equals(ControlTemplate, point.ControlTemplate) &&
-                   EqualityComparer<View>.Default.Equals(Content, point.Content) &&
-                   EqualityComparer<List<Player>>.Default.Equals(m_allPlayers, point.m_allPlayers) &&
-                   EqualityComparer<ObservableCollection<Player>>.Default.Equals(m_finishDefPlayers, point.m_finishDefPlayers) &&
-                   EqualityComparer<ObservableCollection<Player>>.Default.Equals(m_startDefPlayers, point.m_startDefPlayers) &&
-                   EqualityComparer<Tournament>.Default.Equals(m_tournament, point.m_tournament) &&
-                   EqualityComparer<Player>.Default.Equals(m_user, point.m_user) &&
-                   EqualityComparer<Entry>.Default.Equals(StartPlayerEntry, point.StartPlayerEntry) &&
-                   EqualityComparer<ListView>.Default.Equals(StartAllList, point.StartAllList) &&
-                   EqualityComparer<ListView>.Default.Equals(StartTopList, point.StartTopList) &&
-                   EqualityComparer<Entry>.Default.Equals(FinishPlayerEntry, point.FinishPlayerEntry) &&
-                   EqualityComparer<ListView>.Default.Equals(FinishAllList, point.FinishAllList) &&
-                   EqualityComparer<ListView>.Default.Equals(FinishTopList, point.FinishTopList) &&
-                   EqualityComparer<Switch>.Default.Equals(Switch_Share, point.Switch_Share) &&
-                   EqualityComparer<Button>.Default.Equals(Btn_Calc, point.Btn_Calc);
-        }
-
-        public override int GetHashCode()
-        {
-            int hashCode = 1525230600;
-            hashCode = hashCode * -1521134295 + EqualityComparer<IDispatcher>.Default.GetHashCode(Dispatcher);
-            hashCode = hashCode * -1521134295 + EqualityComparer<object>.Default.GetHashCode(BindingContext);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(AutomationId);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ClassId);
-            hashCode = hashCode * -1521134295 + EqualityComparer<IList<Effect>>.Default.GetHashCode(Effects);
-            hashCode = hashCode * -1521134295 + Id.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<VisualElement>.Default.GetHashCode(ParentView);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(StyleId);
-            hashCode = hashCode * -1521134295 + EqualityComparer<ReadOnlyCollection<Element>>.Default.GetHashCode(LogicalChildren);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Element>.Default.GetHashCode(RealParent);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Element>.Default.GetHashCode(Parent);
-            hashCode = hashCode * -1521134295 + EqualityComparer<IEffectControlProvider>.Default.GetHashCode(EffectControlProvider);
-            hashCode = hashCode * -1521134295 + EqualityComparer<IPlatform>.Default.GetHashCode(Platform);
-            hashCode = hashCode * -1521134295 + EqualityComparer<INavigation>.Default.GetHashCode(Navigation);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Style>.Default.GetHashCode(Style);
-            hashCode = hashCode * -1521134295 + EqualityComparer<IList<string>>.Default.GetHashCode(StyleClass);
-            hashCode = hashCode * -1521134295 + EqualityComparer<IList<string>>.Default.GetHashCode(@class);
-            hashCode = hashCode * -1521134295 + EqualityComparer<NavigationProxy>.Default.GetHashCode(NavigationProxy);
-            hashCode = hashCode * -1521134295 + EqualityComparer<IVisual>.Default.GetHashCode(Visual);
-            hashCode = hashCode * -1521134295 + FlowDirection.GetHashCode();
-            hashCode = hashCode * -1521134295 + AnchorX.GetHashCode();
-            hashCode = hashCode * -1521134295 + AnchorY.GetHashCode();
-            hashCode = hashCode * -1521134295 + BackgroundColor.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<Brush>.Default.GetHashCode(Background);
-            hashCode = hashCode * -1521134295 + EqualityComparer<IList<Behavior>>.Default.GetHashCode(Behaviors);
-            hashCode = hashCode * -1521134295 + Bounds.GetHashCode();
-            hashCode = hashCode * -1521134295 + Height.GetHashCode();
-            hashCode = hashCode * -1521134295 + HeightRequest.GetHashCode();
-            hashCode = hashCode * -1521134295 + InputTransparent.GetHashCode();
-            hashCode = hashCode * -1521134295 + IsEnabled.GetHashCode();
-            hashCode = hashCode * -1521134295 + IsFocused.GetHashCode();
-            hashCode = hashCode * -1521134295 + IsVisible.GetHashCode();
-            hashCode = hashCode * -1521134295 + MinimumHeightRequest.GetHashCode();
-            hashCode = hashCode * -1521134295 + MinimumWidthRequest.GetHashCode();
-            hashCode = hashCode * -1521134295 + Opacity.GetHashCode();
-            hashCode = hashCode * -1521134295 + Rotation.GetHashCode();
-            hashCode = hashCode * -1521134295 + RotationX.GetHashCode();
-            hashCode = hashCode * -1521134295 + RotationY.GetHashCode();
-            hashCode = hashCode * -1521134295 + Scale.GetHashCode();
-            hashCode = hashCode * -1521134295 + ScaleX.GetHashCode();
-            hashCode = hashCode * -1521134295 + ScaleY.GetHashCode();
-            hashCode = hashCode * -1521134295 + TabIndex.GetHashCode();
-            hashCode = hashCode * -1521134295 + IsTabStop.GetHashCode();
-            hashCode = hashCode * -1521134295 + TranslationX.GetHashCode();
-            hashCode = hashCode * -1521134295 + TranslationY.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<IList<TriggerBase>>.Default.GetHashCode(Triggers);
-            hashCode = hashCode * -1521134295 + Width.GetHashCode();
-            hashCode = hashCode * -1521134295 + WidthRequest.GetHashCode();
-            hashCode = hashCode * -1521134295 + X.GetHashCode();
-            hashCode = hashCode * -1521134295 + Y.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<Geometry>.Default.GetHashCode(Clip);
-            hashCode = hashCode * -1521134295 + Batched.GetHashCode();
-            hashCode = hashCode * -1521134295 + DisableLayout.GetHashCode();
-            hashCode = hashCode * -1521134295 + IsInNativeLayout.GetHashCode();
-            hashCode = hashCode * -1521134295 + IsNativeStateConsistent.GetHashCode();
-            hashCode = hashCode * -1521134295 + IsPlatformEnabled.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<ResourceDictionary>.Default.GetHashCode(Resources);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(BackgroundImage);
-            hashCode = hashCode * -1521134295 + EqualityComparer<ImageSource>.Default.GetHashCode(BackgroundImageSource);
-            hashCode = hashCode * -1521134295 + EqualityComparer<FileImageSource>.Default.GetHashCode(Icon);
-            hashCode = hashCode * -1521134295 + EqualityComparer<ImageSource>.Default.GetHashCode(IconImageSource);
-            hashCode = hashCode * -1521134295 + IsBusy.GetHashCode();
-            hashCode = hashCode * -1521134295 + Padding.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Title);
-            hashCode = hashCode * -1521134295 + EqualityComparer<IList<ToolbarItem>>.Default.GetHashCode(ToolbarItems);
-            hashCode = hashCode * -1521134295 + ContainerArea.GetHashCode();
-            hashCode = hashCode * -1521134295 + IgnoresContainerArea.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<ObservableCollection<Element>>.Default.GetHashCode(InternalChildren);
-            hashCode = hashCode * -1521134295 + EqualityComparer<ControlTemplate>.Default.GetHashCode(ControlTemplate);
-            hashCode = hashCode * -1521134295 + EqualityComparer<View>.Default.GetHashCode(Content);
-            hashCode = hashCode * -1521134295 + EqualityComparer<List<Player>>.Default.GetHashCode(m_allPlayers);
-            hashCode = hashCode * -1521134295 + EqualityComparer<ObservableCollection<Player>>.Default.GetHashCode(m_finishDefPlayers);
-            hashCode = hashCode * -1521134295 + EqualityComparer<ObservableCollection<Player>>.Default.GetHashCode(m_startDefPlayers);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Tournament>.Default.GetHashCode(m_tournament);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Player>.Default.GetHashCode(m_user);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Entry>.Default.GetHashCode(StartPlayerEntry);
-            hashCode = hashCode * -1521134295 + EqualityComparer<ListView>.Default.GetHashCode(StartAllList);
-            hashCode = hashCode * -1521134295 + EqualityComparer<ListView>.Default.GetHashCode(StartTopList);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Entry>.Default.GetHashCode(FinishPlayerEntry);
-            hashCode = hashCode * -1521134295 + EqualityComparer<ListView>.Default.GetHashCode(FinishAllList);
-            hashCode = hashCode * -1521134295 + EqualityComparer<ListView>.Default.GetHashCode(FinishTopList);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Switch>.Default.GetHashCode(Switch_Share);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Button>.Default.GetHashCode(Btn_Calc);
-            return hashCode;
-        }
-
-        public class Player : INotifyPropertyChanged
-        {
-            public event PropertyChangedEventHandler PropertyChanged;
-
             public double FisDh
             {
                 get
