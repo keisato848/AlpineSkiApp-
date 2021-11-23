@@ -1,5 +1,5 @@
 [
   {
-    "ConnectInfo": "Server=localhost; Port=5432; User Id=postgres; Password=satoke; Database=test;"
+    "DatabaseInfo": "host=pointapp.postgres.database.azure.com; port=5432; user id=mokaadmin; password=@Mmookkaa00442200; database=postgres; sslmode = Require; Trust Server Certificate = true;"
   }
 ]
