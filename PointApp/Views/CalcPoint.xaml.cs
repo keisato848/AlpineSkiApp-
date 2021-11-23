@@ -58,14 +58,18 @@ namespace PointApp.Views
         {
             SL = 730,
             GS = 1010,
-            SG = 1190
+            SG = 1190,
+            DH = 1250,
+            AC = 1360
         }
 
         private enum MaximumPoint
         {
             SL = 165,
             GS = 220,
-            SG = 270
+            SG = 270,
+            AC = 270,
+            DH = 330
         }
 
         private enum ViewCellRowStyle { Height = 46 }
@@ -833,17 +837,11 @@ namespace PointApp.Views
         {
             public event PropertyChangedEventHandler PropertyChanged;
 
-            public string BirthOfDate { get; set; } = string.Empty;
-
-            public string Country { get; set; } = string.Empty;
-
-            public string EnglishName { get; set; } = string.Empty;
-
             public double FisDh
             {
                 get
                 {
-                    double dValue = 999.99;
+                    double dValue = 330.00;
                     if (!string.IsNullOrEmpty(strFisDh))
                     {
                         string strValue = strFisDh.Insert(strFisDh.Length - 2, ".");
@@ -857,7 +855,7 @@ namespace PointApp.Views
             {
                 get
                 {
-                    double dValue = 999.99;
+                    double dValue = 220.00;
                     if (!string.IsNullOrEmpty(strFisGs))
                     {
                         string strValue = strFisGs.Insert(strFisGs.Length - 2, ".");
@@ -867,13 +865,11 @@ namespace PointApp.Views
                 }
             }
 
-            public string FisNo { get; set; } = string.Empty;
-
             public double FisSc
             {
                 get
                 {
-                    double dValue = 999.99;
+                    double dValue = 270.00;
                     if (!string.IsNullOrEmpty(strFisSc))
                     {
                         string strValue = strFisSc.Insert(strFisSc.Length - 2, ".");
@@ -887,7 +883,7 @@ namespace PointApp.Views
             {
                 get
                 {
-                    double dValue = 999.99;
+                    double dValue = 270.00;
                     if (!string.IsNullOrEmpty(strFisSg))
                     {
                         string strValue = strFisSg.Insert(strFisSg.Length - 2, ".");
@@ -901,7 +897,7 @@ namespace PointApp.Views
             {
                 get
                 {
-                    double dValue = 999.99;
+                    double dValue = 165.00;
                     if (!string.IsNullOrEmpty(strFisSl))
                     {
                         string strValue = strFisSl.Insert(strFisSl.Length - 2, ".");
@@ -915,13 +911,11 @@ namespace PointApp.Views
 
             public string KanaName { get; set; } = string.Empty;
 
-            public string Prefecture { get; set; } = string.Empty;
-
             public double SajDh
             {
                 get
                 {
-                    double dValue = 999.99;
+                    double dValue = 330.00;
                     if (!string.IsNullOrEmpty(strSajDh))
                     {
                         string strValue = strSajDh.Insert(strSajDh.Length - 2, ".");
@@ -935,7 +929,7 @@ namespace PointApp.Views
             {
                 get
                 {
-                    double dValue = 999.99;
+                    double dValue = 220.00;
                     if (!string.IsNullOrEmpty(strSajGs))
                     {
                         string strValue = strSajGs.Insert(strSajGs.Length - 2, ".");
@@ -945,13 +939,11 @@ namespace PointApp.Views
                 }
             }
 
-            public string SajNo { get; set; } = string.Empty;
-
             public double SajSc
             {
                 get
                 {
-                    double dValue = 999.99;
+                    double dValue = 270.00;
                     if (!string.IsNullOrEmpty(strSajSc))
                     {
                         string strValue = strSajSc.Insert(strSajSc.Length - 2, ".");
@@ -965,7 +957,7 @@ namespace PointApp.Views
             {
                 get
                 {
-                    double dValue = 999.99;
+                    double dValue = 270.00;
                     if (!string.IsNullOrEmpty(strSajSg))
                     {
                         string strValue = strSajSg.Insert(strSajSg.Length - 2, ".");
@@ -979,7 +971,7 @@ namespace PointApp.Views
             {
                 get
                 {
-                    double dValue = 999.99;
+                    double dValue = 165.00;
                     if (!string.IsNullOrEmpty(strSajSl))
                     {
                         string strValue = strSajSl.Insert(strSajSl.Length - 2, ".");
@@ -1009,7 +1001,6 @@ namespace PointApp.Views
 
             public string strSajSl { get; set; } = string.Empty;
 
-            public string TeamName { get; set; } = string.Empty;
 
             public double Time { get; set; } = 120.00;
 
