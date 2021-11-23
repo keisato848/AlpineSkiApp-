@@ -144,7 +144,6 @@
       <Visible>false</Visible>
     </ImageAsset>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
-    <InterfaceDefinition Include="Resources\Launch Screen.storyboard" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
