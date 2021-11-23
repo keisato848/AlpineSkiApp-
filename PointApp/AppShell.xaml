@@ -81,9 +81,11 @@
     <FlyoutItem Title="ポイント計算">
         <ShellContent Route="CalcPoint" ContentTemplate="{DataTemplate local:CalcPoint}" />
     </FlyoutItem>
+    <!--
     <FlyoutItem Title="結果一覧" Icon="icon_feed.png">
         <ShellContent Route="ItemsPage" ContentTemplate="{DataTemplate local:ItemsPage}" />
     </FlyoutItem>
+    -->
     <FlyoutItem Title="ログイン">
         <ShellContent Route="LoginPage" ContentTemplate="{DataTemplate local:LoginPage}" />
     </FlyoutItem>
