@@ -50,7 +50,8 @@ namespace PointApp.Views
             LackFinishUser = 3,
             CalcError = 10,
             IdEmpty = 20,
-            PwdEmpty = 21
+            PwdEmpty = 21,
+            TournamentNameEmpty = 22,
         }
 
         private enum FValue
@@ -67,7 +68,7 @@ namespace PointApp.Views
             SG = 270
         }
 
-        private enum ViewCellRowStyle { Height = 45 }
+        private enum ViewCellRowStyle { Height = 46 }
 
         public void UpdateControl()
         {
@@ -112,85 +113,115 @@ namespace PointApp.Views
                 SetTopListViewLayout(m_finishDefPlayers, FinishTopList, FinishPlayerEntry);
                 FinishTopList.ScrollTo(copyPlayer, ScrollToPosition.Center, true);
             }
+            else if (AllList.SelectedItem != null)
+            {
+                selectedPlayer = AllList.SelectedItem as Player;
+                if (selectedPlayer != null && TopList.ItemsSource != null)
+                {
+                    DisplayErrorMessage(ErrorCode.OverUserCount);
+                    return;
+                }
+                var copyPlayer = selectedPlayer.DeepCopy();
+                var searchedPlayer = new ObservableCollection<Player>();
+                searchedPlayer.Add(copyPlayer);
+                SetTopListViewLayout(searchedPlayer, TopList, PlayerEntry);
+                TopList.ScrollTo(copyPlayer, ScrollToPosition.Center, true);
+            }
         }
 
-        private bool IsValidId(string id)
+        private async void Switch_Share_Toggled(object sender, ToggledEventArgs e)
         {
-            bool isValid = true;
+            var switchToggle = sender as Switch;
+            if (switchToggle != null)
+            {
+                object loginUserId;
+                Application.Current.Resources.TryGetValue("LoginUserId", out loginUserId);
+                if (loginUserId != null)
+                {
+                    PopupLayout_Share.IsVisible = switchToggle.IsToggled;
+                }
+                else
+                {
+                    switchToggle.IsToggled = false;
+                    await DisplayAlert("通知", "共有にはログインが必要です。\nログインページに移動します。", "OK");
+                    await Shell.Current.GoToAsync("//LoginPage");
+                }
+            }
+        }
+
+        private async void Btn_Calc_Clicked(object sender, EventArgs e)
+        {
             try
             {
-                if (string.IsNullOrEmpty(id))
+                if (m_startDefPlayers.Count() < 5)
                 {
-                    DisplayErrorMessage(ErrorCode.IdEmpty);
-                    return false;
+                    DisplayErrorMessage(ErrorCode.LackStartUser);
+                    return;
                 }
-                using (var connection = DatabaseUtility.ConnectDataBase())
+                if (m_finishDefPlayers.Count() < 5)
                 {
-                    connection.Open();
-                    using (var transaction = connection.BeginTransaction())
+                    DisplayErrorMessage(ErrorCode.LackFinishUser);
+                    return;
+                }
+                if (Switch_Share.IsToggled && string.IsNullOrEmpty(Entry_TournamentName.Text))
+                {
+                    DisplayErrorMessage(ErrorCode.TournamentNameEmpty);
+                }
+                double[] penaltyPoints = GetPenaltyPoints();
+                if (penaltyPoints != null && !double.IsNaN(penaltyPoints[(int)Association.FIS]) && !double.IsNaN(penaltyPoints[(int)Association.SAJ]))
+                {
+                    string tournamentName = Entry_TournamentName.Text;
+                    string fisPoint = penaltyPoints[(int)Association.FIS].ToString();
+                    string sajPoint = penaltyPoints[(int)Association.SAJ].ToString();
+                    string userFisPoint = null;
+                    string userSajPoint = null;
+                    if (Switch_Share.IsToggled)
                     {
+                        RegisterTournament(tournamentName, fisPoint, sajPoint);
+                    }
+                    if (TopList.SelectedItem != null)
+                    {
+                        var racePoint = GetRacePoint(TopList.SelectedItem as Player, m_finishDefPlayers.OrderBy(player => player.Time).First());
+                        if (!double.IsNaN(racePoint))
+                        {
+                            userFisPoint = (Convert.ToString(fisPoint) + racePoint).ToString();
+                            userSajPoint = (Convert.ToString(sajPoint) + racePoint).ToString();
+                        }
+                    }
+                    var resultPage = new ResultPage(fisPoint, sajPoint, userFisPoint, userSajPoint);
+                    await Navigation.PushModalAsync(resultPage);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw ex;
+            }
+        }
 
+        private void RegisterTournament(string tournament_name, string fis_penalty, string saj_penalty)
+        {
+            try
+            {
+                string user_id = Application.Current.Resources["LoginUserId"].ToString();
+                if (!string.IsNullOrEmpty(user_id))
+                {
+                    using (var connection = DatabaseUtility.ConnectDataBase())
+                    {
+                        connection.Open();
+                        var time = DateTime.Now.ToString().Replace('/', '-');
+                        using (var transaction = connection.BeginTransaction())
+                        {
+                            var sql = $"INSERT INTO tournaments_table (tournament_name, fis_penarty, saj_penarty, user_id, created_at, updated_at) VALUES('{tournament_name}', '{fis_penalty}', '{saj_penalty}', '{user_id}', '{time}', '{time}');";
+                            DatabaseUtility.ExecuteSqlNonquery(sql, connection);
+                            transaction.Commit();
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
                 throw ex;
-            }
-            return isValid;
-        }
-
-        private void Switch_Share_Toggled(object sender, ToggledEventArgs e)
-        {
-            object loginUserId;
-            Application.Current.Resources.TryGetValue("LoginUserId", out loginUserId);
-            if (loginUserId == null)
-            {
-                var switchToggle = sender as Switch;
-                if (switchToggle != null)
-                {
-                    PopupLayout_Share.IsVisible = switchToggle.IsToggled;
-                }
-            }
-        }
-
-        private void Btn_Calc_Clicked(object sender, EventArgs e)
-        {
-            try
-            {
-                if (Switch_Share.IsToggled)
-                {
-                    if (string.IsNullOrEmpty(Entry_Mail.Text))
-                    {
-                        DisplayErrorMessage(ErrorCode.IdEmpty);
-                    }
-                    if (string.IsNullOrEmpty(Entry_Pwd.Text))
-                    {
-                        DisplayErrorMessage(ErrorCode.PwdEmpty);
-                    }
-                    if (m_startDefPlayers.Count() < 5)
-                    {
-                        DisplayErrorMessage(ErrorCode.LackStartUser);
-                        return;
-                    }
-                    if (m_finishDefPlayers.Count() < 5)
-                    {
-                        DisplayErrorMessage(ErrorCode.LackFinishUser);
-                        return;
-                    }
-                }
-
-                double[] penaltyPoints = GetPenaltyPoints();
-                if (penaltyPoints != null && double.IsNaN(penaltyPoints[(int)Association.FIS]) && double.IsNaN(penaltyPoints[(int)Association.SAJ]))
-                {
-                    FisResult_Label.Text = penaltyPoints[(int)Association.FIS].ToString();
-                    SajResult_Label.Text = penaltyPoints[(int)Association.SAJ].ToString();
-                    PopupLayout.IsVisible = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
             }
         }
 
@@ -236,33 +267,36 @@ namespace PointApp.Views
             switch (errorCode)
             {
                 case ErrorCode.UserDuplicated:
-                    await DisplayAlert("エラー", "選手が重複しています。", "OK");
+                    await DisplayAlert("通知", "選手が重複しています。", "OK");
                     break;
 
                 case ErrorCode.OverUserCount:
-                    await DisplayAlert("エラー", "これ以上選択できません。", "OK");
+                    await DisplayAlert("通知", "これ以上選択できません。", "OK");
                     break;
 
                 case ErrorCode.LackStartUser:
-                    await DisplayAlert("エラー", "項番２は５人選択してください。", "OK");
+                    await DisplayAlert("通知", "項番３は５人選択してください。", "OK");
                     break;
 
                 case ErrorCode.LackFinishUser:
-                    await DisplayAlert("エラー", "項番３は５人以上選択してください。", "OK");
+                    await DisplayAlert("通知", "項番４は５人以上選択してください。", "OK");
                     break;
 
                 case ErrorCode.CalcError:
-                    await DisplayAlert("計算エラー", "管理者に報告してください。", "OK");
+                    await DisplayAlert("通知", "管理者に報告してください。", "OK");
                     break;
 
                 case ErrorCode.IdEmpty:
-                    await DisplayAlert("会員登録エラー", "IDを入力してください。", "OK");
+                    await DisplayAlert("通知", "IDを入力してください。", "OK");
                     break;
 
                 case ErrorCode.PwdEmpty:
-                    await DisplayAlert("会員登録エラー", "パスワードを入力してください。", "OK");
+                    await DisplayAlert("通知", "パスワードを入力してください。", "OK");
                     break;
 
+                case ErrorCode.TournamentNameEmpty:
+                    await DisplayAlert("通知", "大会名を入力してください", "OK");
+                    break;
             }
         }
 
@@ -348,6 +382,7 @@ namespace PointApp.Views
         {
             return new ObservableCollection<Player>(from player in m_allPlayers
                                                     where player.KanaName.StartsWith(kana)
+                                                    orderby player.FisGs
                                                     select player);
         }
 
@@ -389,15 +424,12 @@ namespace PointApp.Views
             return points;
         }
 
-        private double GetRacePoints(Player targetPlayer, Player winner)
+        private double GetRacePoint(Player targetPlayer, Player winner)
         {
             // Ｐ＝（Ｆ値×当該選手のタイム）÷ラップライム －Ｆ値 またはＰ＝（当該選手のタイム÷ラップタイム－１）×Ｆ値
             int fValue = 0;
             switch (m_tournament.Types)
             {
-                case Tournament.EventTypes.DH:
-                    break;
-
                 case Tournament.EventTypes.SG:
                     fValue = (int)FValue.SG;
                     break;
@@ -423,9 +455,10 @@ namespace PointApp.Views
             return Regex.IsMatch(str, @"^\p{IsKatakana}*$");
         }
 
-        private void PlayerEntry_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private async void PlayerEntry_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var matchedPlayers = new ObservableCollection<Player>();
+            ListView allList = null;
             var textCell = sender as Entry;
 
             if (textCell != null && !string.IsNullOrEmpty(textCell.Text))
@@ -449,11 +482,15 @@ namespace PointApp.Views
                     matchedPlayers = GetPlayersFromKanji(str);
                 }
             }
-            var allList = (sender == StartPlayerEntry) ? StartAllList : FinishAllList;
+
+            if (sender == StartPlayerEntry) allList = StartAllList;
+            if (sender == FinishPlayerEntry) allList = FinishAllList;
+            if (sender == PlayerEntry) allList = AllList;
             if (matchedPlayers.Count > 0)
             {
                 allList.ItemsSource = matchedPlayers;
                 allList.IsVisible = true;
+                await ScrollView_Main.ScrollToAsync(allList.X, allList.Y, false);
             }
             else
             {
@@ -564,6 +601,14 @@ namespace PointApp.Views
             listView.HeightRequest = players.Count * (int)ViewCellRowStyle.Height;
             listView.SelectedItem = null;
             entry.Text = string.Empty;
+            if (entry.Equals(StartPlayerEntry))
+            {
+                StartPlayerEntry.IsVisible = m_finishDefPlayers.Count() < 5;
+            }
+            else
+            {
+                FinishPlayerEntry.IsVisible = m_finishDefPlayers.Count() < 10;
+            }
         }
 
         private void SetUp()
@@ -602,7 +647,7 @@ namespace PointApp.Views
             double sumRacePoint = 0;
             foreach (var player in listPlayer)
             {
-                sumRacePoint += GetRacePoints(player, winner);
+                sumRacePoint += GetRacePoint(player, winner);
             }
             return sumRacePoint;
         }
@@ -692,12 +737,7 @@ namespace PointApp.Views
                    EqualityComparer<ListView>.Default.Equals(FinishAllList, point.FinishAllList) &&
                    EqualityComparer<ListView>.Default.Equals(FinishTopList, point.FinishTopList) &&
                    EqualityComparer<Switch>.Default.Equals(Switch_Share, point.Switch_Share) &&
-                   EqualityComparer<Entry>.Default.Equals(Entry_Mail, point.Entry_Mail) &&
-                   EqualityComparer<Entry>.Default.Equals(Entry_Pwd, point.Entry_Pwd) &&
-                   EqualityComparer<Button>.Default.Equals(Btn_Calc, point.Btn_Calc) &&
-                   EqualityComparer<Grid>.Default.Equals(PopupLayout, point.PopupLayout) &&
-                   EqualityComparer<Label>.Default.Equals(FisResult_Label, point.FisResult_Label) &&
-                   EqualityComparer<Label>.Default.Equals(SajResult_Label, point.SajResult_Label);
+                   EqualityComparer<Button>.Default.Equals(Btn_Calc, point.Btn_Calc);
         }
 
         public override int GetHashCode()
@@ -785,12 +825,7 @@ namespace PointApp.Views
             hashCode = hashCode * -1521134295 + EqualityComparer<ListView>.Default.GetHashCode(FinishAllList);
             hashCode = hashCode * -1521134295 + EqualityComparer<ListView>.Default.GetHashCode(FinishTopList);
             hashCode = hashCode * -1521134295 + EqualityComparer<Switch>.Default.GetHashCode(Switch_Share);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Entry>.Default.GetHashCode(Entry_Mail);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Entry>.Default.GetHashCode(Entry_Pwd);
             hashCode = hashCode * -1521134295 + EqualityComparer<Button>.Default.GetHashCode(Btn_Calc);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Grid>.Default.GetHashCode(PopupLayout);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Label>.Default.GetHashCode(FisResult_Label);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Label>.Default.GetHashCode(SajResult_Label);
             return hashCode;
         }
 

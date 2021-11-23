@@ -60,12 +60,10 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     
-    <ScrollView Padding="40" VerticalOptions="StartAndExpand">
+    <ScrollView x:Name="ScrollView_Main" Padding="40" VerticalOptions="StartAndExpand">
 
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
@@ -113,12 +111,10 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <RadioButton Grid.Column="0" Content="DH" IsChecked="True" CheckedChanged="RadioButton_CheckedChanged"/>
-                        <RadioButton Grid.Column="1" Content="SG" CheckedChanged="RadioButton_CheckedChanged"/>
-                        <RadioButton Grid.Column="2" Content="GS" CheckedChanged="RadioButton_CheckedChanged"/>
-                        <RadioButton Grid.Column="3" Content="SL" CheckedChanged="RadioButton_CheckedChanged"/>
+                        <RadioButton Grid.Column="0" Content="ＳＧ" IsChecked="True" CheckedChanged="RadioButton_CheckedChanged"/>
+                        <RadioButton Grid.Column="1" Content="ＧＳ" CheckedChanged="RadioButton_CheckedChanged"/>
+                        <RadioButton Grid.Column="2" Content="ＳＬ" CheckedChanged="RadioButton_CheckedChanged"/>
                     </Grid>
                 </Grid>
                 <!--種目選択-->
@@ -128,6 +124,7 @@
             <!--選手選択-->
             <Grid Grid.Row="2">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
@@ -154,20 +151,37 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" Text="4. 合計タイム上位10名" Style="{StaticResource Heading}"/>
-                    <Entry Grid.Row="1" x:Name="FinishPlayerEntry" Style="{StaticResource PlayerEntry}" PropertyChanged="PlayerEntry_PropertyChanged"/>
-                    <ListView Grid.Row="2" x:Name="FinishAllList" Style="{StaticResource AllList}" ItemSelected="AllList_ItemSelected"/>
-                    <ListView Grid.Row="3" x:Name="FinishTopList" Style="{StaticResource TopListView}"/>
+                    <Label Grid.Row="1" Text="※10名の内、ポイント上位5名の選択でも可。"/>
+                    <Entry Grid.Row="2" x:Name="FinishPlayerEntry" Style="{StaticResource PlayerEntry}" PropertyChanged="PlayerEntry_PropertyChanged"/>
+                    <ListView Grid.Row="3" x:Name="FinishAllList" Style="{StaticResource AllList}" ItemSelected="AllList_ItemSelected"/>
+                    <ListView Grid.Row="4" x:Name="FinishTopList" Style="{StaticResource TopListView}"/>
                 </Grid>
                 <!--合計タイム上位10名-->
 
+                <!--計算対象選手選択-->
+                <Grid Grid.Row="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" Text="5. ポイントを計算する選手（任意）" Style="{StaticResource Heading}"/>
+                    <Entry Grid.Row="1" x:Name="PlayerEntry" Style="{StaticResource PlayerEntry}" PropertyChanged="PlayerEntry_PropertyChanged"/>
+                    <ListView Grid.Row="2" x:Name="AllList" Style="{StaticResource AllList}" ItemSelected="AllList_ItemSelected"/>
+                    <ListView Grid.Row="3" x:Name="TopList" Style="{StaticResource TopListView}"/>
+                </Grid>
+                <!--計算対象選手選択-->
             </Grid>
             <!--選手選択-->
 
             <!--共有選択エリア-->
             <Grid Grid.Row="4">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
@@ -179,63 +193,23 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0" Margin="0, 5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Text="メールアドレス" WidthRequest="150" VerticalOptions="Center"/>
-                        <Entry Grid.Column="1" x:Name="Entry_Mail" MaxLength="16" WidthRequest="100"/>
+                        <Label Grid.Column="0" Text="大会名" WidthRequest="150" VerticalOptions="Center"/>
+                        <Entry Grid.Column="1" x:Name="Entry_TournamentName" WidthRequest="100"/>
                     </Grid>
-                    <Grid Grid.Row="2" Margin="0,5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Text="パスワード" WidthRequest="150" VerticalOptions="Center"/>
-                        <Entry Grid.Column="1" x:Name="Entry_Pwd" MaxLength="16" WidthRequest="100" IsPassword="True"/>
-                    </Grid>
-                    <Label Grid.Row="3" Text="※パスワードは英数字16字以内で入力してください。" TextColor="{StaticResource Alert}"/>
-                    <Label Grid.Row="4" Text="※未登録の方は計算と同時に会員登録されます。" TextColor="{StaticResource Alert}"/>
                 </Grid>
             </Grid>
             <!--共有選択エリア-->
             
             <!--計算ボタン-->
             <Button Grid.Row="6" x:Name="Btn_Calc" Margin="0,30" VerticalOptions="Center" Text="計算する" 
-                    BackgroundColor="{StaticResource Primary}" TextColor="White" FontSize="Medium" FontAttributes="Bold" Clicked="Btn_Calc_Clicked"/>
+                    BackgroundColor="{StaticResource Primary}" TextColor="White" FontSize="Medium" Clicked="Btn_Calc_Clicked"/>
             <!--計算ボタン-->
-
-            <!--結果表示エリア-->
-            <Grid Grid.Row="8" x:Name="PopupLayout" IsVisible="false">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Label Grid.Row="0" Text="ペナルティポイント"/>
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Text="FISポイント"/>
-                    <Label Grid.Column="1" x:Name="FisResult_Label" Text="fispoint"/>
-                </Grid>
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Text="SAJポイント"/>
-                    <Label Grid.Column="1" x:Name="SajResult_Label" Text="sajpoint"/>
-                </Grid>
-            </Grid>
-            <!--結果表示エリア-->
         </Grid>
     </ScrollView>
 
