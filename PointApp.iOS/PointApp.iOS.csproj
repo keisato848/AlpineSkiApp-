@@ -154,6 +154,9 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Mono.Security">
+      <Version>5.4.0.201</Version>
+    </PackageReference>
     <PackageReference Include="Npgsql">
       <Version>5.0.2</Version>
     </PackageReference>

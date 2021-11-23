@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using Npgsql;
@@ -11,67 +13,54 @@ namespace PointApp.Views
 {
     public static class DatabaseUtility
     {
-        /// <summary> 
-        /// 設定ファイルのパスを取得します 
-        /// </summary> 
-        /// <returns>設定ファイルのフルパス</returns> 
-        private static string GetDatabaseSettingPath()
+        private static string GetDatabaseSetting()
         {
-            string path = null;
+            string strJson = null;
             try
             {
-                var myAssembly = Assembly.GetEntryAssembly();
-                if (myAssembly != null)
+                var assembly = Assembly.GetExecutingAssembly();
+                var jsonResource = assembly.GetManifestResourceNames();
+                var file = assembly.GetManifestResourceStream(jsonResource.First(json => json.Equals("PointApp.Settings.json")));
+                if (file != null)
                 {
-                    path = Path.Combine(myAssembly.Location, "../Settings.json");
+                    using (var sr = new StreamReader(file))
+                    {
+                        strJson = sr.ReadToEnd();
+                    }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
-            return path;
+            return strJson;
         }
-        /// <summary> 
-        /// json ファイルからデータベースの接続先を取得 
-        /// </summary> 
-        /// <returns>接続先</returns> 
+
         public static string GetConnectInfo()
         {
             string connectInfo = null;
             try
             {
-                string filePath = GetDatabaseSettingPath();
-                if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+                string strJson = GetDatabaseSetting();
+                if (!string.IsNullOrEmpty(strJson))
                 {
-                }
-                using (FileStream stream = new FileStream(filePath, FileMode.Open))
-                {
-                    using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+                    var listJson = JsonSerializer.Deserialize<List<JsonElement>>(strJson);
+                    foreach (var json in listJson)
                     {
-                        string strJson = reader.ReadToEnd();
-                        var listJson = JsonSerializer.Deserialize<List<JsonElement>>(strJson);
-                        foreach (var json in listJson)
+                        if (!string.IsNullOrEmpty(json.DatabaseInfo))
                         {
-                            if (!string.IsNullOrEmpty(json.DatabaseInfo))
-                            {
-                                connectInfo = json.DatabaseInfo;
-                            }
+                            connectInfo = json.DatabaseInfo;
                         }
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
             return connectInfo;
         }
-        /// <summary> 
-        /// データベースに接続します 
-        /// </summary> 
-        /// <param name="connectInfo">接続先データベースの情報</param> 
-        /// <returns></returns> 
+
         public static NpgsqlConnection ConnectDataBase()
         {
             NpgsqlConnection connection = null;
@@ -83,18 +72,13 @@ namespace PointApp.Views
                     connection = new NpgsqlConnection(connectInfo);
                 }
             }
-            catch (Exception)
+            catch (NpgsqlException ex)
             {
-                throw;
+                Console.WriteLine(ex);
             }
             return connection;
         }
-        /// <summary> 
-        /// データベースを参照します。 
-        /// </summary> 
-        /// <param name="sql">実行するSQL文</param> 
-        /// <param name="connection">NpgsqlConnectionのインスタンス</param> 
-        /// <returns>NpgsqlDataReader のインスタンス</returns> 
+
         public static NpgsqlDataReader ExecuteSql(string sql, NpgsqlConnection connection)
         {
             NpgsqlDataReader reader = null;
@@ -119,17 +103,71 @@ namespace PointApp.Views
             }
             return reader;
         }
-        /// <summary> 
-        /// json 設定ファイルのデシリアライズ用クラス 
-        /// </summary> 
+
+        public static void ExecuteSqlNonquery(string sql, NpgsqlConnection connection)
+        {
+            NpgsqlDataReader reader = null;
+            try
+            {
+                using (NpgsqlCommand command = new NpgsqlCommand(sql, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                if (connection != null)
+                {
+                    connection.Close();
+                }
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+                throw ex;
+            }
+        }
+        public static string GetSalt()
+        {
+            string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            StringBuilder result = new StringBuilder();
+            int length = 8;
+            using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
+            {
+                byte[] uintBuffer = new byte[sizeof(uint)];
+                for (int ii = 0; ii < length; ++ii)
+                {
+                    rng.GetBytes(uintBuffer);
+                    uint num = BitConverter.ToUInt32(uintBuffer, 0);
+                    result.Append(valid[(int)(num % (uint)valid.Length)]);
+                }
+            }
+            return result.ToString();
+        }
+
+        public static string GetSHA256HashString(string password, string salt)
+        {
+            // 平文のパスワードの末尾にサルトを結合 
+            string passwordAndSalt = password + salt;
+            // 文字列をバイト型配列に変換 
+            byte[] data = Encoding.UTF8.GetBytes(passwordAndSalt);
+            // SHA512ハッシュアルゴリズム生成 
+            var algorithm = new SHA256CryptoServiceProvider();
+            // ハッシュ値を計算 
+            byte[] bs = algorithm.ComputeHash(data);
+            // リソースを解放 
+            algorithm.Clear();
+            // バイト型配列を16進数文字列に変換 
+            var result = new StringBuilder();
+            foreach (byte b in bs)
+            {
+                result.Append(b.ToString("X2"));
+            }
+            return result.ToString();
+        }
+
         public class JsonElement
         {
-            /// <summary> 
-            /// 接続先データベースの情報 
-            /// </summary> 
-            /// <example> 
-            /// Server=サーバー名; Port=ポート番号; User Id=ユーザーID; Password=パスワード; Database=データベース名; 
-            /// </example> 
             public string DatabaseInfo { get; set; } = string.Empty;
         }
     }

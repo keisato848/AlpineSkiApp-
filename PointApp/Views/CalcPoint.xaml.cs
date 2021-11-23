@@ -85,14 +85,15 @@ namespace PointApp.Views
                     return;
                 }
                 selectedPlayer = StartAllList.SelectedItem as Player;
-                if (selectedPlayer != null && m_startDefPlayers.Contains(selectedPlayer))
+                if (selectedPlayer != null && m_startDefPlayers.Count(player => player.JapaneseName.Equals(selectedPlayer.JapaneseName)) > 0)
                 {
                     DisplayErrorMessage(ErrorCode.UserDuplicated);
                     return;
                 }
-                m_startDefPlayers.Add(selectedPlayer);
+                var copyPlayer = selectedPlayer.DeepCopy();
+                m_startDefPlayers.Add(copyPlayer);
                 SetTopListViewLayout(m_startDefPlayers, StartTopList, StartPlayerEntry);
-                StartTopList.ScrollTo(selectedPlayer, ScrollToPosition.Center, true);
+                StartTopList.ScrollTo(copyPlayer, ScrollToPosition.Center, true);
             }
             else if (FinishAllList.SelectedItem != null)
             {
@@ -101,14 +102,15 @@ namespace PointApp.Views
                     DisplayErrorMessage(ErrorCode.OverUserCount);
                 }
                 selectedPlayer = FinishAllList.SelectedItem as Player;
-                if (selectedPlayer != null && m_finishDefPlayers.Contains(selectedPlayer))
+                if (selectedPlayer != null && m_finishDefPlayers.Count(player => player.JapaneseName.Equals(selectedPlayer.JapaneseName)) > 0)
                 {
                     DisplayErrorMessage(ErrorCode.UserDuplicated);
                     return;
                 }
-                m_finishDefPlayers.Add(selectedPlayer);
+                var copyPlayer = selectedPlayer.DeepCopy();
+                m_finishDefPlayers.Add(copyPlayer);
                 SetTopListViewLayout(m_finishDefPlayers, FinishTopList, FinishPlayerEntry);
-                FinishTopList.ScrollTo(selectedPlayer, ScrollToPosition.End, true);
+                FinishTopList.ScrollTo(copyPlayer, ScrollToPosition.Center, true);
             }
         }
 
@@ -142,20 +144,26 @@ namespace PointApp.Views
         {
             try
             {
-                if (IsValidId(Entry_Id.Text))
+                if (Switch_Share.IsToggled)
                 {
-
-                }
-
-                if (m_startDefPlayers.Count() < 5)
-                {
-                    DisplayErrorMessage(ErrorCode.LackStartUser);
-                    return;
-                }
-                if (m_finishDefPlayers.Count() < 5)
-                {
-                    DisplayErrorMessage(ErrorCode.LackFinishUser);
-                    return;
+                    if (string.IsNullOrEmpty(Entry_Mail.Text))
+                    {
+                        DisplayErrorMessage(ErrorCode.IdEmpty);
+                    }
+                    if (string.IsNullOrEmpty(Entry_Pwd.Text))
+                    {
+                        DisplayErrorMessage(ErrorCode.PwdEmpty);
+                    }
+                    if (m_startDefPlayers.Count() < 5)
+                    {
+                        DisplayErrorMessage(ErrorCode.LackStartUser);
+                        return;
+                    }
+                    if (m_finishDefPlayers.Count() < 5)
+                    {
+                        DisplayErrorMessage(ErrorCode.LackFinishUser);
+                        return;
+                    }
                 }
 
                 double[] penaltyPoints = GetPenaltyPoints();
@@ -391,16 +399,6 @@ namespace PointApp.Views
             return fValue * targetPlayer.Time / winner.Time - fValue;
         }
 
-        // FIXME 用途を要検討
-        private bool hasKanji(string str)
-        {
-            return Regex.IsMatch(str,
-                    @"[\p{IsCJKUnifiedIdeographs}" +
-                    @"\p{IsCJKCompatibilityIdeographs}" +
-                    @"\p{IsCJKUnifiedIdeographsExtensionA}]|" +
-                    @"[\uD840-\uD869][\uDC00-\uDFFF]|\uD869[\uDC00-\uDEDF]");
-        }
-
         private bool IsHiragana(string str)
         {
             return Regex.IsMatch(str, @"^\p{IsHiragana}*$");
@@ -487,26 +485,30 @@ namespace PointApp.Views
                     m_tournament.Types = Tournament.EventTypes.SL;
                     break;
             }
-            SetStartDefPlayers();
         }
 
         private string ReadPointList()
         {
-            // リソースを一覧取得
-            var assembly = Assembly.GetExecutingAssembly();
-            var jsonResource = from res in assembly.GetManifestResourceNames()
-                               where res.EndsWith("json")
-                               select res;
-            if (jsonResource is null)
+            string strJson = null;
+            try
             {
-                return string.Empty;
+                var assembly = Assembly.GetExecutingAssembly();
+                var jsonResource = assembly.GetManifestResourceNames();
+                if (jsonResource != null)
+                {
+                    var file = assembly.GetManifestResourceStream(jsonResource.First(json => json.Equals("PointApp.PointList.json")));
+                    if (file != null)
+                    {
+                        using (var sr = new StreamReader(file))
+                        {
+                            strJson = sr.ReadToEnd();
+                        }
+                    }
+                }
             }
-
-            var file = assembly.GetManifestResourceStream(jsonResource.First());
-            string strJson;
-            using (var sr = new StreamReader(file))
+            catch (Exception ex)
             {
-                strJson = sr.ReadToEnd();
+                throw ex;
             }
             return strJson;
         }
@@ -525,46 +527,20 @@ namespace PointApp.Views
             }
         }
 
-        private void SetDisplayPoint(Tournament.EventTypes eventType, ObservableCollection<Player> players)
-        {
-            if (players.Count <= 0) { return; }
-            foreach (var player in players)
-            {
-                switch (m_tournament.Types)
-                {
-                    case Tournament.EventTypes.NONE:
-                        player.DisplayPoint = player.JapaneseName;
-                        break;
-                    case Tournament.EventTypes.DH:
-                        player.DisplayPoint = $"{player.JapaneseName} FIS:{player.FisDh}  SAJ:{player.SajDh}";
-                        break;
-
-                    case Tournament.EventTypes.SG:
-                        player.DisplayPoint = $"{player.JapaneseName} FIS:{player.FisSg}  SAJ:{player.SajSg}";
-                        break;
-
-                    case Tournament.EventTypes.GS:
-                        player.DisplayPoint = $"{player.JapaneseName} FIS:{player.FisGs}  SAJ:{player.SajGs}";
-                        break;
-
-                    case Tournament.EventTypes.SL:
-                        player.DisplayPoint = $"{player.JapaneseName} FIS:{player.FisSl}  SAJ:{player.SajSl}";
-                        break;
-                }
-            }
-        }
-
         private void Button_Clicked(object sender, EventArgs e)
         {
             var button = sender as Button;
-            if (button.Parent == StartTopList)
-            {
-            }
-
             var player = button.BindingContext as Player;
-            var startDefPlayersTemp = new ObservableCollection<Player>(m_startDefPlayers);
-            startDefPlayersTemp.Remove(player);
-            SetTopListViewLayout(startDefPlayersTemp, StartTopList, StartPlayerEntry);
+            if (m_startDefPlayers.Contains(player))
+            {
+                m_startDefPlayers.Remove(player);
+                SetTopListViewLayout(m_startDefPlayers, StartTopList, StartPlayerEntry);
+            }
+            else
+            {
+                m_finishDefPlayers.Remove(player);
+                SetTopListViewLayout(m_finishDefPlayers, FinishTopList, FinishPlayerEntry);
+            }
         }
 
         private void SetTopListViewLayout(ObservableCollection<Player> players, ListView listView, Entry entry)
@@ -574,26 +550,6 @@ namespace PointApp.Views
             listView.HeightRequest = players.Count * (int)ViewCellRowStyle.Height;
             listView.SelectedItem = null;
             entry.Text = string.Empty;
-        }
-
-        private void SetFinishDefPlayers()
-        {
-            //SetDisplayPoint(m_tournament.Types, m_finishDefPlayers);
-            FinishTopList.IsVisible = m_finishDefPlayers.Count > 0 ? true : false;
-            FinishTopList.ItemsSource = m_finishDefPlayers;
-            FinishTopList.HeightRequest = m_finishDefPlayers.Count * (int)ViewCellRowStyle.Height;
-            FinishPlayerEntry.Text = string.Empty;
-            StartAllList.SelectedItem = null;
-        }
-
-        private void SetStartDefPlayers()
-        {
-            //SetDisplayPoint(m_tournament.Types, m_startDefPlayers);
-            StartTopList.IsVisible = m_startDefPlayers.Count > 0;
-            StartTopList.ItemsSource = m_startDefPlayers;
-            StartTopList.HeightRequest = m_startDefPlayers.Count * (int)ViewCellRowStyle.Height;
-            StartPlayerEntry.Text = string.Empty;
-            StartAllList.SelectedItem = null;
         }
 
         private void SetUp()
@@ -722,7 +678,7 @@ namespace PointApp.Views
                    EqualityComparer<ListView>.Default.Equals(FinishAllList, point.FinishAllList) &&
                    EqualityComparer<ListView>.Default.Equals(FinishTopList, point.FinishTopList) &&
                    EqualityComparer<Switch>.Default.Equals(Switch_Share, point.Switch_Share) &&
-                   EqualityComparer<Entry>.Default.Equals(Entry_Id, point.Entry_Id) &&
+                   EqualityComparer<Entry>.Default.Equals(Entry_Mail, point.Entry_Mail) &&
                    EqualityComparer<Entry>.Default.Equals(Entry_Pwd, point.Entry_Pwd) &&
                    EqualityComparer<Button>.Default.Equals(Btn_Calc, point.Btn_Calc) &&
                    EqualityComparer<Grid>.Default.Equals(PopupLayout, point.PopupLayout) &&
@@ -815,7 +771,7 @@ namespace PointApp.Views
             hashCode = hashCode * -1521134295 + EqualityComparer<ListView>.Default.GetHashCode(FinishAllList);
             hashCode = hashCode * -1521134295 + EqualityComparer<ListView>.Default.GetHashCode(FinishTopList);
             hashCode = hashCode * -1521134295 + EqualityComparer<Switch>.Default.GetHashCode(Switch_Share);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Entry>.Default.GetHashCode(Entry_Id);
+            hashCode = hashCode * -1521134295 + EqualityComparer<Entry>.Default.GetHashCode(Entry_Mail);
             hashCode = hashCode * -1521134295 + EqualityComparer<Entry>.Default.GetHashCode(Entry_Pwd);
             hashCode = hashCode * -1521134295 + EqualityComparer<Button>.Default.GetHashCode(Btn_Calc);
             hashCode = hashCode * -1521134295 + EqualityComparer<Grid>.Default.GetHashCode(PopupLayout);
@@ -831,16 +787,6 @@ namespace PointApp.Views
             public string BirthOfDate { get; set; } = string.Empty;
 
             public string Country { get; set; } = string.Empty;
-
-            public string DisplayPoint
-            {
-                get => _DisplayPoint;
-                set
-                {
-                    _DisplayPoint = value;
-                    NotifyPropertyChanged(nameof(DisplayPoint));
-                }
-            }
 
             public string EnglishName { get; set; } = string.Empty;
 
@@ -1018,11 +964,10 @@ namespace PointApp.Views
 
             public double Time { get; set; } = 120.00;
 
-            private string _DisplayPoint { get; set; }
-
-            private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+            public Player DeepCopy()
             {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                var player = MemberwiseClone() as Player;
+                return player;
             }
         }
 
