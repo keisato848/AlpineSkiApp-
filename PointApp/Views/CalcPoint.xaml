@@ -213,7 +213,7 @@
             <!--共有選択エリア-->
             
             <!--計算ボタン-->
-            <Button Grid.Row="6" x:Name="Btn_Calc" Margin="0,30" VerticalOptions="Center" Text="計算する" 
+            <Button Grid.Row="6" x:Name="Btn_Calc" Margin="0,30" VerticalOptions="Center" Text="計算する" FontAttributes="Bold"
                     BackgroundColor="#FFFFFF" TextColor="{StaticResource Primary}" FontSize="Medium" Clicked="Btn_Calc_Clicked"/>
             <!--計算ボタン-->
 

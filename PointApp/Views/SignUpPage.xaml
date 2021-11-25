@@ -31,7 +31,7 @@
                 <Label Grid.Row="5" Text="パスワード" Style="{StaticResource Heading}"/>
                 <Entry Grid.Row="6" x:Name="Entry_Pwd" MaxLength="16" WidthRequest="100" IsPassword="True"/>
                 <Label Grid.Row="7" Text="※パスワードは英数字16字以内で入力してください。" TextColor="{StaticResource Alert}"/>
-                <Button Grid.Row="8" Margin="0,40" VerticalOptions="Center" Text="登録する" Clicked="Button_Clicked"/>
+                <Button Grid.Row="8" Margin="0,40" VerticalOptions="Center" BackgroundColor="#FFFFFF" TextColor="{StaticResource Primary}" FontAttributes="Bold" Text="登録する" Clicked="Button_Clicked"/>
             </Grid>
         </ScrollView>
     </ContentPage.Content>
