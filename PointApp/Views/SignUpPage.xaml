@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PointApp.Views.SignUpPage"
              Title="新規登録"
-             BackgroundColor="#005080">
+             BackgroundColor="{StaticResource Primary}">
     <ContentPage.Content>
         <ScrollView Margin="40">
             <Grid Grid.Row="1">

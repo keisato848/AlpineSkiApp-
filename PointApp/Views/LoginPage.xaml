@@ -6,7 +6,7 @@
              mc:Ignorable="d"
              Title="ログイン"
              x:Class="PointApp.Views.LoginPage"
-             BackgroundColor="#005080"
+             BackgroundColor="{StaticResource Primary}"
              >
     <ContentPage.Content>
         <ScrollView Margin="40">

@@ -3,7 +3,8 @@
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:local="clr-namespace:PointApp.Views"
        Title="PointApp"
-       x:Class="PointApp.AppShell">
+       x:Class="PointApp.AppShell"
+       BackgroundColor="{StaticResource Primary}">
 
     <!--
         The overall app visual hierarchy is defined here, along with navigation.
