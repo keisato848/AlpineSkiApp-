@@ -57,6 +57,7 @@
                 <Setter Property="Placeholder" Value="選手名を入力"/>
                 <Setter Property="MaxLength" Value="30"/>
                 <Setter Property="BackgroundColor" Value="Transparent"/>
+                <Setter Property="TextColor" Value="#FFFFFF"/>
             </Style>
             <Style x:Key="RadioBtn" TargetType="RadioButton">
                 <Setter Property="BackgroundColor" Value="Transparent"/>
