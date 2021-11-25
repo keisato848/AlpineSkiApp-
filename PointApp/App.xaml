@@ -11,6 +11,7 @@
             <Color x:Key="Accent">#96d1ff</Color>
             <Color x:Key="Alert">tomato</Color>
             <Style x:Key="Heading" TargetType="Label">
+                <Setter Property="BackgroundColor" Value="#005080"/>
                 <Setter Property="Margin" Value="0,10"/>
                 <Setter Property="FontSize" Value="Large"/>
                 <Setter Property="TextColor" Value="WhiteSmoke"/>
