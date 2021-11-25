@@ -56,6 +56,10 @@
                 <Setter Property="WidthRequest" Value="250"/>
                 <Setter Property="Placeholder" Value="選手名を入力"/>
                 <Setter Property="MaxLength" Value="30"/>
+                <Setter Property="BackgroundColor" Value="Transparent"/>
+            </Style>
+            <Style x:Key="RadioBtn" TargetType="RadioButton">
+                <Setter Property="BackgroundColor" Value="Transparent"/>
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -94,8 +98,8 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <RadioButton Grid.Column="0" ClassId="0" Content="男子" IsChecked="True" CheckedChanged="EventSex_RadioButton_CheckedChanged"/>
-                        <RadioButton Grid.Column="1" ClassId="1" Content="女子" CheckedChanged="EventSex_RadioButton_CheckedChanged"/>
+                        <RadioButton Grid.Column="0" ClassId="0" Content="男子" Style="{StaticResource RadioBtn}" IsChecked="True" CheckedChanged="EventSex_RadioButton_CheckedChanged"/>
+                        <RadioButton Grid.Column="1" ClassId="1" Content="女子" Style="{StaticResource RadioBtn}" CheckedChanged="EventSex_RadioButton_CheckedChanged"/>
                     </Grid>
                 </Grid>
                 <!--性別選択-->
@@ -113,9 +117,9 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <RadioButton Grid.Column="0" Content="ＳＧ" IsChecked="True" CheckedChanged="RadioButton_CheckedChanged"/>
-                        <RadioButton Grid.Column="1" Content="ＧＳ" CheckedChanged="RadioButton_CheckedChanged"/>
-                        <RadioButton Grid.Column="2" Content="ＳＬ" CheckedChanged="RadioButton_CheckedChanged"/>
+                        <RadioButton Grid.Column="0" Content="ＳＧ" Style="{StaticResource RadioBtn}" IsChecked="True" CheckedChanged="RadioButton_CheckedChanged"/>
+                        <RadioButton Grid.Column="1" Content="ＧＳ" Style="{StaticResource RadioBtn}" CheckedChanged="RadioButton_CheckedChanged"/>
+                        <RadioButton Grid.Column="2" Content="ＳＬ" Style="{StaticResource RadioBtn}" CheckedChanged="RadioButton_CheckedChanged"/>
                     </Grid>
                 </Grid>
                 <!--種目選択-->
@@ -188,9 +192,9 @@
                 </Grid.RowDefinitions>
                 <StackLayout Grid.Row="0" Orientation="Horizontal">
                     <Switch x:Name="Switch_Share" IsToggled="False" Toggled="Switch_Share_Toggled"/>
-                    <Label Text="結果を共有する" VerticalOptions="Center" FontSize="Subtitle"/>
+                    <Label Text="結果を共有する" VerticalOptions="Center" FontSize="Medium"/>
                 </StackLayout>
-                <Grid Grid.Row="1" x:Name="PopupLayout_Share" Margin="10,0" IsVisible="False">
+                <Grid Grid.Row="1" x:Name="PopupLayout_Share" Margin="5,0" IsVisible="False">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
