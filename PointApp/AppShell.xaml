@@ -33,21 +33,16 @@
             https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/shell/flyout#flyoutitem-and-menuitem-style-classes
             -->
             <Style Class="FlyoutItemLabelStyle" TargetType="Label">
-                <Setter Property="TextColor" Value="White"></Setter>
+                <Setter Property="TextColor" Value="{StaticResource Primary}"></Setter>
             </Style>
-            <Style Class="FlyoutItemLayoutStyle" TargetType="Layout" ApplyToDerivedTypes="True">
+            
+            <Style Class="FlyoutItemLayoutStyle" TargetType="Layout">
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
                         <VisualStateGroup x:Name="CommonStates">
                             <VisualState x:Name="Normal">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{x:OnPlatform UWP={StaticResource Primary}, iOS={StaticResource Primary}}" />
                                     <Setter TargetName="FlyoutItemLabel" Property="Label.TextColor" Value="{StaticResource Primary}" />
-                                </VisualState.Setters>
-                            </VisualState>
-                            <VisualState x:Name="Selected">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
                                 </VisualState.Setters>
                             </VisualState>
                         </VisualStateGroup>
@@ -93,7 +88,7 @@
     <FlyoutItem Title="新規登録">
         <ShellContent Route="SignUpPage" ContentTemplate="{DataTemplate local:SignUpPage}" />
     </FlyoutItem>
-    <FlyoutItem Title="問い合わせ" Icon="icon_about.png">
+    <FlyoutItem Title="問い合わせ">
         <ShellContent Route="ContactPage" ContentTemplate="{DataTemplate local:ContactPage}" />
     </FlyoutItem>
 

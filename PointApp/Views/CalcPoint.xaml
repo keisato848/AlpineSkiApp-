@@ -221,5 +221,4 @@
             <Label Grid.Row="8" Text="© Kei Sato" FontSize="Micro" TextColor="WhiteSmoke" HorizontalOptions="Center" BackgroundColor="Transparent"/>
         </Grid>
     </ScrollView>
-
 </ContentPage>

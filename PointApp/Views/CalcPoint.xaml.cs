@@ -135,8 +135,7 @@ namespace PointApp.Views
 
         private async void Switch_Share_Toggled(object sender, ToggledEventArgs e)
         {
-            var switchToggle = sender as Switch;
-            if (switchToggle != null)
+            if (sender is Switch switchToggle)
             {
                 Application.Current.Resources.TryGetValue("LoginUserId", out object loginUserId);
                 if (loginUserId != null)
@@ -462,9 +461,8 @@ namespace PointApp.Views
         {
             var matchedPlayers = new ObservableCollection<Player>();
             ListView allList = null;
-            var textCell = sender as Entry;
 
-            if (textCell != null && !string.IsNullOrEmpty(textCell.Text))
+            if (sender is TextCell textCell && !string.IsNullOrEmpty(textCell.Text))
             {
                 string str = textCell.Text;
 
@@ -509,19 +507,11 @@ namespace PointApp.Views
                 return;
             }
 
-            var checkedButton = sender as RadioButton;
-            if (checkedButton is null)
+            if (sender is RadioButton checkedButton)
             {
-                return;
-            }
-
-            var checkedValue = checkedButton.Content as string;
-            if (checkedValue is null)
-            {
-                return;
-            }
-
-            switch (checkedValue)
+                if (checkedButton.Content is string checkedValue)
+                {
+                    switch (checkedValue)
             {
                 case "DH":
                     m_tournament.Types = Tournament.EventTypes.DH;
@@ -538,6 +528,8 @@ namespace PointApp.Views
                 case "SL":
                     m_tournament.Types = Tournament.EventTypes.SL;
                     break;
+            }
+                }
             }
         }
 
