@@ -79,6 +79,8 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <!--性別・種目選択-->
@@ -161,32 +163,28 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" Text="4. 合計タイム上位10名" Style="{StaticResource Heading}"/>
-                    <Label Grid.Row="1" Text="※10名の内、ポイント上位5名の選択でも可。"/>
+                    <Label Grid.Row="1" Text="※10名の内、ポイント上位5名の選択でも可。" TextColor="#FFFFFF"/>
                     <Entry Grid.Row="2" x:Name="FinishPlayerEntry" Style="{StaticResource PlayerEntry}" PropertyChanged="PlayerEntry_PropertyChanged"/>
                     <ListView Grid.Row="3" x:Name="FinishAllList" Style="{StaticResource AllList}" ItemSelected="AllList_ItemSelected"/>
                     <ListView Grid.Row="4" x:Name="FinishTopList" Style="{StaticResource TopListView}"/>
                 </Grid>
                 <!--合計タイム上位10名-->
-
-                <!--計算対象選手選択-->
-                <Grid Grid.Row="3">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Text="5. ポイントを計算する選手（任意）" Style="{StaticResource Heading}"/>
-                    <Entry Grid.Row="1" x:Name="PlayerEntry" Style="{StaticResource PlayerEntry}" PropertyChanged="PlayerEntry_PropertyChanged"/>
-                    <ListView Grid.Row="2" x:Name="AllList" Style="{StaticResource AllList}" ItemSelected="AllList_ItemSelected"/>
-                    <ListView Grid.Row="3" x:Name="TopList" Style="{StaticResource TopListView}"/>
-                </Grid>
-                <!--計算対象選手選択-->
             </Grid>
             <!--選手選択-->
 
-            <!--共有選択エリア-->
             <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Text="5.あなたのタイム(任意)" Style="{StaticResource Heading}" VerticalOptions="Center" Margin="0,0,10,0"/>
+                <Entry Grid.Column="1" WidthRequest="100" VerticalOptions="Center" x:Name="Entry_TargetTime"/>
+                <Label Grid.Column="2" Text="秒" VerticalOptions="Center"/>
+            </Grid>
+            
+            <!--共有選択エリア-->
+            <Grid Grid.Row="6">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -214,11 +212,11 @@
             <!--共有選択エリア-->
             
             <!--計算ボタン-->
-            <Button Grid.Row="6" x:Name="Btn_Calc" Margin="0,30" VerticalOptions="Center" Text="計算する" FontAttributes="Bold"
+            <Button Grid.Row="8" x:Name="Btn_Calc" Margin="0,30" VerticalOptions="Center" Text="計算する" FontAttributes="Bold"
                     BackgroundColor="#FFFFFF" TextColor="{StaticResource Primary}" FontSize="Medium" Clicked="Btn_Calc_Clicked"/>
             <!--計算ボタン-->
 
-            <Label Grid.Row="8" Text="© Kei Sato" FontSize="Micro" TextColor="WhiteSmoke" HorizontalOptions="Center" BackgroundColor="Transparent"/>
+            <Label Grid.Row="10" Text="© Kei Sato" FontSize="Micro" TextColor="WhiteSmoke" HorizontalOptions="Center" BackgroundColor="Transparent"/>
         </Grid>
     </ScrollView>
 </ContentPage>

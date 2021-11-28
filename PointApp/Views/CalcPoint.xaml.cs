@@ -115,22 +115,6 @@ namespace PointApp.Views
                 SetTopListViewLayout(m_finishDefPlayers, FinishTopList, FinishPlayerEntry);
                 FinishTopList.ScrollTo(copyPlayer, ScrollToPosition.Center, true);
             }
-            else if (AllList.SelectedItem != null)
-            {
-                selectedPlayer = AllList.SelectedItem as Player;
-                if (selectedPlayer != null && TopList.ItemsSource != null)
-                {
-                    DisplayErrorMessage(ErrorCode.OverUserCount);
-                    return;
-                }
-                var copyPlayer = selectedPlayer.DeepCopy();
-                var searchedPlayer = new ObservableCollection<Player>
-                {
-                    copyPlayer
-                };
-                SetTopListViewLayout(searchedPlayer, TopList, PlayerEntry);
-                TopList.ScrollTo(copyPlayer, ScrollToPosition.Center, true);
-            }
         }
 
         private async void Switch_Share_Toggled(object sender, ToggledEventArgs e)
@@ -150,7 +134,7 @@ namespace PointApp.Views
                 }
             }
         }
-
+        
         private async void Btn_Calc_Clicked(object sender, EventArgs e)
         {
             try
@@ -181,13 +165,14 @@ namespace PointApp.Views
                     {
                         RegisterTournament(tournamentName, fisPoint, sajPoint);
                     }
-                    if (TopList.SelectedItem != null)
+                    if (!string.IsNullOrWhiteSpace(Entry_TargetTime.Text))
                     {
-                        var racePoint = GetRacePoint(TopList.SelectedItem as Player, m_finishDefPlayers.OrderBy(player => player.Time).First());
+                        var racePoint = GetRacePoint(new Player {Time = double.Parse(Entry_TargetTime.Text) }, m_finishDefPlayers.OrderBy(player => player.Time).First());
                         if (!double.IsNaN(racePoint))
                         {
-                            userFisPoint = (Convert.ToString(fisPoint) + racePoint).ToString();
-                            userSajPoint = (Convert.ToString(sajPoint) + racePoint).ToString();
+                            racePoint = Math.Truncate(racePoint * 1000) * 0.001;
+                            userFisPoint = (double.Parse(fisPoint) + racePoint).ToString();
+                            userSajPoint = (double.Parse(sajPoint) + racePoint).ToString();
                         }
                     }
                     var resultPage = new ResultPage(fisPoint, sajPoint, userFisPoint, userSajPoint);
@@ -462,13 +447,13 @@ namespace PointApp.Views
             var matchedPlayers = new ObservableCollection<Player>();
             ListView allList = null;
 
-            if (sender is TextCell textCell && !string.IsNullOrEmpty(textCell.Text))
+            if (sender is Entry entry && !string.IsNullOrEmpty(entry.Text))
             {
-                string str = textCell.Text;
+                string str = entry.Text;
 
                 if (IsHiragana(str))
                 {
-                    var kana = ConvKanaFromHiragana(textCell.Text);
+                    var kana = ConvKanaFromHiragana(entry.Text);
                     if (kana != null)
                     {
                         matchedPlayers = GetPlayersFromKana(kana);
@@ -486,7 +471,6 @@ namespace PointApp.Views
 
             if (sender == StartPlayerEntry) allList = StartAllList;
             if (sender == FinishPlayerEntry) allList = FinishAllList;
-            if (sender == PlayerEntry) allList = AllList;
             if (matchedPlayers.Count > 0)
             {
                 allList.ItemsSource = matchedPlayers;
@@ -502,33 +486,28 @@ namespace PointApp.Views
 
         private void RadioButton_CheckedChanged(object sender, CheckedChangedEventArgs e)
         {
-            if (!e.Value)
-            {
-                return;
-            }
-
             if (sender is RadioButton checkedButton)
             {
                 if (checkedButton.Content is string checkedValue)
                 {
                     switch (checkedValue)
-            {
-                case "DH":
-                    m_tournament.Types = Tournament.EventTypes.DH;
-                    break;
+                    {
+                        case "ＤＨ":
+                            m_tournament.Types = Tournament.EventTypes.DH;
+                            break;
 
-                case "SG":
-                    m_tournament.Types = Tournament.EventTypes.SG;
-                    break;
+                        case "ＳＧ":
+                            m_tournament.Types = Tournament.EventTypes.SG;
+                            break;
 
-                case "GS":
-                    m_tournament.Types = Tournament.EventTypes.GS;
-                    break;
+                        case "ＧＳ":
+                            m_tournament.Types = Tournament.EventTypes.GS;
+                            break;
 
-                case "SL":
-                    m_tournament.Types = Tournament.EventTypes.SL;
-                    break;
-            }
+                        case "ＳＬ":
+                            m_tournament.Types = Tournament.EventTypes.SL;
+                            break;
+                    }
                 }
             }
         }
@@ -829,7 +808,7 @@ namespace PointApp.Views
 
             public string Name { get; set; } = string.Empty;
             public int Sex { get; set; } = 0; // 男子 = 0, 女子 = 1
-            public EventTypes Types { get; set; } = EventTypes.NONE;
+            public EventTypes Types { get; set; } = EventTypes.SG;
         }
     }
 }

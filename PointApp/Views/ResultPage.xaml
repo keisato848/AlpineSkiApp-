@@ -48,7 +48,7 @@
             </StackLayout>
             <!--選手のポイント-->
             <Label Grid.Row="3" Text="※結果の正確性は保障しません。正式なポイントは公式リザルトを確認してください。"/>
-            <Button Grid.Row="4" x:Name="dismissButton" Margin="0,20,0,0" Text="閉じる" Clicked="dismissButton_Clicked" />
+            <Button Grid.Row="4" x:Name="dismissButton" Margin="0,20,0,0" Text="閉じる" Clicked="dismissButton_Clicked" FontAttributes="Bold" BackgroundColor="#FFFFFF" TextColor="{StaticResource Primary}"/>
         </Grid>
     </ContentPage.Content>
 </ContentPage>
