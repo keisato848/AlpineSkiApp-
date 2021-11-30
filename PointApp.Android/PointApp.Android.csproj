@@ -35,21 +35,22 @@
     <AndroidLinkMode>None</AndroidLinkMode>
     <AotAssemblies>false</AotAssemblies>
     <EnableLLVM>false</EnableLLVM>
-    <AndroidEnableProfiledAot>true</AndroidEnableProfiledAot>
+    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     <BundleAssemblies>false</BundleAssemblies>
     <MandroidI18n />
-    <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
-    <AndroidPackageFormat>apk</AndroidPackageFormat>
+    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+    <AndroidPackageFormat>aab</AndroidPackageFormat>
     <AndroidUseAapt2>true</AndroidUseAapt2>
-    <AndroidCreatePackagePerAbi>true</AndroidCreatePackagePerAbi>
+    <AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
     <DocumentationFile>
     </DocumentationFile>
-    <AndroidEnableMultiDex>true</AndroidEnableMultiDex>
+    <AndroidEnableMultiDex>false</AndroidEnableMultiDex>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <AndroidEnableSGenConcurrent>false</AndroidEnableSGenConcurrent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>false</DebugSymbols>
-　　<AndroidPackageFormat>aab</AndroidPackageFormat><DebugType>portable</DebugType><Optimize>true</Optimize><OutputPath>bin\Release</OutputPath><ErrorReport>prompt</ErrorReport><WarningLevel>4</WarningLevel><AndroidManagedSymbols>true</AndroidManagedSymbols><AndroidUseSharedRuntime>false</AndroidUseSharedRuntime><AotAssemblies>false</AotAssemblies><EnableLLVM>false</EnableLLVM><AndroidEnableProfiledAot>false</AndroidEnableProfiledAot><BundleAssemblies>false</BundleAssemblies><AndroidLinkMode>None</AndroidLinkMode><EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk><MandroidI18n /><PlatformTarget>AnyCPU</PlatformTarget><AndroidSupportedAbis /><AndroidLinkTool>proguard</AndroidLinkTool><AndroidEnableSGenConcurrent>false</AndroidEnableSGenConcurrent><Debugger>Xamarin</Debugger><DefineConstants></DefineConstants><AndroidEnableMultiDex>false</AndroidEnableMultiDex></PropertyGroup>
+　　<DebugType>portable</DebugType><Optimize>false</Optimize><OutputPath>bin\Release</OutputPath><ErrorReport>prompt</ErrorReport><WarningLevel>4</WarningLevel><AndroidManagedSymbols>true</AndroidManagedSymbols><AndroidUseSharedRuntime>false</AndroidUseSharedRuntime><AotAssemblies>false</AotAssemblies><EnableLLVM>false</EnableLLVM><AndroidEnableProfiledAot>false</AndroidEnableProfiledAot><BundleAssemblies>false</BundleAssemblies><AndroidLinkMode>Full</AndroidLinkMode><EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk><MandroidI18n /><PlatformTarget>AnyCPU</PlatformTarget><AndroidSupportedAbis /><AndroidEnableSGenConcurrent>false</AndroidEnableSGenConcurrent><Debugger>Xamarin</Debugger><DefineConstants></DefineConstants><AndroidEnableMultiDex>false</AndroidEnableMultiDex><AndroidPackageFormat>aab</AndroidPackageFormat><AndroidUseAapt2>true</AndroidUseAapt2><AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi><AndroidKeyStore>false</AndroidKeyStore><AndroidSigningKeyStore>C:\Users\habnk\AppData\Local\Xamarin\Mono for Android\Keystore\Appkey\Appkey.keystore</AndroidSigningKeyStore><AndroidSigningStorePass>Moka0420</AndroidSigningStorePass><AndroidSigningKeyAlias>AppKey</AndroidSigningKeyAlias><AndroidSigningKeyPass>Moka0420</AndroidSigningKeyPass><AndroidLinkTool>r8</AndroidLinkTool><AndroidDexTool>dx</AndroidDexTool></PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Mono.Android" />
@@ -109,7 +110,7 @@
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties XamarinHotReloadDebuggerTimeoutExceptionPointAppAndroidHideInfoBar="True" XamarinHotReloadWrongLinkerErrorInfoBarPointAppAndroidHideInfoBar="True" />
+      <UserProperties XamarinHotReloadWrongLinkerErrorInfoBarPointAppAndroidHideInfoBar="True" XamarinHotReloadDebuggerTimeoutExceptionPointAppAndroidHideInfoBar="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

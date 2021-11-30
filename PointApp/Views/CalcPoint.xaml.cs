@@ -5,14 +5,10 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using Npgsql;
 using Xamarin.Forms;
-using Xamarin.Forms.Internals;
-using Xamarin.Forms.Shapes;
 
 namespace PointApp.Views
 {
@@ -38,7 +34,8 @@ namespace PointApp.Views
             SetUp();
         }
 
-        private enum Association { FIS = 0, SAJ = 1 }
+        private enum Association
+        { FIS = 0, SAJ = 1 }
 
         private enum ErrorCode
         {
@@ -70,7 +67,8 @@ namespace PointApp.Views
             DH = 330
         }
 
-        private enum ViewCellRowStyle { Height = 46 }
+        private enum ViewCellRowStyle
+        { Height = 46 }
 
         public void UpdateControl()
         {
@@ -134,7 +132,7 @@ namespace PointApp.Views
                 }
             }
         }
-        
+
         private async void Btn_Calc_Clicked(object sender, EventArgs e)
         {
             try
@@ -161,13 +159,15 @@ namespace PointApp.Views
                     string sajPoint = penaltyPoints[(int)Association.SAJ].ToString();
                     string userFisPoint = null;
                     string userSajPoint = null;
+                    var winner = m_finishDefPlayers.OrderBy(player => player.Time).First();
                     if (Switch_Share.IsToggled)
                     {
-                        RegisterTournament(tournamentName, fisPoint, sajPoint);
+                        var perSecRacePoint = GetRacePoint(new Player { Time = winner.Time + 1.0}, winner);
+                        RegisterTournament(tournamentName, fisPoint, sajPoint, perSecRacePoint.ToString());
                     }
                     if (!string.IsNullOrWhiteSpace(Entry_TargetTime.Text))
                     {
-                        var racePoint = GetRacePoint(new Player {Time = double.Parse(Entry_TargetTime.Text) }, m_finishDefPlayers.OrderBy(player => player.Time).First());
+                        var racePoint = GetRacePoint(new Player { Time = double.Parse(Entry_TargetTime.Text) }, winner);
                         if (!double.IsNaN(racePoint))
                         {
                             racePoint = Math.Truncate(racePoint * 1000) * 0.001;
@@ -186,7 +186,7 @@ namespace PointApp.Views
             }
         }
 
-        private void RegisterTournament(string tournament_name, string fis_penalty, string saj_penalty)
+        private void RegisterTournament(string tournament_name, string fis_penalty, string saj_penalty, string per_sec_race_point)
         {
             try
             {
@@ -199,7 +199,7 @@ namespace PointApp.Views
                         var time = DateTime.Now.ToString().Replace('/', '-');
                         using (var transaction = connection.BeginTransaction())
                         {
-                            var sql = $"INSERT INTO tournaments_table (tournament_name, fis_penarty, saj_penarty, user_id, created_at, updated_at) VALUES('{tournament_name}', '{fis_penalty}', '{saj_penalty}', '{user_id}', '{time}', '{time}');";
+                            var sql = $"INSERT INTO tournaments_table (tournament_name, fis_penarty, saj_penarty, per_sec_race_point, user_id, created_at, updated_at) VALUES('{tournament_name}', '{fis_penalty}', '{saj_penalty}', '{per_sec_race_point}', '{user_id}', '{time}', '{time}');";
                             DatabaseUtility.ExecuteSqlNonquery(sql, connection);
                             transaction.Commit();
                         }
@@ -307,7 +307,6 @@ namespace PointApp.Views
             {
                 return null;
             }
-
 
             var penaltyPoints = new double[Enum.GetNames(typeof(Association)).Length];
             double fisA, sajA, fisB, sajB, fisC, sajC;
@@ -605,6 +604,7 @@ namespace PointApp.Views
                 }
             }
         }
+
         private double[] SumPoints(IEnumerable<Player> listPlayer)
         {
             double[] sumPoints = new double[Enum.GetNames(typeof(Association)).Length];
@@ -616,6 +616,7 @@ namespace PointApp.Views
             }
             return sumPoints;
         }
+
         private double SumRacePoint(IEnumerable<Player> listPlayer, Player winner)
         {
             double sumRacePoint = 0;
@@ -792,7 +793,6 @@ namespace PointApp.Views
 
             public string strSajSl { get; set; } = string.Empty;
 
-
             public double Time { get; set; } = 120.00;
 
             public Player DeepCopy()
@@ -804,7 +804,8 @@ namespace PointApp.Views
 
         public class Tournament
         {
-            public enum EventTypes { NONE, DH, SG, GS, SL }
+            public enum EventTypes
+            { NONE, DH, SG, GS, SL }
 
             public string Name { get; set; } = string.Empty;
             public int Sex { get; set; } = 0; // 男子 = 0, 女子 = 1

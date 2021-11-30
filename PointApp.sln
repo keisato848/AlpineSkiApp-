@@ -28,9 +28,9 @@ Global
 		{E87EDFCB-D307-40FC-8A4D-7362D1EBED4E}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
 		{E87EDFCB-D307-40FC-8A4D-7362D1EBED4E}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
 		{E87EDFCB-D307-40FC-8A4D-7362D1EBED4E}.Debug|iPhoneSimulator.Deploy.0 = Debug|Any CPU
-		{E87EDFCB-D307-40FC-8A4D-7362D1EBED4E}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{E87EDFCB-D307-40FC-8A4D-7362D1EBED4E}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{E87EDFCB-D307-40FC-8A4D-7362D1EBED4E}.Release|Any CPU.Deploy.0 = Debug|Any CPU
+		{E87EDFCB-D307-40FC-8A4D-7362D1EBED4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E87EDFCB-D307-40FC-8A4D-7362D1EBED4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E87EDFCB-D307-40FC-8A4D-7362D1EBED4E}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{E87EDFCB-D307-40FC-8A4D-7362D1EBED4E}.Release|iPhone.ActiveCfg = Release|Any CPU
 		{E87EDFCB-D307-40FC-8A4D-7362D1EBED4E}.Release|iPhone.Build.0 = Release|Any CPU
 		{E87EDFCB-D307-40FC-8A4D-7362D1EBED4E}.Release|iPhone.Deploy.0 = Release|Any CPU
