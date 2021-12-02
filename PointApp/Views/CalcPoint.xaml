@@ -17,6 +17,7 @@
                 <Setter Property="HasUnevenRows" Value="False"/>
                 <Setter Property="RowHeight" Value="35"/>
                 <Setter Property="AbsoluteLayout.VerticalOptions" Value="Center"/>
+                <Setter Property="BackgroundColor" Value="Transparent"/>
             </Style>
             <DataTemplate x:Key="TopListView_Items">
                 <ViewCell>
@@ -34,9 +35,9 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Text="{Binding JapaneseName}" VerticalOptions="Center" LineBreakMode="NoWrap"/>
-                            <Entry Grid.Column="2" Text="{Binding Time, Mode=TwoWay}" VerticalOptions="Center" HorizontalTextAlignment="Center" WidthRequest="70"/>
+                            <Entry Grid.Column="2" Text="{Binding Time, Mode=TwoWay}" VerticalOptions="Center" BackgroundColor="Transparent" HorizontalTextAlignment="Center" WidthRequest="70"/>
                             <Label Grid.Column="3" Text="秒" VerticalOptions="Center"/>
-                            <Button Grid.Column="5" Text="削除" Background="tomato" TextColor="White" FontAttributes="Bold"
+                            <Button Grid.Column="5" Text="削除" Background="{StaticResource Aleat}" TextColor="White" FontAttributes="Bold"
                                     WidthRequest="80" HeightRequest="38" VerticalOptions="Center" Clicked="Button_Clicked"/>
                         </Grid>
                     </Grid>
@@ -51,6 +52,7 @@
                 <Setter Property="VerticalScrollBarVisibility" Value="Never"/>
                 <Setter Property="SelectionMode" Value="None"/>
                 <Setter Property="SeparatorVisibility" Value="None"/>
+                <Setter Property="BackgroundColor" Value="Transparent"/>
             </Style>
             <Style x:Key="PlayerEntry" TargetType="Entry">
                 <Setter Property="WidthRequest" Value="250"/>
@@ -58,6 +60,7 @@
                 <Setter Property="MaxLength" Value="30"/>
                 <Setter Property="BackgroundColor" Value="Transparent"/>
                 <Setter Property="TextColor" Value="#FFFFFF"/>
+                <Setter Property="PlaceholderColor" Value="#FFFFFF"/>
             </Style>
             <Style x:Key="RadioBtn" TargetType="RadioButton">
                 <Setter Property="BackgroundColor" Value="Transparent"/>
@@ -163,10 +166,10 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" Text="4. 合計タイム上位10名" Style="{StaticResource Heading}"/>
-                    <Label Grid.Row="1" Text="※10名の内、ポイント上位5名の選択でも可。" TextColor="#FFFFFF"/>
-                    <Entry Grid.Row="2" x:Name="FinishPlayerEntry" Style="{StaticResource PlayerEntry}" PropertyChanged="PlayerEntry_PropertyChanged"/>
-                    <ListView Grid.Row="3" x:Name="FinishAllList" Style="{StaticResource AllList}" ItemSelected="AllList_ItemSelected"/>
-                    <ListView Grid.Row="4" x:Name="FinishTopList" Style="{StaticResource TopListView}"/>
+                    <Entry Grid.Row="1" x:Name="FinishPlayerEntry" Style="{StaticResource PlayerEntry}" PropertyChanged="PlayerEntry_PropertyChanged"/>
+                    <ListView Grid.Row="2" x:Name="FinishAllList" Style="{StaticResource AllList}" ItemSelected="AllList_ItemSelected"/>
+                    <ListView Grid.Row="3" x:Name="FinishTopList" Style="{StaticResource TopListView}"/>
+                    <Label Grid.Row="4" Text="※10名の内、ポイント上位5名の選択でも可。" FontSize="14" Margin="15,0,0,0" TextColor="#FFFFFF"/>
                 </Grid>
                 <!--合計タイム上位10名-->
             </Grid>
@@ -179,7 +182,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" Text="5.あなたのタイム(任意)" Style="{StaticResource Heading}" VerticalOptions="Center" Margin="0,0,10,0"/>
-                <Entry Grid.Column="1" WidthRequest="100" VerticalOptions="Center" x:Name="Entry_TargetTime"/>
+                <Entry Grid.Column="1" WidthRequest="100" BackgroundColor="Transparent" Text="120.00" HorizontalTextAlignment="End" PlaceholderColor="#FFFFFF" TextColor="#FFFFFF" VerticalOptions="Center" x:Name="Entry_TargetTime"/>
                 <Label Grid.Column="2" Text="秒" VerticalOptions="Center"/>
             </Grid>
             
@@ -212,7 +215,7 @@
             <!--共有選択エリア-->
             
             <!--計算ボタン-->
-            <Button Grid.Row="8" x:Name="Btn_Calc" Margin="0,30" VerticalOptions="Center" Text="計算する" FontAttributes="Bold"
+            <Button Grid.Row="8" x:Name="Btn_Calc" Margin="0,30" VerticalOptions="Center" Text="計算" FontAttributes="Bold"
                     BackgroundColor="#FFFFFF" TextColor="{StaticResource Primary}" FontSize="Medium" Clicked="Btn_Calc_Clicked"/>
             <!--計算ボタン-->
 

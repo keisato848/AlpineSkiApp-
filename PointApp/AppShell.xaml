@@ -4,7 +4,9 @@
        xmlns:local="clr-namespace:PointApp.Views"
        Title="PointApp"
        x:Class="PointApp.AppShell"
-       BackgroundColor="{StaticResource Primary}">
+       FlyoutBackgroundColor="{StaticResource Accent}"
+       >
+    
 
     <!--
         The overall app visual hierarchy is defined here, along with navigation.
@@ -25,6 +27,7 @@
                 <Setter Property="Shell.TabBarUnselectedColor" Value="{StaticResource Primary}"/>
                 <Setter Property="Shell.TabBarTitleColor" Value="White"/>
             </Style>
+
             <Style TargetType="TabBar" BasedOn="{StaticResource BaseStyle}"/>
             <Style TargetType="FlyoutItem" BasedOn="{StaticResource BaseStyle}" />
 
@@ -34,8 +37,13 @@
             -->
             <Style Class="FlyoutItemLabelStyle" TargetType="Label">
                 <Setter Property="TextColor" Value="{StaticResource Primary}"></Setter>
+                <Setter Property="BackgroundColor" Value="#FFFFFF"/>
             </Style>
-            
+
+            <Style Class="FlyItemIconStyle" TargetType="Image">
+                <Setter Property="BackgroundColor" Value="#FFFFFF"/>
+            </Style>
+
             <Style Class="FlyoutItemLayoutStyle" TargetType="Layout">
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
@@ -43,16 +51,15 @@
                             <VisualState x:Name="Normal">
                                 <VisualState.Setters>
                                     <Setter TargetName="FlyoutItemLabel" Property="Label.TextColor" Value="{StaticResource Primary}" />
+                                    <Setter Property="BackgroundColor" Value="#FFFFFF"/>
                                 </VisualState.Setters>
                             </VisualState>
+                            
                         </VisualStateGroup>
                     </VisualStateGroupList>
                 </Setter>
             </Style>
 
-            <!--
-            Custom Style you can apply to any Flyout Item
-            -->
             <Style Class="MenuItemLayoutStyle" TargetType="Layout" ApplyToDerivedTypes="True">
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
@@ -60,6 +67,22 @@
                             <VisualState x:Name="Normal">
                                 <VisualState.Setters>
                                     <Setter TargetName="FlyoutItemLabel" Property="Label.TextColor" Value="{StaticResource Primary}" />
+                                    <Setter TargetName="FlyoutItemLabel" Property="Label.BackgroundColor" Value="#FFFFFF" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+
+            <Style x:Key="FloutItemStyle" TargetType="Grid">
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal" />
+                            <VisualState x:Name="Selected">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
                                 </VisualState.Setters>
                             </VisualState>
                         </VisualStateGroup>
@@ -69,6 +92,27 @@
         </ResourceDictionary>
     </Shell.Resources>
 
+    <Shell.ItemTemplate>
+        <DataTemplate>
+            <Grid Style="{StaticResource FloutItemStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.2*" />
+                    <ColumnDefinition Width="0.8*" />
+                </Grid.ColumnDefinitions>
+                <Image
+                    Margin="5"
+                    HeightRequest="45"
+                    Scale="0.5"
+                    Source="{Binding FlyoutIcon}" />
+                <Label
+                    Grid.Column="1"
+                    FontSize="14"
+                    FontAttributes="Bold"
+                    Text="{Binding Title}"
+                    VerticalTextAlignment="Center" />
+            </Grid>
+        </DataTemplate>
+    </Shell.ItemTemplate>
     <!-- 
         When the Flyout is visible this defines the content to display in the flyout.
         FlyoutDisplayOptions="AsMultipleItems" will create a separate flyout item for each child element    
@@ -91,7 +135,7 @@
     <FlyoutItem Title="問い合わせ">
         <ShellContent Route="ContactPage" ContentTemplate="{DataTemplate local:ContactPage}" />
     </FlyoutItem>
-
+    
     <!-- When the Flyout is visible this will be a menu item you can tie a click behavior to  -->
 
     <!--

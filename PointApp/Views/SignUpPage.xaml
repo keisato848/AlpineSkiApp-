@@ -3,10 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PointApp.Views.SignUpPage"
              Title="新規登録"
-             BackgroundColor="{StaticResource Primary}">
+             BackgroundColor="{StaticResource Primary}"
+             Visual="Material">
     <ContentPage.Content>
         <ScrollView Margin="40">
-            <Grid Grid.Row="1" Margin="40">
+            <Grid Margin="40">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -17,21 +18,29 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Text="ログインはこちら" TextDecorations="Underline" FontSize="Medium" Margin="0,0,0,20">
+                <Label Grid.Row="0" Text="ログインはこちら" TextDecorations="Underline" FontSize="Medium" HorizontalTextAlignment="Center" Margin="0,0,0,20">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Tapped="TapGesture_Tapped" />
                     </Label.GestureRecognizers>
                 </Label>
 
-                <Label Grid.Row="1" Text="ニックネーム" Style="{StaticResource Heading}"/>
-                <Entry Grid.Row="2" x:Name="Entry_Nickname" MaxLength="16" BackgroundColor="Transparent"/>
-                <Label Grid.Row="3" Text="メールアドレス" Style="{StaticResource Heading}"/>
-                <Entry Grid.Row="4" x:Name="Entry_Mail" MaxLength="16" BackgroundColor="Transparent"/>
-                <Label Grid.Row="5" Text="パスワード" Style="{StaticResource Heading}"/>
-                <Entry Grid.Row="6" x:Name="Entry_Pwd" MaxLength="16" WidthRequest="100" IsPassword="True" BackgroundColor="Transparent"/>
-                <Label Grid.Row="7" Text="※パスワードは英数字16字以内で入力してください。" TextColor="{StaticResource Alert}"/>
+                <Entry Grid.Row="2" x:Name="Entry_Nickname" BackgroundColor="Transparent" TextColor="#FFFFFF" Placeholder="ニックネーム（公開）" PlaceholderColor="#FFFFFF"/>
+                <Entry Grid.Row="4" x:Name="Entry_Mail" BackgroundColor="Transparent" TextColor="#FFFFFF" Placeholder="メールアドレス（非公開）" PlaceholderColor="#FFFFFF"/>
+                <Entry Grid.Row="6" x:Name="Entry_Pwd" MaxLength="16" WidthRequest="100" IsPassword="True" BackgroundColor="Transparent" Placeholder="パスワード（非公開）" PlaceholderColor="#FFFFFF" TextColor="#FFFFFF"/>
+                <Label Grid.Row="7" Text="※パスワードは英数字16字以内で入力してください。" FontSize="14" TextColor="#FFFFFF" Margin="0,5,0,0"/>
                 <Button Grid.Row="8" Margin="0,40" VerticalOptions="Center" BackgroundColor="#FFFFFF" TextColor="{StaticResource Primary}" FontAttributes="Bold" Text="登録する" Clicked="Button_Clicked"/>
+                <StackLayout Grid.Row="9" Orientation="Vertical">
+
+                <Label Text="登録をもって" FontSize="14"/>
+                <Label Text="プライバシーポリシー" FontSize="14" TextDecorations="Underline">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+                    </Label.GestureRecognizers>
+                </Label>
+                <Label Text="に同意したものとみなします。" FontSize="14"/>
+                </StackLayout>
             </Grid>
         </ScrollView>
     </ContentPage.Content>

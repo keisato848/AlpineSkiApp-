@@ -5,6 +5,7 @@
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
     <Authors>Kei Sato</Authors>
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <Configurations>Release;Debug</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -17,6 +18,7 @@
     <Compile Remove="Views\新しいフォルダー\**" />
     <EmbeddedResource Remove="Views\新しいフォルダー\**" />
     <None Remove="Views\新しいフォルダー\**" />
+    <None Remove="Xamarin.Forms.Visual.Material" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,6 +47,7 @@
     <PackageReference Include="System.Text.Json" Version="6.0.0" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2244" />  
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
+    <PackageReference Include="Xamarin.Forms.Visual.Material" Version="5.0.0.2244" />
   </ItemGroup>
 
   <ItemGroup>
