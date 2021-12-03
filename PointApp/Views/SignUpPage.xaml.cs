@@ -23,7 +23,7 @@ namespace PointApp.Views
             await Shell.Current.GoToAsync("//LoginPage");
         }
 
-        private void Button_Clicked(object sender, EventArgs e)
+        private async void Button_Clicked(object sender, EventArgs e)
         {
             try
             {
@@ -39,16 +39,34 @@ namespace PointApp.Views
                     var time = DateTime.Now.ToString().Replace('/', '-');
                     using (var transaction = connection.BeginTransaction())
                     {
-                        var sql = $"INSERT INTO users_table (nickname, mail_address, pass, salt, created_at, updated_at) VALUES('{nickname}', '{mail}', '{pwdHash}', '{salt}', '{time}', '{time}');";
-                        DatabaseUtility.ExecuteSqlNonquery(sql,connection);
+                        var sql = $"INSERT INTO users_table (nickname, mail_address, pass, salt, created_at, updated_at) VALUES('{nickname}', '{mail}', '{pwdHash}', '{salt}', '{time}', '{time}') RETURNING id;";
+                        var result = DatabaseUtility.ExecuteScalar (sql,connection);
                         transaction.Commit();
+                        LoginSuccess(result.ToString());
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is Npgsql.PostgresException postgresEx)
             {
-                Console.WriteLine(ex.Message);
+                if (postgresEx.SqlState == "23505")
+                {
+                    if (postgresEx.ConstraintName == "users_table_nickname_key")
+                    {
+                        await DisplayAlert("通知", "ニックネームはすでに使用されています。", "OK");
+                    }
+                    if (postgresEx.ConstraintName == "users_table_mail_address_key")
+                    {
+                        await DisplayAlert("通知", "メールアドレスはすでに使用されています。", "OK");
+                    }
+                }
             }
+        }
+
+        private async void LoginSuccess(string id)
+        {
+            Application.Current.Resources.Add("LoginUserId", id);
+            await Shell.Current.GoToAsync("//CalcPoint");
+            await DisplayAlert("通知", "登録が完了しました。\nログインしました。", "OK");
         }
 
         async void TapGestureRecognizer_Tapped(System.Object sender, System.EventArgs e)

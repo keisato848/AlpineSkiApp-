@@ -128,14 +128,14 @@ namespace PointApp.Views
             }
         }
 
-        public static void ExecuteScalar(string sql, NpgsqlConnection connection)
+        public static object ExecuteScalar(string sql, NpgsqlConnection connection)
         {
             NpgsqlDataReader reader = null;
             try
             {
                 using (NpgsqlCommand command = new NpgsqlCommand(sql, connection))
                 {
-                    command.ExecuteScalar();
+                    return command.ExecuteScalar();
                 }
             }
             catch (Exception ex)

@@ -26,9 +26,9 @@
                     </Label.GestureRecognizers>
                 </Label>
 
-                <Entry Grid.Row="2" x:Name="Entry_Mail" TextColor="#FFFFFF" BackgroundColor="Transparent" PlaceholderColor="#FFFFFF" Placeholder="メールアドレス"/>
-                <Entry Grid.Row="4" x:Name="Entry_Pwd" TextColor="#FFFFFF" MaxLength="16" IsPassword="True" BackgroundColor="Transparent" PlaceholderColor="#FFFFFF" Placeholder="パスワード"/>
-                <Button Grid.Row="5" Margin="0,40" VerticalOptions="Center" BackgroundColor="#FFFFFF" TextColor="{StaticResource Primary}" FontAttributes="Bold" Text="ログイン" Clicked="Button_Clicked"/>
+                <Entry Grid.Row="2" x:Name="Entry_Mail" TextColor="#FFFFFF" BackgroundColor="{StaticResource Primary}" PlaceholderColor="#FFFFFF" Placeholder="メールアドレス"/>
+                <Entry Grid.Row="4" x:Name="Entry_Pwd" TextColor="#FFFFFF" MaxLength="16" IsPassword="True" BackgroundColor="{StaticResource Primary}" PlaceholderColor="#FFFFFF" Placeholder="パスワード"/>
+                <Button Grid.Row="5" Margin="0,40" VerticalOptions="Center" HeightRequest="50" BackgroundColor="#FFFFFF" TextColor="{StaticResource Primary}" FontAttributes="Bold" Text="ログイン" Clicked="Button_Clicked"/>
             </Grid>
         </ScrollView>
     </ContentPage.Content>
