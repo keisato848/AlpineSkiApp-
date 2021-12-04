@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Application xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="PointApp.App">
+<Application
+    x:Class="PointApp.App"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     <!--
         Define global resources and styles here, that apply to all pages in your app.
     -->
@@ -11,14 +12,14 @@
             <Color x:Key="Accent">#0073BD</Color>
             <Color x:Key="Alert">tomato</Color>
             <Style x:Key="Heading" TargetType="Label">
-                <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
-                <Setter Property="Margin" Value="0,10"/>
-                <Setter Property="FontSize" Value="Medium"/>
-                <Setter Property="TextColor" Value="WhiteSmoke"/>
-                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                <Setter Property="Margin" Value="0,10" />
+                <Setter Property="FontSize" Value="Medium" />
+                <Setter Property="TextColor" Value="WhiteSmoke" />
+                <Setter Property="FontAttributes" Value="Bold" />
             </Style>
             <Style TargetType="Button">
-                <Setter Property="TextColor" Value="White"></Setter>
+                <Setter Property="TextColor" Value="White" />
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
                         <VisualStateGroup x:Name="CommonStates">
@@ -36,6 +37,6 @@
                     </VisualStateGroupList>
                 </Setter>
             </Style>
-        </ResourceDictionary>        
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

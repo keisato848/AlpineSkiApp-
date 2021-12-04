@@ -1,34 +1,63 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
-             Title="ログイン"
-             x:Class="PointApp.Views.LoginPage"
-             BackgroundColor="{StaticResource Primary}"
-             Visual="Material"
-             >
+<ContentPage
+    x:Class="PointApp.Views.LoginPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="ログイン"
+    BackgroundColor="{StaticResource Primary}"
+    Visual="Material"
+    mc:Ignorable="d">
     <ContentPage.Content>
         <ScrollView Margin="40">
             <Grid Margin="40">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Text="新規登録はこちら" HorizontalTextAlignment="Center" TextDecorations="Underline" FontSize="Medium" Margin="0,0,0,20">
+                <Label
+                    Grid.Row="0"
+                    Margin="0,0,0,20"
+                    FontSize="Medium"
+                    HorizontalTextAlignment="Center"
+                    Text="新規登録はこちら"
+                    TextDecorations="Underline">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
                     </Label.GestureRecognizers>
                 </Label>
 
-                <Entry Grid.Row="2" x:Name="Entry_Mail" TextColor="#FFFFFF" BackgroundColor="{StaticResource Primary}" PlaceholderColor="#FFFFFF" Placeholder="メールアドレス"/>
-                <Entry Grid.Row="4" x:Name="Entry_Pwd" TextColor="#FFFFFF" MaxLength="16" IsPassword="True" BackgroundColor="{StaticResource Primary}" PlaceholderColor="#FFFFFF" Placeholder="パスワード"/>
-                <Button Grid.Row="5" Margin="0,40" VerticalOptions="Center" HeightRequest="50" BackgroundColor="#FFFFFF" TextColor="{StaticResource Primary}" FontAttributes="Bold" Text="ログイン" Clicked="Button_Clicked"/>
+                <Entry
+                    x:Name="Entry_Mail"
+                    Grid.Row="2"
+                    BackgroundColor="{StaticResource Primary}"
+                    Placeholder="メールアドレス"
+                    PlaceholderColor="#FFFFFF"
+                    TextColor="#FFFFFF" />
+                <Entry
+                    x:Name="Entry_Pwd"
+                    Grid.Row="4"
+                    BackgroundColor="{StaticResource Primary}"
+                    IsPassword="True"
+                    MaxLength="16"
+                    Placeholder="パスワード"
+                    PlaceholderColor="#FFFFFF"
+                    TextColor="#FFFFFF" />
+                <Button
+                    Grid.Row="5"
+                    Margin="0,40"
+                    BackgroundColor="#FFFFFF"
+                    Clicked="Button_Clicked"
+                    FontAttributes="Bold"
+                    HeightRequest="50"
+                    Text="ログイン"
+                    TextColor="{StaticResource Primary}"
+                    VerticalOptions="Center" />
             </Grid>
         </ScrollView>
     </ContentPage.Content>

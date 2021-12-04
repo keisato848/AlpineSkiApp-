@@ -162,7 +162,7 @@ namespace PointApp.Views
                     var winner = m_finishDefPlayers.OrderBy(player => player.Time).First();
                     if (Switch_Share.IsToggled)
                     {
-                        var perSecRacePoint = GetRacePoint(new Player { Time = winner.Time + 1.0}, winner);
+                        var perSecRacePoint = GetRacePoint(new Player { Time = winner.Time + 1.0 }, winner);
                         RegisterTournament(tournamentName, fisPoint, sajPoint, perSecRacePoint.ToString());
                     }
                     if (!string.IsNullOrWhiteSpace(Entry_TargetTime.Text))

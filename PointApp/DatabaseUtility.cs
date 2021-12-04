@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Npgsql;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,7 +7,6 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using Npgsql;
 
 namespace PointApp.Views
 
@@ -172,17 +172,17 @@ namespace PointApp.Views
 
         public static string GetSHA256HashString(string password, string salt)
         {
-            // 平文のパスワードの末尾にサルトを結合 
+            // 平文のパスワードの末尾にサルトを結合
             string passwordAndSalt = password + salt;
-            // 文字列をバイト型配列に変換 
+            // 文字列をバイト型配列に変換
             byte[] data = Encoding.UTF8.GetBytes(passwordAndSalt);
-            // SHA512ハッシュアルゴリズム生成 
+            // SHA512ハッシュアルゴリズム生成
             var algorithm = new SHA256CryptoServiceProvider();
-            // ハッシュ値を計算 
+            // ハッシュ値を計算
             byte[] bs = algorithm.ComputeHash(data);
-            // リソースを解放 
+            // リソースを解放
             algorithm.Clear();
-            // バイト型配列を16進数文字列に変換 
+            // バイト型配列を16進数文字列に変換
             var result = new StringBuilder();
             foreach (byte b in bs)
             {
