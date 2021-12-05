@@ -93,6 +93,7 @@
                 BackgroundColor="#FFFFFF"
                 Clicked="DismissButton_Clicked"
                 FontAttributes="Bold"
+                HeightRequest="50"
                 Text="閉じる"
                 TextColor="{StaticResource Primary}" />
         </Grid>

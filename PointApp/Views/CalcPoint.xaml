@@ -4,7 +4,7 @@
              x:Class="PointApp.Views.CalcPoint"
              Title="ポイント計算"
              BackgroundColor="{StaticResource Primary}"
-             >
+             Visual="Default" >
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -15,31 +15,36 @@
                 <Setter Property="ItemTemplate" Value="{StaticResource AllList_ItemTemplate}"/>
                 <Setter Property="IsVisible" Value="False"/>
                 <Setter Property="HasUnevenRows" Value="False"/>
-                <Setter Property="RowHeight" Value="35"/>
+                <Setter Property="RowHeight" Value="45"/>
                 <Setter Property="AbsoluteLayout.VerticalOptions" Value="Center"/>
                 <Setter Property="BackgroundColor" Value="Transparent"/>
             </Style>
+            <Style x:Key="TimeEntry" TargetType="Entry">
+                <Setter Property="WidthRequest" Value="70"/>
+                <Setter Property="Keyboard" Value="Numeric"/>
+                <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
+                <Setter Property="TextColor" Value="#FFFFFF"/>
+                <Setter Property="PlaceholderColor" Value="#FFFFFF"/>
+                <Setter Property="MaxLength" Value="6"/>
+            </Style>
             <DataTemplate x:Key="TopListView_Items">
                 <ViewCell>
-                    <Grid VerticalOptions="Center" Margin="0,2">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Text="{Binding JapaneseName}" VerticalOptions="Center" LineBreakMode="NoWrap"/>
-                            <Entry Grid.Column="2" Text="{Binding StrTime, Mode=TwoWay}" VerticalOptions="Center" MaxLength="6" BackgroundColor="Transparent" WidthRequest="70" HorizontalTextAlignment="End" Keyboard="Numeric"/>
-                            <Label Grid.Column="3" Text="秒" VerticalOptions="Center"/>
-                            <Button Grid.Column="5" Text="削除" Background="tomato" TextColor="White" FontAttributes="Bold"
-                                    WidthRequest="80" HeightRequest="38" VerticalOptions="Center" Clicked="Button_Clicked"/>
-                        </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Text="{Binding JapaneseName}" VerticalOptions="Center" WidthRequest="90" LineBreakMode="NoWrap"/>
+                        <Entry Grid.Column="2" Text="{Binding StrTime, Mode=TwoWay}" Style="{StaticResource TimeEntry}"/>
+                        <Label Grid.Column="3" Text="秒" VerticalOptions="Center"/>
+                        <Button Grid.Column="5" Text="削除" Background="tomato" TextColor="White" FontAttributes="Bold"
+                                WidthRequest="80" HeightRequest="38" VerticalOptions="Center" Clicked="Button_Clicked"/>
                     </Grid>
                 </ViewCell>
             </DataTemplate>
@@ -53,12 +58,14 @@
                 <Setter Property="SelectionMode" Value="None"/>
                 <Setter Property="SeparatorVisibility" Value="None"/>
                 <Setter Property="BackgroundColor" Value="Transparent"/>
+                <Setter Property="Margin" Value="10,0"/>
             </Style>
             <Style x:Key="PlayerEntry" TargetType="Entry">
                 <Setter Property="WidthRequest" Value="250"/>
                 <Setter Property="Placeholder" Value="選手名を入力"/>
                 <Setter Property="MaxLength" Value="30"/>
-                <Setter Property="BackgroundColor" Value="Transparent"/>
+                <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
+                <Setter Property="FontSize" Value="14"/>
                 <Setter Property="TextColor" Value="#FFFFFF"/>
                 <Setter Property="PlaceholderColor" Value="#FFFFFF"/>
             </Style>
@@ -69,95 +76,47 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <ScrollView x:Name="ScrollView_Main" Padding="40" VerticalOptions="StartAndExpand">
-
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+    <ScrollView x:Name="ScrollView_Main" VerticalOptions="StartAndExpand" Padding="30">
+        <StackLayout VerticalOptions="StartAndExpand" Margin="0,0,0,100">
 
             <!--性別・種目選択-->
-            <Grid Grid.Row="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-
+            <StackLayout>
                 <!--性別選択-->
-                <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Text="1. 性別" Style="{StaticResource Heading}"/>
-                    <Grid Grid.Row="1" RadioButtonGroup.GroupName="EventSex" RadioButtonGroup.SelectedValue="{Binding m_tournament.Sex, Mode=TwoWay}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <RadioButton Grid.Column="0" ClassId="0" Content="男子" Style="{StaticResource RadioBtn}" IsChecked="True" CheckedChanged="EventSex_RadioButton_CheckedChanged"/>
-                        <RadioButton Grid.Column="1" ClassId="1" Content="女子" Style="{StaticResource RadioBtn}" CheckedChanged="EventSex_RadioButton_CheckedChanged"/>
-                    </Grid>
-                </Grid>
+                <StackLayout>
+                    <Label Text="1. 性別" Style="{StaticResource Heading}"/>
+                    <StackLayout Orientation="Horizontal" RadioButtonGroup.GroupName="EventSex" RadioButtonGroup.SelectedValue="{Binding m_tournament.Sex, Mode=TwoWay}">
+                        <RadioButton ClassId="0" Content="男子" IsChecked="True" Style="{StaticResource RadioBtn}" CheckedChanged="EventSex_RadioButton_CheckedChanged"/>
+                        <RadioButton ClassId="1" Content="女子" Style="{StaticResource RadioBtn}" CheckedChanged="EventSex_RadioButton_CheckedChanged"/>
+                    </StackLayout>
+                </StackLayout>
                 <!--性別選択-->
 
                 <!--種目選択-->
-                <Grid Grid.Row="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Text="2. 種目" Style="{StaticResource Heading}"/>
-                    <Grid Grid.Row="1" RadioButtonGroup.GroupName="EventTypes" RadioButtonGroup.SelectedValue="{Binding m_tournament.Types, Mode=TwoWay}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <RadioButton Grid.Column="0" Content="ＳＧ" Style="{StaticResource RadioBtn}" IsChecked="True" CheckedChanged="RadioButton_CheckedChanged"/>
-                        <RadioButton Grid.Column="1" Content="ＧＳ" Style="{StaticResource RadioBtn}" CheckedChanged="RadioButton_CheckedChanged"/>
-                        <RadioButton Grid.Column="2" Content="ＳＬ" Style="{StaticResource RadioBtn}" CheckedChanged="RadioButton_CheckedChanged"/>
-                    </Grid>
-                </Grid>
+                <StackLayout>
+                    <Label Text="2. 種目" Style="{StaticResource Heading}"/>
+                    <StackLayout Orientation="Horizontal" RadioButtonGroup.GroupName="EventTypes" RadioButtonGroup.SelectedValue="{Binding m_tournament.Types, Mode=TwoWay}">
+                        <RadioButton Content="ＳＧ" Style="{StaticResource RadioBtn}" IsChecked="True" CheckedChanged="RadioButton_CheckedChanged"/>
+                        <RadioButton Content="ＧＳ" Style="{StaticResource RadioBtn}" CheckedChanged="RadioButton_CheckedChanged"/>
+                        <RadioButton Content="ＳＬ" Style="{StaticResource RadioBtn}" CheckedChanged="RadioButton_CheckedChanged"/>
+                    </StackLayout>
+                </StackLayout>
                 <!--種目選択-->
-            </Grid>
+            </StackLayout>
             <!--性別・種目選択-->
 
             <!--選手選択-->
-            <Grid Grid.Row="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-
+            <StackLayout>
                 <!--スタート時のポイント上位5名-->
-                <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Text="3. スタート時のポイント上位5名" Style="{StaticResource Heading}"/>
-                    <Entry Grid.Row="1" x:Name="StartPlayerEntry" Style="{StaticResource PlayerEntry}" PropertyChanged="PlayerEntry_PropertyChanged"/>
-                    <ListView Grid.Row="2" x:Name="StartAllList" Style="{StaticResource AllList}" ItemSelected="AllList_ItemSelected"/>
-                    <ListView Grid.Row="3" x:Name="StartTopList" Style="{StaticResource TopListView}"/>
-                </Grid>
+                <StackLayout>
+                    <Label Text="3. スタート時のポイント上位5名" Style="{StaticResource Heading}"/>
+                    <Entry x:Name="StartPlayerEntry" Style="{StaticResource PlayerEntry}" PropertyChanged="PlayerEntry_PropertyChanged"/>
+                    <ListView x:Name="StartAllList" Style="{StaticResource AllList}" ItemSelected="AllList_ItemSelected"/>
+                    <ListView x:Name="StartTopList" Style="{StaticResource TopListView}"/>
+                </StackLayout>
                 <!--スタート時のポイント上位5名-->
 
-                <!--合計タイム上位10名-->
-                <Grid Grid.Row="1">
+            <!--合計タイム上位10名-->
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -168,58 +127,41 @@
                     <Label Grid.Row="0" Text="4. 合計タイム上位10名" Style="{StaticResource Heading}"/>
                     <Entry Grid.Row="1" x:Name="FinishPlayerEntry" Style="{StaticResource PlayerEntry}" PropertyChanged="PlayerEntry_PropertyChanged"/>
                     <ListView Grid.Row="2" x:Name="FinishAllList" Style="{StaticResource AllList}" ItemSelected="AllList_ItemSelected"/>
-                    <ListView Grid.Row="3" x:Name="FinishTopList" Style="{StaticResource TopListView}"/>
+                    <ListView Grid.Row="3" x:Name="FinishTopList" Style="{StaticResource TopListView}" Margin="0,0,0,10"/>
                     <Label Grid.Row="4" Text="※10名の内、ポイント上位5名の選択でも可。" FontSize="14" Margin="15,0,0,0" TextColor="#FFFFFF"/>
                 </Grid>
                 <!--合計タイム上位10名-->
-            </Grid>
+            </StackLayout>
             <!--選手選択-->
 
-            <Grid Grid.Row="4">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <Label Grid.Column="0" Text="5.あなたのタイム(任意)" Style="{StaticResource Heading}" VerticalOptions="Center" Margin="0,0,10,0"/>
-                <Entry Grid.Column="1" WidthRequest="70" MaxLength="6" BackgroundColor="Transparent" Text="120.00" HorizontalTextAlignment="End" PlaceholderColor="#FFFFFF" TextColor="#FFFFFF" VerticalOptions="Center" x:Name="Entry_TargetTime" Keyboard="Numeric"/>
-                <Label Grid.Column="2" Text="秒" VerticalOptions="Center"/>
-            </Grid>
-
-            <!--共有選択エリア-->
-            <Grid Grid.Row="6">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <StackLayout Grid.Row="0" Orientation="Horizontal">
-                    <Switch x:Name="Switch_Share" IsToggled="False" Toggled="Switch_Share_Toggled"/>
-                    <Label Text="結果を共有する" VerticalOptions="Center" FontSize="Medium" TextColor="#ffffff"/>
+            <StackLayout HorizontalOptions="Start">
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="5.あなたのタイム" Style="{StaticResource Heading}" VerticalOptions="Center"/>
+                    <Label Text="※任意" VerticalOptions="Center" Margin="0,0,10,0"/>
                 </StackLayout>
-                <Grid Grid.Row="1" x:Name="PopupLayout_Share" Margin="5,0" IsVisible="False">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0" Margin="0, 5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Text="大会名" WidthRequest="150" VerticalOptions="Center"/>
-                        <Entry Grid.Column="1" x:Name="Entry_TournamentName" WidthRequest="100"/>
-                    </Grid>
-                </Grid>
-            </Grid>
+                <StackLayout Orientation="Horizontal">
+                <Entry x:Name="Entry_TargetTime" Style="{StaticResource TimeEntry}" Text="120.00"/>
+                <Label Text="秒" VerticalOptions="Center"/>
+                </StackLayout>
+            </StackLayout>
+
+            <!--共有選択エリア-->
+            <StackLayout Margin="0,20,0,5" Orientation="Horizontal">
+                <Switch x:Name="Switch_Share" IsToggled="False" Toggled="Switch_Share_Toggled"/>
+                <Label Text="結果を共有" VerticalOptions="Center" TextColor="#ffffff"/>
+                <StackLayout x:Name="PopupLayout_Share" Margin="20,0,0,0" IsVisible="false" HorizontalOptions="Start" Orientation="Horizontal">
+                    <Label Text="大会名" VerticalOptions="Center" VerticalTextAlignment="Center"/>
+                    <Entry x:Name="Entry_TournamentName" MinimumWidthRequest="150" />
+                </StackLayout>
+            </StackLayout>
             <!--共有選択エリア-->
 
             <!--計算ボタン-->
-            <Button Grid.Row="8" x:Name="Btn_Calc" Margin="0,30" VerticalOptions="Center" Text="計算" FontAttributes="Bold"
-                    BackgroundColor="#FFFFFF" TextColor="{StaticResource Primary}" FontSize="Medium" Clicked="Btn_Calc_Clicked"/>
+            <Button x:Name="Btn_Calc" VerticalOptions="Center" Text="計算" FontAttributes="Bold" HeightRequest="50"
+                    BackgroundColor="#FFFFFF" TextColor="{StaticResource Primary}" Clicked="Btn_Calc_Clicked"/>
             <!--計算ボタン-->
 
-            <Label Grid.Row="10" Text="© Kei Sato" FontSize="Micro" TextColor="WhiteSmoke" HorizontalOptions="Center" BackgroundColor="Transparent"/>
-        </Grid>
+            <Label Grid.Row="11" Margin="0,20,0,0" Text="© Kei Sato" FontSize="Micro" TextColor="WhiteSmoke" HorizontalOptions="Center" BackgroundColor="Transparent"/>
+        </StackLayout>
     </ScrollView>
 </ContentPage>

@@ -51,8 +51,8 @@ namespace PointApp.Views
                     if (!string.IsNullOrEmpty(pwdHash) && pass.Equals(pwdHash))
                     {
                         Application.Current.Resources.Add("LoginUserId", id);
-                        await Shell.Current.GoToAsync("//CalcPoint");
                         await DisplayAlert("通知", "ログインしました。", "OK");
+                        await Shell.Current.GoToAsync("//CalcPoint");
                     }
                     else
                     {

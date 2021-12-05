@@ -47,7 +47,8 @@
                     BackgroundColor="{StaticResource Primary}"
                     Placeholder="メールアドレス（非公開）"
                     PlaceholderColor="#FFFFFF"
-                    TextColor="#FFFFFF" />
+                    TextColor="#FFFFFF"
+                    Keyboard="Email" />
                 <Entry
                     x:Name="Entry_Pwd"
                     Grid.Row="6"
@@ -56,17 +57,25 @@
                     MaxLength="16"
                     Placeholder="パスワード（非公開）"
                     PlaceholderColor="#FFFFFF"
-                    TextColor="#FFFFFF"
-                    WidthRequest="100" />
+                    TextColor="#FFFFFF" />
                 <Label
                     Grid.Row="7"
-                    Margin="0,5,0,0"
+                    Margin="0,5,0,15"
                     FontSize="14"
                     Text="※パスワードは英数字16字以内で入力してください。"
                     TextColor="#FFFFFF" />
-                <Button
+                <Label
                     Grid.Row="8"
-                    Margin="0,40"
+                    FontSize="14"
+                    Text="プライバシーポリシー"
+                    TextDecorations="Underline">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+                    </Label.GestureRecognizers>
+                </Label>
+                <Button
+                    Grid.Row="9"
+                    Margin="0,20,0,30"
                     BackgroundColor="#FFFFFF"
                     Clicked="Button_Clicked"
                     FontAttributes="Bold"
@@ -74,19 +83,6 @@
                     Text="登録する"
                     TextColor="{StaticResource Primary}"
                     VerticalOptions="Center" />
-                <StackLayout Grid.Row="9" Orientation="Vertical">
-
-                    <Label FontSize="14" Text="登録をもって" />
-                    <Label
-                        FontSize="14"
-                        Text="プライバシーポリシー"
-                        TextDecorations="Underline">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
-                        </Label.GestureRecognizers>
-                    </Label>
-                    <Label FontSize="14" Text="に同意したものとみなします。" />
-                </StackLayout>
             </Grid>
         </ScrollView>
     </ContentPage.Content>

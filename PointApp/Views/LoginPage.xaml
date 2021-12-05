@@ -38,16 +38,17 @@
                     BackgroundColor="{StaticResource Primary}"
                     Placeholder="メールアドレス"
                     PlaceholderColor="#FFFFFF"
-                    TextColor="#FFFFFF" />
+                    TextColor="#FFFFFF" 
+                    Keyboard="Email" />
                 <Entry
                     x:Name="Entry_Pwd"
                     Grid.Row="4"
                     BackgroundColor="{StaticResource Primary}"
-                    IsPassword="True"
                     MaxLength="16"
                     Placeholder="パスワード"
                     PlaceholderColor="#FFFFFF"
-                    TextColor="#FFFFFF" />
+                    TextColor="#FFFFFF" 
+                    IsPassword="True" />
                 <Button
                     Grid.Row="5"
                     Margin="0,40"
