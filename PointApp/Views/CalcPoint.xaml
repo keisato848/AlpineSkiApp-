@@ -9,13 +9,13 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <DataTemplate x:Key="AllList_ItemTemplate" >
-                <TextCell Text="{Binding JapaneseName, Mode=TwoWay}"/>
+                <TextCell Text="{Binding JapaneseName, Mode=TwoWay}" TextColor="#FFFFFF"/>
             </DataTemplate>
             <Style x:Key="AllList" TargetType="ListView">
                 <Setter Property="ItemTemplate" Value="{StaticResource AllList_ItemTemplate}"/>
                 <Setter Property="IsVisible" Value="False"/>
                 <Setter Property="HasUnevenRows" Value="False"/>
-                <Setter Property="RowHeight" Value="45"/>
+                <Setter Property="RowHeight" Value="43"/>
                 <Setter Property="AbsoluteLayout.VerticalOptions" Value="Center"/>
                 <Setter Property="BackgroundColor" Value="Transparent"/>
             </Style>
@@ -40,9 +40,9 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Text="{Binding JapaneseName}" VerticalOptions="Center" WidthRequest="90" LineBreakMode="NoWrap"/>
+                        <Label Grid.Column="0" Text="{Binding JapaneseName}" TextColor="#FFFFFF" VerticalOptions="Center" WidthRequest="90" LineBreakMode="NoWrap"/>
                         <Entry Grid.Column="2" Text="{Binding StrTime, Mode=TwoWay}" Style="{StaticResource TimeEntry}"/>
-                        <Label Grid.Column="3" Text="秒" VerticalOptions="Center"/>
+                        <Label Grid.Column="3" Text="秒" VerticalOptions="Center" TextColor="#FFFFFF"/>
                         <Button Grid.Column="5" Text="削除" Background="tomato" TextColor="White" FontAttributes="Bold"
                                 WidthRequest="80" HeightRequest="38" VerticalOptions="Center" Clicked="Button_Clicked"/>
                     </Grid>
@@ -137,11 +137,11 @@
             <StackLayout HorizontalOptions="Start">
                 <StackLayout Orientation="Horizontal">
                     <Label Text="5.あなたのタイム" Style="{StaticResource Heading}" VerticalOptions="Center"/>
-                    <Label Text="※任意" VerticalOptions="Center" Margin="0,0,10,0"/>
+                    <Label Text="※任意" VerticalOptions="Center" Margin="0,0,10,0" TextColor="#FFFFFF" FontSize="12"/>
                 </StackLayout>
                 <StackLayout Orientation="Horizontal">
                 <Entry x:Name="Entry_TargetTime" Style="{StaticResource TimeEntry}" Text="120.00"/>
-                <Label Text="秒" VerticalOptions="Center"/>
+                <Label Text="秒" VerticalOptions="Center" TextColor="#FFFFFF"/>
                 </StackLayout>
             </StackLayout>
 

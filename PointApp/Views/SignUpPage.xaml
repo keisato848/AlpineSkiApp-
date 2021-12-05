@@ -28,7 +28,8 @@
                     FontSize="Medium"
                     HorizontalTextAlignment="Center"
                     Text="ログインはこちら"
-                    TextDecorations="Underline">
+                    TextDecorations="Underline"
+                    TextColor="#FFFFFF">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Tapped="TapGesture_Tapped" />
                     </Label.GestureRecognizers>
@@ -68,7 +69,8 @@
                     Grid.Row="8"
                     FontSize="14"
                     Text="プライバシーポリシー"
-                    TextDecorations="Underline">
+                    TextDecorations="Underline"
+                    TextColor="#FFFFFF">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
                     </Label.GestureRecognizers>

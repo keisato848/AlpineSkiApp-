@@ -34,9 +34,6 @@ namespace PointApp.Views
             SetUp();
         }
 
-        private enum Association
-        { FIS = 0, SAJ = 1 }
-
         private enum ErrorCode
         {
             UserDuplicated = 0,

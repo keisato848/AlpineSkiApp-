@@ -26,7 +26,8 @@
                     FontSize="Medium"
                     HorizontalTextAlignment="Center"
                     Text="新規登録はこちら"
-                    TextDecorations="Underline">
+                    TextDecorations="Underline"
+                    TextColor="#FFFFFF">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
                     </Label.GestureRecognizers>
