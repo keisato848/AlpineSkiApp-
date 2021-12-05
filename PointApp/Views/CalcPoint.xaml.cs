@@ -16,11 +16,11 @@ namespace PointApp.Views
     {
         private List<Player> m_allPlayers;
 
-        private ObservableCollection<Player> m_finishDefPlayers;
+        private readonly ObservableCollection<Player> m_finishDefPlayers;
 
-        private ObservableCollection<Player> m_startDefPlayers;
+        private readonly ObservableCollection<Player> m_startDefPlayers;
 
-        private Tournament m_tournament;
+        private readonly Tournament m_tournament;
 
         public CalcPoint()
         {
@@ -151,12 +151,12 @@ namespace PointApp.Views
                 {
                     DisplayErrorMessage(ErrorCode.TournamentNameEmpty);
                 }
-                double[] penaltyPoints = GetPenaltyPoints();
-                if (penaltyPoints != null && !double.IsNaN(penaltyPoints[(int)Association.FIS]) && !double.IsNaN(penaltyPoints[(int)Association.SAJ]))
+                (var fisPenalty, var sajPenalty)= GetPenaltyPoints();
+                if (fisPenalty != null && sajPenalty != null)
                 {
                     string tournamentName = Entry_TournamentName.Text;
-                    string fisPoint = penaltyPoints[(int)Association.FIS].ToString();
-                    string sajPoint = penaltyPoints[(int)Association.SAJ].ToString();
+                    string fisPoint = fisPenalty.ToString();
+                    string sajPoint = sajPenalty.ToString();
                     string userFisPoint = null;
                     string userSajPoint = null;
                     var winner = m_finishDefPlayers.OrderBy(player => player.Time).First();
@@ -170,7 +170,6 @@ namespace PointApp.Views
                         var racePoint = GetRacePoint(new Player { Time = double.Parse(Entry_TargetTime.Text) }, winner);
                         if (!double.IsNaN(racePoint))
                         {
-                            racePoint = Math.Truncate(racePoint * 1000) * 0.001;
                             userFisPoint = (double.Parse(fisPoint) + racePoint).ToString();
                             userSajPoint = (double.Parse(sajPoint) + racePoint).ToString();
                         }
@@ -212,9 +211,9 @@ namespace PointApp.Views
             }
         }
 
-        private double CalcPenaltyPoint(double sumFinishFivePenaltyPoint, double sumStartFivePenaltyPoint, double sumFinishFiveRacePoint)
+        private double? CalcPenaltyPoint(double sumFinishFivePenaltyPoint, double sumStartFivePenaltyPoint, double sumFinishFiveRacePoint)
         {
-            var penaltyPoint = (sumFinishFivePenaltyPoint + sumStartFivePenaltyPoint - sumFinishFiveRacePoint) * 0.1;
+            var penaltyPoint = Math.Round((Convert.ToInt32(sumFinishFivePenaltyPoint * 100) + Convert.ToInt32(sumStartFivePenaltyPoint * 100) - Convert.ToInt32(sumFinishFiveRacePoint * 100)) * 0.001, 2, MidpointRounding.AwayFromZero);
             switch (m_tournament.Types)
             {
                 case Tournament.EventTypes.SG:
@@ -296,7 +295,7 @@ namespace PointApp.Views
             }
         }
 
-        private double[] GetPenaltyPoints()
+        private (double?, double?) GetPenaltyPoints()
         {
             //   A + B - C
             // （A)上位10名の中のポイントトップ5の所持ポイントの合計
@@ -305,10 +304,9 @@ namespace PointApp.Views
 
             if (m_tournament.Types == Tournament.EventTypes.NONE || m_startDefPlayers.Count != 5 || m_finishDefPlayers.Count == 10)
             {
-                return null;
+                return (null, null);
             }
 
-            var penaltyPoints = new double[Enum.GetNames(typeof(Association)).Length];
             double fisA, sajA, fisB, sajB, fisC, sajC;
             IEnumerable<Player> fisFinishTopfive = Enumerable.Empty<Player>();
             IEnumerable<Player> sajFinishTopfive = Enumerable.Empty<Player>();
@@ -341,27 +339,18 @@ namespace PointApp.Views
 
             var winner = m_finishDefPlayers.OrderBy(player => player.Time).First();
 
-            var finishTopFivePoints = SumPoints(fisFinishTopfive);
-            var startTopFivePoints = SumPoints(fisStartTopfive);
-
-            fisA = finishTopFivePoints[(int)Association.FIS];
-            sajA = finishTopFivePoints[(int)Association.SAJ];
-
-            fisB = startTopFivePoints[(int)Association.FIS];
-            sajB = startTopFivePoints[(int)Association.SAJ];
+            (fisA, sajA) = SumPoints(fisFinishTopfive);
+            (fisB, sajB) = SumPoints(fisStartTopfive);
 
             fisC = SumRacePoint(fisFinishTopfive, winner);
             sajC = SumRacePoint(sajFinishTopfive, winner);
 
             if (double.IsNaN(fisA) && double.IsNaN(fisB) && double.IsNaN(fisC) && double.IsNaN(sajA) && double.IsNaN(sajB) && double.IsNaN(sajC))
             {
-                return penaltyPoints;
+                return (null, null);
             }
 
-            penaltyPoints[(int)Association.FIS] = CalcPenaltyPoint(fisA, fisB, fisC);
-            penaltyPoints[(int)Association.SAJ] = CalcPenaltyPoint(sajA, sajB, sajC);
-
-            return penaltyPoints;
+            return (CalcPenaltyPoint(fisA, fisB, fisC), CalcPenaltyPoint(sajA, sajB, sajC));
         }
 
         private ObservableCollection<Player> GetPlayersFromKana(string kana)
@@ -379,35 +368,29 @@ namespace PointApp.Views
                                                     select player);
         }
 
-        private double[] GetPoints(Player player)
+        private (double?, double?) GetPoints(Player player)
         {
-            double[] points = new double[Enum.GetNames(typeof(Association)).Length];
             if (m_tournament.Types != Tournament.EventTypes.NONE)
             {
                 switch (m_tournament.Types)
                 {
                     case Tournament.EventTypes.DH:
-                        points[(int)Association.FIS] = player.FisDh;
-                        points[(int)Association.SAJ] = player.SajDh;
-                        break;
+                        return (player.FisDh, player.SajDh);
 
                     case Tournament.EventTypes.SG:
-                        points[(int)Association.FIS] = player.FisSg;
-                        points[(int)Association.SAJ] = player.SajSg;
-                        break;
+                        return (player.FisSg, player.SajSg);
 
                     case Tournament.EventTypes.GS:
-                        points[(int)Association.FIS] = player.FisGs;
-                        points[(int)Association.SAJ] = player.SajGs;
-                        break;
+                        return (player.FisGs, player.SajGs);
 
                     case Tournament.EventTypes.SL:
-                        points[(int)Association.FIS] = player.FisSl;
-                        points[(int)Association.SAJ] = player.SajSl;
-                        break;
+                        return (player.FisSl, player.SajSl);
+
+                    default:
+                        return (null, null);
                 }
             }
-            return points;
+            return (null, null);
         }
 
         private double GetRacePoint(Player targetPlayer, Player winner)
@@ -427,8 +410,11 @@ namespace PointApp.Views
                 case Tournament.EventTypes.SL:
                     fValue = (int)FValue.SL;
                     break;
+
+                default:
+                    break;
             }
-            return fValue * targetPlayer.Time / winner.Time - fValue;
+            return ((fValue * 100 * Convert.ToInt32(targetPlayer.Time * 100) / Convert.ToInt32(winner.Time * 100)) - fValue * 100) * 0.01;
         }
 
         private bool IsHiragana(string str)
@@ -605,16 +591,20 @@ namespace PointApp.Views
             }
         }
 
-        private double[] SumPoints(IEnumerable<Player> listPlayer)
+        private (double, double) SumPoints(IEnumerable<Player> listPlayer)
         {
-            double[] sumPoints = new double[Enum.GetNames(typeof(Association)).Length];
+            int sumFisPoint = 0;
+            int sumSajPoint = 0;
             foreach (var player in listPlayer)
             {
                 var points = GetPoints(player);
-                sumPoints[(int)Association.FIS] += points[(int)Association.FIS];
-                sumPoints[(int)Association.SAJ] += points[(int)Association.SAJ];
+                if (points.Item1 != null && points.Item2 != null)
+                {
+                    sumFisPoint += Convert.ToInt32(points.Item1 * 100);
+                    sumSajPoint += Convert.ToInt32(points.Item2 * 100);
+                }
             }
-            return sumPoints;
+            return (sumFisPoint * 0.01, sumSajPoint * 0.01);
         }
 
         private double SumRacePoint(IEnumerable<Player> listPlayer, Player winner)
@@ -634,9 +624,9 @@ namespace PointApp.Views
                 get
                 {
                     double dValue = 330.00;
-                    if (!string.IsNullOrEmpty(strFisDh))
+                    if (!string.IsNullOrEmpty(StrFisDh))
                     {
-                        string strValue = strFisDh.Insert(strFisDh.Length - 2, ".");
+                        string strValue = StrFisDh.Insert(StrFisDh.Length - 2, ".");
                         dValue = double.Parse(strValue);
                     }
                     return dValue;
@@ -648,9 +638,9 @@ namespace PointApp.Views
                 get
                 {
                     double dValue = 220.00;
-                    if (!string.IsNullOrEmpty(strFisGs))
+                    if (!string.IsNullOrEmpty(StrFisGs))
                     {
-                        string strValue = strFisGs.Insert(strFisGs.Length - 2, ".");
+                        string strValue = StrFisGs.Insert(StrFisGs.Length - 2, ".");
                         dValue = double.Parse(strValue);
                     }
                     return dValue;
@@ -662,9 +652,9 @@ namespace PointApp.Views
                 get
                 {
                     double dValue = 270.00;
-                    if (!string.IsNullOrEmpty(strFisSc))
+                    if (!string.IsNullOrEmpty(StrFisSc))
                     {
-                        string strValue = strFisSc.Insert(strFisSc.Length - 2, ".");
+                        string strValue = StrFisSc.Insert(StrFisSc.Length - 2, ".");
                         dValue = double.Parse(strValue);
                     }
                     return dValue;
@@ -676,9 +666,9 @@ namespace PointApp.Views
                 get
                 {
                     double dValue = 270.00;
-                    if (!string.IsNullOrEmpty(strFisSg))
+                    if (!string.IsNullOrEmpty(StrFisSg))
                     {
-                        string strValue = strFisSg.Insert(strFisSg.Length - 2, ".");
+                        string strValue = StrFisSg.Insert(StrFisSg.Length - 2, ".");
                         dValue = double.Parse(strValue);
                     }
                     return dValue;
@@ -690,9 +680,9 @@ namespace PointApp.Views
                 get
                 {
                     double dValue = 165.00;
-                    if (!string.IsNullOrEmpty(strFisSl))
+                    if (!string.IsNullOrEmpty(StrFisSl))
                     {
-                        string strValue = strFisSl.Insert(strFisSl.Length - 2, ".");
+                        string strValue = StrFisSl.Insert(StrFisSl.Length - 2, ".");
                         dValue = double.Parse(strValue);
                     }
                     return dValue;
@@ -708,9 +698,9 @@ namespace PointApp.Views
                 get
                 {
                     double dValue = 330.00;
-                    if (!string.IsNullOrEmpty(strSajDh))
+                    if (!string.IsNullOrEmpty(StrSajDh))
                     {
-                        string strValue = strSajDh.Insert(strSajDh.Length - 2, ".");
+                        string strValue = StrSajDh.Insert(StrSajDh.Length - 2, ".");
                         dValue = double.Parse(strValue);
                     }
                     return dValue;
@@ -722,9 +712,9 @@ namespace PointApp.Views
                 get
                 {
                     double dValue = 220.00;
-                    if (!string.IsNullOrEmpty(strSajGs))
+                    if (!string.IsNullOrEmpty(StrSajGs))
                     {
-                        string strValue = strSajGs.Insert(strSajGs.Length - 2, ".");
+                        string strValue = StrSajGs.Insert(StrSajGs.Length - 2, ".");
                         dValue = double.Parse(strValue);
                     }
                     return dValue;
@@ -736,9 +726,9 @@ namespace PointApp.Views
                 get
                 {
                     double dValue = 270.00;
-                    if (!string.IsNullOrEmpty(strSajSc))
+                    if (!string.IsNullOrEmpty(StrSajSc))
                     {
-                        string strValue = strSajSc.Insert(strSajSc.Length - 2, ".");
+                        string strValue = StrSajSc.Insert(StrSajSc.Length - 2, ".");
                         dValue = double.Parse(strValue);
                     }
                     return dValue;
@@ -750,9 +740,9 @@ namespace PointApp.Views
                 get
                 {
                     double dValue = 270.00;
-                    if (!string.IsNullOrEmpty(strSajSg))
+                    if (!string.IsNullOrEmpty(StrSajSg))
                     {
-                        string strValue = strSajSg.Insert(strSajSg.Length - 2, ".");
+                        string strValue = StrSajSg.Insert(StrSajSg.Length - 2, ".");
                         dValue = double.Parse(strValue);
                     }
                     return dValue;
@@ -764,34 +754,34 @@ namespace PointApp.Views
                 get
                 {
                     double dValue = 165.00;
-                    if (!string.IsNullOrEmpty(strSajSl))
+                    if (!string.IsNullOrEmpty(StrSajSl))
                     {
-                        string strValue = strSajSl.Insert(strSajSl.Length - 2, ".");
+                        string strValue = StrSajSl.Insert(StrSajSl.Length - 2, ".");
                         dValue = double.Parse(strValue);
                     }
                     return dValue;
                 }
             }
 
-            public string strFisDh { get; set; } = string.Empty;
+            public string StrFisDh { get; set; } = string.Empty;
 
-            public string strFisGs { get; set; } = string.Empty;
+            public string StrFisGs { get; set; } = string.Empty;
 
-            public string strFisSc { get; set; } = string.Empty;
+            public string StrFisSc { get; set; } = string.Empty;
 
-            public string strFisSg { get; set; } = string.Empty;
+            public string StrFisSg { get; set; } = string.Empty;
 
-            public string strFisSl { get; set; } = string.Empty;
+            public string StrFisSl { get; set; } = string.Empty;
 
-            public string strSajDh { get; set; } = string.Empty;
+            public string StrSajDh { get; set; } = string.Empty;
 
-            public string strSajGs { get; set; } = string.Empty;
+            public string StrSajGs { get; set; } = string.Empty;
 
-            public string strSajSc { get; set; } = string.Empty;
+            public string StrSajSc { get; set; } = string.Empty;
 
-            public string strSajSg { get; set; } = string.Empty;
+            public string StrSajSg { get; set; } = string.Empty;
 
-            public string strSajSl { get; set; } = string.Empty;
+            public string StrSajSl { get; set; } = string.Empty;
 
             public double Time { get; set; } = 120.00;
 
