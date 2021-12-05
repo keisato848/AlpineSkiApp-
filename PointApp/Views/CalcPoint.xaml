@@ -27,7 +27,7 @@
                         </Grid.RowDefinitions>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
@@ -35,7 +35,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Text="{Binding JapaneseName}" VerticalOptions="Center" LineBreakMode="NoWrap"/>
-                            <Entry Grid.Column="2" Text="{Binding Time, Mode=TwoWay}" VerticalOptions="Center" MaxLength="6" BackgroundColor="Transparent" HorizontalTextAlignment="Center" WidthRequest="70"/>
+                            <Entry Grid.Column="2" Text="{Binding StrTime, Mode=TwoWay}" VerticalOptions="Center" MaxLength="6" BackgroundColor="Transparent" WidthRequest="70" HorizontalTextAlignment="End" Keyboard="Numeric"/>
                             <Label Grid.Column="3" Text="秒" VerticalOptions="Center"/>
                             <Button Grid.Column="5" Text="削除" Background="tomato" TextColor="White" FontAttributes="Bold"
                                     WidthRequest="80" HeightRequest="38" VerticalOptions="Center" Clicked="Button_Clicked"/>
@@ -182,7 +182,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" Text="5.あなたのタイム(任意)" Style="{StaticResource Heading}" VerticalOptions="Center" Margin="0,0,10,0"/>
-                <Entry Grid.Column="1" WidthRequest="100" MaxLength="6" BackgroundColor="Transparent" Text="120.00" HorizontalTextAlignment="End" PlaceholderColor="#FFFFFF" TextColor="#FFFFFF" VerticalOptions="Center" x:Name="Entry_TargetTime"/>
+                <Entry Grid.Column="1" WidthRequest="70" MaxLength="6" BackgroundColor="Transparent" Text="120.00" HorizontalTextAlignment="End" PlaceholderColor="#FFFFFF" TextColor="#FFFFFF" VerticalOptions="Center" x:Name="Entry_TargetTime" Keyboard="Numeric"/>
                 <Label Grid.Column="2" Text="秒" VerticalOptions="Center"/>
             </Grid>
 

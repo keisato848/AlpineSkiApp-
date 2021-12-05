@@ -1,37 +1,32 @@
-﻿using PointApp.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace PointApp.Views
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class LoginPage : ContentPage
-	{
-		public LoginPage()
-		{
-			InitializeComponent();
-		}
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class LoginPage : ContentPage
+    {
+        public LoginPage()
+        {
+            InitializeComponent();
+        }
 
         private async void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
-			await Shell.Current.GoToAsync("//SignUpPage");
-		}
+            await Shell.Current.GoToAsync("//SignUpPage");
+        }
 
         private async void Button_Clicked(object sender, EventArgs e)
         {
             try
             {
-                string mail     = Entry_Mail.Text;
+                string mail = Entry_Mail.Text;
                 string inputPwd = Entry_Pwd.Text;
-                string id       = null;
-                string pass     = null;
-                string salt     = null;
-                string pwdHash  = null;
+                string id = null;
+                string pass = null;
+                string salt = null;
+                string pwdHash = null;
                 using (var connection = DatabaseUtility.ConnectDataBase())
                 {
                     connection.Open();
@@ -42,7 +37,7 @@ namespace PointApp.Views
                         {
                             if (reader.Read())
                             {
-                                id   = reader.GetValue(0).ToString();
+                                id = reader.GetValue(0).ToString();
                                 pass = reader.GetValue(1).ToString();
                                 salt = reader.GetValue(2).ToString();
                             }

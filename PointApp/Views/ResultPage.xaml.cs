@@ -20,7 +20,7 @@ namespace PointApp.Views
             }
         }
 
-        private async void dismissButton_Clicked(object sender, EventArgs e)
+        private async void DismissButton_Clicked(object sender, EventArgs e)
         {
             await Navigation.PopModalAsync();
         }

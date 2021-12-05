@@ -87,11 +87,11 @@
             <!--  選手のポイント  -->
             <Label Grid.Row="3" Text="※結果の正確性は保障しません。正式なポイントは公式リザルトを確認してください。" />
             <Button
-                x:Name="dismissButton"
+                x:Name="DismissButton"
                 Grid.Row="4"
                 Margin="0,20,0,0"
                 BackgroundColor="#FFFFFF"
-                Clicked="dismissButton_Clicked"
+                Clicked="DismissButton_Clicked"
                 FontAttributes="Bold"
                 Text="閉じる"
                 TextColor="{StaticResource Primary}" />

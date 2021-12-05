@@ -68,7 +68,7 @@ namespace PointApp.Views
         }
 
         private enum ViewCellRowStyle
-        { Height = 46 }
+        { Height = 49 }
 
         public void UpdateControl()
         {
@@ -151,7 +151,7 @@ namespace PointApp.Views
                 {
                     DisplayErrorMessage(ErrorCode.TournamentNameEmpty);
                 }
-                (var fisPenalty, var sajPenalty)= GetPenaltyPoints();
+                (var fisPenalty, var sajPenalty) = GetPenaltyPoints();
                 if (fisPenalty != null && sajPenalty != null)
                 {
                     string tournamentName = Entry_TournamentName.Text;
@@ -562,7 +562,7 @@ namespace PointApp.Views
             entry.Text = string.Empty;
             if (entry.Equals(StartPlayerEntry))
             {
-                StartPlayerEntry.IsVisible = m_finishDefPlayers.Count() < 5;
+                StartPlayerEntry.IsVisible = m_startDefPlayers.Count() < 5;
             }
             else
             {
@@ -784,6 +784,12 @@ namespace PointApp.Views
             public string StrSajSl { get; set; } = string.Empty;
 
             public double Time { get; set; } = 120.00;
+
+            public string StrTime
+            {
+                get => Time.ToString("N");
+                set => Time = Convert.ToDouble(value);
+            }
 
             public Player DeepCopy()
             {
