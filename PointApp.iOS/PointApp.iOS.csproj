@@ -36,7 +36,7 @@
     <OutputPath>bin\iPhoneSimulator\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <MtouchLink>None</MtouchLink>
+    <MtouchLink>SdkOnly</MtouchLink>
     <MtouchArch>x86_64</MtouchArch>
     <CodesignProvision>VS: WildCard Development</CodesignProvision>
     <CodesignKey>Apple Development: habnk1227@gmail.com (YX24X83DGV)</CodesignKey>
@@ -54,7 +54,6 @@
     <MtouchDebug>true</MtouchDebug>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchLink>None</MtouchLink>
-    <MtouchInterpreter>-all</MtouchInterpreter>
     <MtouchFastDev>false</MtouchFastDev>
     <OptimizePNGs>false</OptimizePNGs>
     <CodesignProvision>VS: WildCard Development</CodesignProvision>
@@ -68,10 +67,10 @@
     <MtouchArch>ARM64</MtouchArch>
     <CodesignKey>Apple Development: habnk1227@gmail.com (YX24X83DGV)</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <MtouchLink>None</MtouchLink>
+    <MtouchLink>SdkOnly</MtouchLink>
     <CodesignProvision>VS: WildCard Development</CodesignProvision>
-<RunCodeAnalysis>true</RunCodeAnalysis><MtouchInterpreter>-all</MtouchInterpreter>
-<OptimizePNGs>false</OptimizePNGs>
+<RunCodeAnalysis>true</RunCodeAnalysis><OptimizePNGs>false</OptimizePNGs>
+<MtouchExtraArgs>-gcc_flags</MtouchExtraArgs>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -163,16 +162,19 @@
     <PackageReference Include="Mono.Security">
       <Version>5.4.0.201</Version>
     </PackageReference>
-    <PackageReference Include="System.Text.Json">
-      <Version>5.0.2</Version>
-    </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2244" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
     <PackageReference Include="Xamarin.Forms.Visual.Material">
       <Version>5.0.0.2244</Version>
     </PackageReference>
+    <PackageReference Include="System.Text.Json">
+      <Version>5.0.2</Version>
+    </PackageReference>
     <PackageReference Include="Npgsql">
       <Version>3.2.6</Version>
+    </PackageReference>
+    <PackageReference Include="System.Threading.Tasks.Extensions">
+      <Version>4.5.4</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
