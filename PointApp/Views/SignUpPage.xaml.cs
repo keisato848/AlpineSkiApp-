@@ -25,6 +25,23 @@ namespace PointApp.Views
                 string nickname = Entry_Nickname.Text;
                 string mail = Entry_Mail.Text;
                 string pwd = Entry_Pwd.Text;
+
+                if (string.IsNullOrWhiteSpace(nickname))
+                {
+                    await DisplayAlert("通知", "ニックネームを入力してください。", "OK");
+                    return;
+                }
+                else if (string.IsNullOrWhiteSpace(mail))
+                {
+                    await DisplayAlert("通知", "メールアドレスを入力してください。", "OK");
+                    return;
+                }
+                else if (string.IsNullOrWhiteSpace(pwd))
+                {
+                    await DisplayAlert("通知", "パスワードを入力してください。", "OK");
+                    return;
+                }
+
                 string salt = DatabaseUtility.GetSalt();
                 string pwdHash = DatabaseUtility.GetSHA256HashString(pwd, salt);
 
@@ -48,10 +65,12 @@ namespace PointApp.Views
                     if (postgresEx.ConstraintName == "users_table_nickname_key")
                     {
                         await DisplayAlert("通知", "ニックネームはすでに使用されています。", "OK");
+                        return;
                     }
                     if (postgresEx.ConstraintName == "users_table_mail_address_key")
                     {
                         await DisplayAlert("通知", "メールアドレスはすでに使用されています。", "OK");
+                        return;
                     }
                 }
             }
@@ -60,8 +79,8 @@ namespace PointApp.Views
         private async void LoginSuccess(string id)
         {
             Application.Current.Resources.Add("LoginUserId", id);
-            await Shell.Current.GoToAsync("//CalcPoint");
             await DisplayAlert("通知", "登録が完了しました。\nログインしました。", "OK");
+            await Shell.Current.GoToAsync("//CalcPoint");
         }
 
         private async void TapGestureRecognizer_Tapped(System.Object sender, System.EventArgs e)

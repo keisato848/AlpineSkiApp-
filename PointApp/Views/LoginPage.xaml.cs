@@ -27,6 +27,18 @@ namespace PointApp.Views
                 string pass = null;
                 string salt = null;
                 string pwdHash = null;
+
+                if (string.IsNullOrWhiteSpace(mail))
+                {
+                    await DisplayAlert("通知", "メールアドレスを入力してください。", "OK");
+                    return;
+                }
+                else if(string.IsNullOrWhiteSpace(inputPwd))
+                {
+                    await DisplayAlert("通知", "パスワードを入力してください。", "OK");
+                    return;
+                }
+
                 using (var connection = DatabaseUtility.ConnectDataBase())
                 {
                     connection.Open();
@@ -57,16 +69,18 @@ namespace PointApp.Views
                     else
                     {
                         await DisplayAlert("エラー", "パスワードが一致しませんでした。\nメールアドレスとパスワードを確認してください。", "OK");
+                        return;
                     }
                 }
                 else
                 {
                     await DisplayAlert("エラー", "メールアドレスは登録されていません。", "OK");
+                    return;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                await DisplayAlert("エラー", "予期せぬエラーが発生しました。", "OK");
             }
         }
     }
