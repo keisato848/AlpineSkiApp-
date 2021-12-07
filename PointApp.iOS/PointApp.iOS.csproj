@@ -58,18 +58,20 @@
     <MtouchFastDev>false</MtouchFastDev>
     <OptimizePNGs>false</OptimizePNGs>
     <CodesignProvision>VS: WildCard Development</CodesignProvision>
-  </PropertyGroup>
+<RunCodeAnalysis>true</RunCodeAnalysis>  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\iPhone\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchArch>ARM64</MtouchArch>
     <CodesignKey>Apple Development: habnk1227@gmail.com (YX24X83DGV)</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchLink>None</MtouchLink>
     <CodesignProvision>VS: WildCard Development</CodesignProvision>
+<RunCodeAnalysis>true</RunCodeAnalysis><MtouchInterpreter>-all</MtouchInterpreter>
+<OptimizePNGs>false</OptimizePNGs>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -161,9 +163,6 @@
     <PackageReference Include="Mono.Security">
       <Version>5.4.0.201</Version>
     </PackageReference>
-    <PackageReference Include="Npgsql">
-      <Version>5.0.2</Version>
-    </PackageReference>
     <PackageReference Include="System.Text.Json">
       <Version>5.0.2</Version>
     </PackageReference>
@@ -171,6 +170,9 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
     <PackageReference Include="Xamarin.Forms.Visual.Material">
       <Version>5.0.0.2244</Version>
+    </PackageReference>
+    <PackageReference Include="Npgsql">
+      <Version>3.2.6</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
