@@ -3,6 +3,7 @@
     x:Class="PointApp.Views.ResultPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ctrl="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
     BackgroundColor="{StaticResource Primary}"
     Visual="Material">
     <ContentPage.Padding>
@@ -13,6 +14,7 @@
     <ContentPage.Content>
         <Grid Margin="50">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -96,6 +98,10 @@
                 HeightRequest="50"
                 Text="閉じる"
                 TextColor="{StaticResource Primary}" />
+            <StackLayout Grid.Row="5" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" AbsoluteLayout.LayoutBounds="1,1,460,80">
+                <Label Text="広告" FontSize="Small" HorizontalOptions="Center"/>
+                <ctrl:MTAdView x:Name="AdsArea" AutomationId="1" AdsId="ca-app-pub-3940256099942544/6300978111" WidthRequest="460" HeightRequest="80" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+            </StackLayout>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

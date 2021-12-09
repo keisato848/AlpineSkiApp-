@@ -9,6 +9,8 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Xamarin.Forms;
+using MarcTron.Plugin;
+using System.Threading;
 
 namespace PointApp.Views
 {
@@ -30,7 +32,6 @@ namespace PointApp.Views
             m_startDefPlayers = new ObservableCollection<Player>();
             m_finishDefPlayers = new ObservableCollection<Player>();
             m_allPlayers = new List<Player>();
-
             SetUp();
         }
 
@@ -67,7 +68,7 @@ namespace PointApp.Views
         private enum ViewCellRowStyle
         { Height = 49 }
 
-        public void UpdateControl()
+        private void UpdateControl()
         {
             StartTopList.IsVisible = m_startDefPlayers.Count > 0;
         }

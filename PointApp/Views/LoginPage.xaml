@@ -5,22 +5,24 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ctrl="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
     Title="ログイン"
     BackgroundColor="{StaticResource Primary}"
     Visual="Material"
     mc:Ignorable="d">
     <ContentPage.Content>
-        <ScrollView Margin="40">
-            <Grid Margin="40">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Label
+        <StackLayout>
+            <ScrollView Margin="40,40,40,0">
+                <Grid Margin="40">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Label
                     Grid.Row="0"
                     Margin="0,0,0,20"
                     FontSize="Medium"
@@ -28,12 +30,12 @@
                     Text="新規登録はこちら"
                     TextDecorations="Underline"
                     TextColor="#FFFFFF">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
-                    </Label.GestureRecognizers>
-                </Label>
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+                        </Label.GestureRecognizers>
+                    </Label>
 
-                <Entry
+                    <Entry
                     x:Name="Entry_Mail"
                     Grid.Row="2"
                     BackgroundColor="{StaticResource Primary}"
@@ -41,7 +43,7 @@
                     PlaceholderColor="#FFFFFF"
                     TextColor="#FFFFFF" 
                     Keyboard="Email" />
-                <Entry
+                    <Entry
                     x:Name="Entry_Pwd"
                     Grid.Row="4"
                     BackgroundColor="{StaticResource Primary}"
@@ -50,7 +52,7 @@
                     PlaceholderColor="#FFFFFF"
                     TextColor="#FFFFFF" 
                     IsPassword="True" />
-                <Button
+                    <Button
                     Grid.Row="5"
                     Margin="0,40"
                     BackgroundColor="#FFFFFF"
@@ -60,7 +62,12 @@
                     Text="ログイン"
                     TextColor="{StaticResource Primary}"
                     VerticalOptions="Center" />
-            </Grid>
-        </ScrollView>
+                </Grid>
+            </ScrollView>
+            <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="Center" AbsoluteLayout.LayoutBounds="1,1,460,80">
+                <Label Text="広告" FontSize="Small" HorizontalOptions="Center"/>
+                <ctrl:MTAdView x:Name="AdsArea" AutomationId="1" AdsId="ca-app-pub-2633806931583277/5152545360" WidthRequest="460" HeightRequest="80" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+            </StackLayout>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

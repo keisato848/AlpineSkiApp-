@@ -3,11 +3,13 @@
     x:Class="PointApp.Views.SignUpPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ctrl="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
     Title="新規登録"
     BackgroundColor="{StaticResource Primary}"
     Visual="Material">
     <ContentPage.Content>
-        <ScrollView Margin="40">
+        <StackLayout>
+            <ScrollView Margin="40,40,40,0">
             <Grid Margin="40">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -87,5 +89,11 @@
                     VerticalOptions="Center" />
             </Grid>
         </ScrollView>
+        <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="Center" AbsoluteLayout.LayoutBounds="1,1,460,80">
+            <Label Text="広告" FontSize="Small" HorizontalOptions="Center"/>
+                <ctrl:MTAdView x:Name="AdsArea" AutomationId="1" AdsId="ca-app-pub-2633806931583277/5152545360" WidthRequest="460" HeightRequest="80" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+        </StackLayout>
+        </StackLayout>
+        
     </ContentPage.Content>
 </ContentPage>

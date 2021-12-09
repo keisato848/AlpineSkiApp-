@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ctrl="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
              x:Class="PointApp.Views.CalcPoint"
              Title="ポイント計算"
              BackgroundColor="{StaticResource Primary}"
@@ -77,8 +78,8 @@
     </ContentPage.Resources>
     <FlexLayout Direction="Column" AlignItems="Start" JustifyContent="SpaceEvenly">
         <ScrollView x:Name="ScrollView_Main" VerticalOptions="StartAndExpand" Padding="30">
-            <StackLayout VerticalOptions="StartAndExpand" Margin="0,0,0,100">
-            
+            <StackLayout VerticalOptions="StartAndExpand" Margin="0,0,0,0">
+
                 <!--性別・種目選択-->
                 <StackLayout>
                     <!--性別選択-->
@@ -115,7 +116,7 @@
                     </StackLayout>
                     <!--スタート時のポイント上位5名-->
 
-                <!--合計タイム上位10名-->
+                    <!--合計タイム上位10名-->
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -140,8 +141,8 @@
                         <Label Text="※任意" VerticalOptions="Center" Margin="0,0,10,0" TextColor="#FFFFFF" FontSize="12"/>
                     </StackLayout>
                     <StackLayout Orientation="Horizontal">
-                    <Entry x:Name="Entry_TargetTime" Style="{StaticResource TimeEntry}" Text="120.00"/>
-                    <Label Text="秒" VerticalOptions="Center" TextColor="#FFFFFF"/>
+                        <Entry x:Name="Entry_TargetTime" Style="{StaticResource TimeEntry}" Text="120.00"/>
+                        <Label Text="秒" VerticalOptions="Center" TextColor="#FFFFFF"/>
                     </StackLayout>
                 </StackLayout>
 
@@ -155,14 +156,18 @@
                     </StackLayout>
                 </StackLayout>
                 <!--共有選択エリア-->
-
-                <!--計算ボタン-->
+                    <!--計算ボタン-->
                 <Button x:Name="Btn_Calc" VerticalOptions="Center" Text="計算" FontAttributes="Bold" HeightRequest="50"
                         BackgroundColor="#FFFFFF" TextColor="{StaticResource Primary}" Clicked="Btn_Calc_Clicked"/>
                 <!--計算ボタン-->
-
                 <Label Grid.Row="11" Margin="0,20,0,0" Text="© Kei Sato" FontSize="Micro" TextColor="WhiteSmoke" HorizontalOptions="Center" BackgroundColor="Transparent"/>
             </StackLayout>
         </ScrollView>
+
+        <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="Center">
+            <Label Text="広告" FontSize="Small" HorizontalOptions="Center"/>
+            <ctrl:MTAdView x:Name="AdsArea" AdsId="ca-app-pub-2633806931583277/2100712905" WidthRequest="460" HeightRequest="80" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+        </StackLayout>
+        
     </FlexLayout>
 </ContentPage>
