@@ -47,6 +47,12 @@ namespace PointApp.Views
             TournamentNameEmpty = 22,
         }
 
+        public enum SexType
+        {
+            Men = 0,
+            Women = 1,
+        }
+
         private enum FValue
         {
             SL = 730,
@@ -286,10 +292,10 @@ namespace PointApp.Views
 
         private void EventSex_RadioButton_CheckedChanged(object sender, CheckedChangedEventArgs e)
         {
-            var radioButton = sender as RadioButton;
-            if (radioButton?.ClassId != null)
+            if (sender is RadioButton radioButton && radioButton?.ClassId != null)
             {
-                m_tournament.Sex = int.Parse(radioButton.ClassId);
+                m_tournament.Sex = (SexType)Enum.ToObject(typeof(SexType), Convert.ToInt32(radioButton.ClassId));
+                SetUp();
             }
         }
 
@@ -495,7 +501,7 @@ namespace PointApp.Views
             }
         }
 
-        private string ReadPointList()
+        private string ReadPointList(SexType sex)
         {
             string strJson = null;
             try
@@ -504,7 +510,9 @@ namespace PointApp.Views
                 var jsonResource = assembly.GetManifestResourceNames();
                 if (jsonResource != null)
                 {
-                    var file = assembly.GetManifestResourceStream(jsonResource.First(json => json.Equals("PointApp.PointList.json")));
+                    var file = m_tournament.Sex == SexType.Men
+                        ? assembly.GetManifestResourceStream(jsonResource.First(json => json.Equals("PointApp.PointList_M.json")))
+                        : assembly.GetManifestResourceStream(jsonResource.First(json => json.Equals("PointApp.PointList_L.json")));
                     if (file != null)
                     {
                         using (var sr = new StreamReader(file))
@@ -570,7 +578,11 @@ namespace PointApp.Views
 
         private void SetUp()
         {
-            var strJson = ReadPointList();
+            m_startDefPlayers.Clear();
+            m_finishDefPlayers.Clear();
+            StartTopList.HeightRequest = 0;
+            FinishTopList.HeightRequest = 0;
+            var strJson = ReadPointList(m_tournament.Sex);
             if (strJson is string)
             {
                 try
@@ -622,7 +634,7 @@ namespace PointApp.Views
                 get
                 {
                     double dValue = 330.00;
-                    if (!string.IsNullOrEmpty(StrFisDh))
+                    if (!string.IsNullOrWhiteSpace(StrFisDh))
                     {
                         string strValue = StrFisDh.Insert(StrFisDh.Length - 2, ".");
                         dValue = double.Parse(strValue);
@@ -636,7 +648,7 @@ namespace PointApp.Views
                 get
                 {
                     double dValue = 220.00;
-                    if (!string.IsNullOrEmpty(StrFisGs))
+                    if (!string.IsNullOrWhiteSpace(StrFisGs))
                     {
                         string strValue = StrFisGs.Insert(StrFisGs.Length - 2, ".");
                         dValue = double.Parse(strValue);
@@ -650,7 +662,7 @@ namespace PointApp.Views
                 get
                 {
                     double dValue = 270.00;
-                    if (!string.IsNullOrEmpty(StrFisSc))
+                    if (!string.IsNullOrWhiteSpace(StrFisSc))
                     {
                         string strValue = StrFisSc.Insert(StrFisSc.Length - 2, ".");
                         dValue = double.Parse(strValue);
@@ -664,7 +676,7 @@ namespace PointApp.Views
                 get
                 {
                     double dValue = 270.00;
-                    if (!string.IsNullOrEmpty(StrFisSg))
+                    if (!string.IsNullOrWhiteSpace(StrFisSg))
                     {
                         string strValue = StrFisSg.Insert(StrFisSg.Length - 2, ".");
                         dValue = double.Parse(strValue);
@@ -678,7 +690,7 @@ namespace PointApp.Views
                 get
                 {
                     double dValue = 165.00;
-                    if (!string.IsNullOrEmpty(StrFisSl))
+                    if (!string.IsNullOrWhiteSpace(StrFisSl))
                     {
                         string strValue = StrFisSl.Insert(StrFisSl.Length - 2, ".");
                         dValue = double.Parse(strValue);
@@ -696,7 +708,7 @@ namespace PointApp.Views
                 get
                 {
                     double dValue = 330.00;
-                    if (!string.IsNullOrEmpty(StrSajDh))
+                    if (!string.IsNullOrWhiteSpace(StrSajDh))
                     {
                         string strValue = StrSajDh.Insert(StrSajDh.Length - 2, ".");
                         dValue = double.Parse(strValue);
@@ -710,7 +722,7 @@ namespace PointApp.Views
                 get
                 {
                     double dValue = 220.00;
-                    if (!string.IsNullOrEmpty(StrSajGs))
+                    if (!string.IsNullOrWhiteSpace(StrSajGs))
                     {
                         string strValue = StrSajGs.Insert(StrSajGs.Length - 2, ".");
                         dValue = double.Parse(strValue);
@@ -724,7 +736,7 @@ namespace PointApp.Views
                 get
                 {
                     double dValue = 270.00;
-                    if (!string.IsNullOrEmpty(StrSajSc))
+                    if (!string.IsNullOrWhiteSpace(StrSajSc))
                     {
                         string strValue = StrSajSc.Insert(StrSajSc.Length - 2, ".");
                         dValue = double.Parse(strValue);
@@ -738,7 +750,7 @@ namespace PointApp.Views
                 get
                 {
                     double dValue = 270.00;
-                    if (!string.IsNullOrEmpty(StrSajSg))
+                    if (!string.IsNullOrWhiteSpace(StrSajSg))
                     {
                         string strValue = StrSajSg.Insert(StrSajSg.Length - 2, ".");
                         dValue = double.Parse(strValue);
@@ -752,7 +764,7 @@ namespace PointApp.Views
                 get
                 {
                     double dValue = 165.00;
-                    if (!string.IsNullOrEmpty(StrSajSl))
+                    if (!string.IsNullOrWhiteSpace(StrSajSl))
                     {
                         string strValue = StrSajSl.Insert(StrSajSl.Length - 2, ".");
                         dValue = double.Parse(strValue);
@@ -762,6 +774,7 @@ namespace PointApp.Views
             }
 
             public string StrFisDh { get; set; } = string.Empty;
+            public string StrFisSl { get; set; } = string.Empty;
 
             public string StrFisGs { get; set; } = string.Empty;
 
@@ -769,7 +782,6 @@ namespace PointApp.Views
 
             public string StrFisSg { get; set; } = string.Empty;
 
-            public string StrFisSl { get; set; } = string.Empty;
 
             public string StrSajDh { get; set; } = string.Empty;
 
@@ -802,7 +814,7 @@ namespace PointApp.Views
             { NONE, DH, SG, GS, SL }
 
             public string Name { get; set; } = string.Empty;
-            public int Sex { get; set; } = 0; // 男子 = 0, 女子 = 1
+            public SexType Sex { get; set; } = SexType.Men;
             public EventTypes Types { get; set; } = EventTypes.SG;
         }
     }

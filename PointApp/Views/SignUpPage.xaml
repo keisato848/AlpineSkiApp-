@@ -43,14 +43,14 @@
                     BackgroundColor="{StaticResource Primary}"
                     Placeholder="ニックネーム（公開）"
                     PlaceholderColor="#FFFFFF"
-                    TextColor="#FFFFFF" />
+                    TextColor="{StaticResource Primary}" />
                 <Entry
                     x:Name="Entry_Mail"
                     Grid.Row="4"
                     BackgroundColor="{StaticResource Primary}"
                     Placeholder="メールアドレス（非公開）"
                     PlaceholderColor="#FFFFFF"
-                    TextColor="#FFFFFF"
+                    TextColor="{StaticResource Primary}"
                     Keyboard="Email" />
                 <Entry
                     x:Name="Entry_Pwd"
@@ -60,7 +60,7 @@
                     MaxLength="16"
                     Placeholder="パスワード（非公開）"
                     PlaceholderColor="#FFFFFF"
-                    TextColor="#FFFFFF" />
+                    TextColor="{StaticResource Primary}" />
                 <Label
                     Grid.Row="7"
                     Margin="0,5,0,15"
@@ -91,7 +91,7 @@
         </ScrollView>
         <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="Center" AbsoluteLayout.LayoutBounds="1,1,460,80">
             <Label Text="広告" FontSize="Small" HorizontalOptions="Center"/>
-                <ctrl:MTAdView x:Name="AdsArea" AutomationId="1" AdsId="ca-app-pub-2633806931583277/5152545360" WidthRequest="460" HeightRequest="80" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                <ctrl:MTAdView x:Name="AdsArea" HorizontalOptions="Center" AutomationId="1" AdsId="{OnPlatform Android=ca-app-pub-2633806931583277/5152545360, iOS=ca-app-pub-2633806931583277/8738536773}" WidthRequest="460" HeightRequest="80" VerticalOptions="FillAndExpand"/>
         </StackLayout>
         </StackLayout>
         

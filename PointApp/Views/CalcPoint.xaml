@@ -5,7 +5,7 @@
              x:Class="PointApp.Views.CalcPoint"
              Title="ポイント計算"
              BackgroundColor="{StaticResource Primary}"
-             Visual="Default" >
+             >
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -35,16 +35,14 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Text="{Binding JapaneseName}" TextColor="#FFFFFF" VerticalOptions="Center" WidthRequest="90" LineBreakMode="NoWrap"/>
-                        <Entry Grid.Column="2" Text="{Binding StrTime, Mode=TwoWay}" Style="{StaticResource TimeEntry}"/>
-                        <Label Grid.Column="3" Text="秒" VerticalOptions="Center" TextColor="#FFFFFF"/>
-                        <Button Grid.Column="5" Text="削除" Background="tomato" TextColor="White" FontAttributes="Bold"
+                        <Label Grid.Column="0" Text="{Binding JapaneseName}" TextColor="#FFFFFF" VerticalOptions="Center" WidthRequest="100" LineBreakMode="NoWrap"/>
+                        <Entry Grid.Column="1" Text="{Binding StrTime, Mode=TwoWay}" Style="{StaticResource TimeEntry}"/>
+                        <Label Grid.Column="2" Text="秒" VerticalOptions="Center" TextColor="#FFFFFF" HorizontalTextAlignment="Start" WidthRequest="50"/>
+                        <Button Grid.Column="3" Text="削除" Background="tomato" TextColor="White" FontAttributes="Bold"
                                 WidthRequest="80" HeightRequest="38" VerticalOptions="Center" Clicked="Button_Clicked"/>
                     </Grid>
                 </ViewCell>
@@ -62,7 +60,7 @@
                 <Setter Property="Margin" Value="10,0"/>
             </Style>
             <Style x:Key="PlayerEntry" TargetType="Entry">
-                <Setter Property="WidthRequest" Value="250"/>
+                <Setter Property="WidthRequest" Value="50"/>
                 <Setter Property="Placeholder" Value="選手名を入力"/>
                 <Setter Property="MaxLength" Value="30"/>
                 <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
@@ -76,9 +74,9 @@
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <FlexLayout Direction="Column" AlignItems="Start" JustifyContent="SpaceEvenly">
-        <ScrollView x:Name="ScrollView_Main" VerticalOptions="StartAndExpand" Padding="30">
-            <StackLayout VerticalOptions="StartAndExpand" Margin="0,0,0,0">
+    <FlexLayout Direction="Column" AlignItems="Start" Margin="30">
+        <ScrollView x:Name="ScrollView_Main" >
+            <StackLayout>
 
                 <!--性別・種目選択-->
                 <StackLayout>
@@ -164,9 +162,9 @@
             </StackLayout>
         </ScrollView>
 
-        <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="Center">
+        <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Margin="0,0,0,20">
             <Label Text="広告" FontSize="Small" HorizontalOptions="Center"/>
-            <ctrl:MTAdView x:Name="AdsArea" AdsId="ca-app-pub-2633806931583277/2100712905" WidthRequest="460" HeightRequest="80" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+            <ctrl:MTAdView x:Name="AdsArea" AdsId="{OnPlatform Android=ca-app-pub-2633806931583277/2100712905, iOS=ca-app-pub-2633806931583277/8738536773}" WidthRequest="{OnPlatform Android=400, iOS=380}" HeightRequest="80" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
         </StackLayout>
         
     </FlexLayout>

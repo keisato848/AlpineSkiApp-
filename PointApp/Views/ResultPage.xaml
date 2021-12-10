@@ -100,7 +100,7 @@
                 TextColor="{StaticResource Primary}" />
             <StackLayout Grid.Row="5" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" AbsoluteLayout.LayoutBounds="1,1,460,80">
                 <Label Text="広告" FontSize="Small" HorizontalOptions="Center"/>
-                <ctrl:MTAdView x:Name="AdsArea" AutomationId="1" AdsId="ca-app-pub-3940256099942544/6300978111" WidthRequest="460" HeightRequest="80" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                <ctrl:MTAdView x:Name="AdsArea" AutomationId="1" AdsId="{OnPlatform Android=ca-app-pub-3940256099942544/6300978111, iOS=ca-app-pub-2633806931583277/8738536773}" WidthRequest="460" HeightRequest="80" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
             </StackLayout>
         </Grid>
     </ContentPage.Content>

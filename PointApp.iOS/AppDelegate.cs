@@ -4,6 +4,11 @@ using System.Linq;
 
 using Foundation;
 using UIKit;
+using Google.MobileAds;
+using MarcTron;
+using MarcTron.Plugin;
+using Xamarin;
+using Xamarin.Forms;
 
 namespace PointApp.iOS
 {
@@ -25,8 +30,10 @@ namespace PointApp.iOS
             global::Xamarin.Forms.Forms.Init();
             global::Xamarin.Forms.FormsMaterial.Init();
             LoadApplication(new App());
-
+            
+            MobileAds.SharedInstance.Start(CompletionHandler);
             return base.FinishedLaunching(app, options);
         }
+        private void CompletionHandler(InitializationStatus status) { }
     }
 }

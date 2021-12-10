@@ -18,6 +18,7 @@
     <Compile Remove="Views\新しいフォルダー\**" />
     <EmbeddedResource Remove="Views\新しいフォルダー\**" />
     <None Remove="Views\新しいフォルダー\**" />
+    <None Remove="PointList_L.json" />
     <None Remove="Xamarin.Forms.Visual.Material" />
   </ItemGroup>
 
@@ -32,7 +33,10 @@
 
   <ItemGroup>
     <EmbeddedResource Include="GettingStarted.txt" />
-	<EmbeddedResource Include="PointList.json">
+    <EmbeddedResource Include="PointList_L.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+	<EmbeddedResource Include="PointList_M.json">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</EmbeddedResource>
 	<EmbeddedResource Include="Settings.json">
