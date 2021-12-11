@@ -43,14 +43,14 @@
                     BackgroundColor="{StaticResource Primary}"
                     Placeholder="ニックネーム（公開）"
                     PlaceholderColor="#FFFFFF"
-                    TextColor="{StaticResource Primary}" />
+                    TextColor="{OnPlatform Android={StaticResource Primary},iOS=#FFFFFF}" />
                 <Entry
                     x:Name="Entry_Mail"
                     Grid.Row="4"
                     BackgroundColor="{StaticResource Primary}"
                     Placeholder="メールアドレス（非公開）"
                     PlaceholderColor="#FFFFFF"
-                    TextColor="{StaticResource Primary}"
+                    TextColor="{OnPlatform Android={StaticResource Primary},iOS=#FFFFFF}"
                     Keyboard="Email" />
                 <Entry
                     x:Name="Entry_Pwd"
@@ -60,7 +60,7 @@
                     MaxLength="16"
                     Placeholder="パスワード（非公開）"
                     PlaceholderColor="#FFFFFF"
-                    TextColor="{StaticResource Primary}" />
+                    TextColor="{OnPlatform Android={StaticResource Primary},iOS=#FFFFFF}" />
                 <Label
                     Grid.Row="7"
                     Margin="0,5,0,15"
