@@ -12,6 +12,8 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using System.Net.Http;
 using Xamarin.Essentials;
+using System.Net;
+using HtmlAgilityPack;
 
 namespace PointApp.Views
 {
@@ -25,7 +27,7 @@ namespace PointApp.Views
             m_startDefPlayers = new ObservableCollection<Player>();
             m_finishDefPlayers = new ObservableCollection<Player>();
             m_allPlayers = new List<Player>();
-            Client = new HttpClient();
+            Client = new WebClient();
             SetUpCalcPoint();
             SetUpLiveTiming();
         }
@@ -37,7 +39,7 @@ namespace PointApp.Views
 
         private readonly Tournament m_tournament;
 
-        private static HttpClient Client;
+        private static WebClient Client;
 
 
         private enum ErrorCode
@@ -86,7 +88,7 @@ namespace PointApp.Views
 
         private bool IsConnective()
         {
-            return Connectivity.NetworkAccess == NetworkAccess.Internet
+            return Connectivity.NetworkAccess == Xamarin.Essentials.NetworkAccess.Internet
                     ? true : false;
         }
 
@@ -99,7 +101,15 @@ namespace PointApp.Views
                     await DisplayAlert("エラー", "インターネットに接続されていません。", "OK");
                 }
 
-
+                // 指定したサイトのHTMLをストリームで取得する
+                var html = Client.DownloadString(@"https://seikosportslink.com/sias/101/?i=20004686&s=SI&d=AS&g=W&e=030&c=01&p=1&u=02");
+                if (html == null)
+                {
+                    await DisplayAlert("エラー", "接続に失敗しました。¥nURLを確認してください。", "OK");
+                }
+                var htmlDoc = new HtmlDocument();
+                htmlDoc.LoadHtml(html);
+                var node = htmlDoc.DocumentNode.SelectSingleNode("/html/body/main/section[@id='results-body']/div/div/div/div[@id='results-results-sm']/div[@id='results-results-sm-1']");
             }
             catch (Exception ex)
             {
