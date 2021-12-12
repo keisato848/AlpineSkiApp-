@@ -11,8 +11,7 @@ using System.Text.RegularExpressions;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using System.Net.Http;
-using AngleSharp;
-using AngleSharp.Html.Parser;
+using Xamarin.Essentials;
 
 namespace PointApp.Views
 {
@@ -27,7 +26,6 @@ namespace PointApp.Views
             m_finishDefPlayers = new ObservableCollection<Player>();
             m_allPlayers = new List<Player>();
             Client = new HttpClient();
-
             SetUpCalcPoint();
             SetUpLiveTiming();
         }
@@ -40,6 +38,7 @@ namespace PointApp.Views
         private readonly Tournament m_tournament;
 
         private static HttpClient Client;
+
 
         private enum ErrorCode
         {
@@ -85,35 +84,22 @@ namespace PointApp.Views
             StartTopList.IsVisible = m_startDefPlayers.Count > 0;
         }
 
+        private bool IsConnective()
+        {
+            return Connectivity.NetworkAccess == NetworkAccess.Internet
+                    ? true : false;
+        }
+
         private async void SetUpLiveTiming()
         {
             try
             {
-                // 指定したサイトのHTMLをストリームで取得する
-                var response = await Client.GetAsync(@"https://seikosportslink.com/skss/102/index.html?i=1101121040&s=SK&d=SS&g=W&e=203&c=52&p=1&u=01");
-                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                if (!IsConnective())
                 {
-                    await DisplayAlert("エラー", "接続に失敗しました。¥nURLを確認してください。", "OK");
+                    await DisplayAlert("エラー", "インターネットに接続されていません。", "OK");
                 }
-                using (var sorce = await response.Content.ReadAsStreamAsync())
-                {
-                    var parser = new HtmlParser();
-                    var doc = default(AngleSharp.Html.Dom.IHtmlDocument);
-                    doc = await parser.ParseDocumentAsync(sorce);
-                    {
-                        var targetNode = doc.QuerySelectorAll("main #results-page section div.results div.d-block");
-                        var startList = targetNode[0].QuerySelectorAll("div.results-startlist-xs");
-                        var resultList = targetNode[0].QuerySelectorAll("div.results-results-xs > div");
 
-                        if (startList != null && resultList != null && startList.Length == 1 && resultList.Length > 0)
-                        {
-                            var results = resultList[1].QuerySelectorAll("div");
-                        }
-                        var bio = doc.GetElementsByClassName(@"results-bio");
-                        var body = doc.GetElementById(@"results-results-lg-body").GetAttribute("data-competitorcode");
-                        var bio2 = doc.GetElementsByName(@"results-bio").Select(x => x);
-                    }
-                }
+
             }
             catch (Exception ex)
             {

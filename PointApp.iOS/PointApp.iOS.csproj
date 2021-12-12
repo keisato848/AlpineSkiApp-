@@ -184,7 +184,7 @@
       <Version>4.5.4</Version>
     </PackageReference>
     <PackageReference Include="AngleSharp">
-      <Version>0.16.1</Version>
+      <Version>0.10.1</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
@@ -196,7 +196,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties XamarinHotReloadMonoInterpreterErrorInfoBarPointAppiOSHideInfoBar="True" XamarinHotReloadDebuggerTimeoutExceptionPointAppiOSHideInfoBar="True" />
+      <UserProperties XamarinHotReloadDebuggerTimeoutExceptionPointAppiOSHideInfoBar="True" XamarinHotReloadMonoInterpreterErrorInfoBarPointAppiOSHideInfoBar="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
