@@ -20,6 +20,10 @@
     <None Remove="Views\新しいフォルダー\**" />
     <None Remove="PointList_L.json" />
     <None Remove="Xamarin.Forms.Visual.Material" />
+    <None Remove="AngleSharp" />
+    <EmbeddedResource Remove="Views\CalcPoint.xaml" />
+    <Compile Remove="Views\CalcPoint.xaml.cs" />
+    <Compile Remove="ViewModels\LoginViewModel.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,16 +57,11 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />  
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2244" />
     <PackageReference Include="Xamarin.Forms.Visual.Material" Version="4.8.0.1821" />
+    <PackageReference Include="AngleSharp" Version="0.16.1" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Remove="Views\Result.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Views\CalcPoint.xaml.cs">
-      <DependentUpon>CalcPoint.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>

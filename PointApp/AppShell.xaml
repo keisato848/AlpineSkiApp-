@@ -121,8 +121,9 @@
         https://docs.microsoft.com/dotnet/api/xamarin.forms.shellgroupitem.flyoutdisplayoptions?view=xamarin-forms
     -->
     <FlyoutItem Title="ポイント計算">
-        <ShellContent ContentTemplate="{DataTemplate local:CalcPoint}" Route="CalcPoint" />
+        <ShellContent ContentTemplate="{DataTemplate local:LiveTimingPage}" Route="LiveTimingPage" />
     </FlyoutItem>
+
     <!--
     <FlyoutItem Title="結果一覧" Icon="icon_feed.png">
         <ShellContent Route="ItemsPage" ContentTemplate="{DataTemplate local:ItemsPage}" />
