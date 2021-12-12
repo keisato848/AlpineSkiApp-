@@ -41,7 +41,7 @@
                     BackgroundColor="{StaticResource Primary}"
                     Placeholder="メールアドレス"
                     PlaceholderColor="#FFFFFF"
-                    TextColor="{StaticResource Primary}" 
+                    TextColor="{OnPlatform Android={StaticResource Primary},iOS=#FFFFFF}" 
                     Keyboard="Email" />
                     <Entry
                     x:Name="Entry_Pwd"
@@ -50,7 +50,7 @@
                     MaxLength="16"
                     Placeholder="パスワード"
                     PlaceholderColor="#FFFFFF"
-                    TextColor="{StaticResource Primary}" 
+                    TextColor="{OnPlatform Android={StaticResource Primary},iOS=#FFFFFF}" 
                     IsPassword="True" />
                     <Button
                     Grid.Row="5"

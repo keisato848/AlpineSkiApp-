@@ -74,10 +74,14 @@
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <FlexLayout Direction="Column" AlignItems="Start" Margin="30">
-        <ScrollView x:Name="ScrollView_Main" >
+    <FlexLayout Direction="Column" AlignItems="Start">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+        <ScrollView  Padding="30" x:Name="ScrollView_Main" Grid.Row="0" >
             <StackLayout>
-
                 <!--性別・種目選択-->
                 <StackLayout>
                     <!--性別選択-->
@@ -162,10 +166,7 @@
             </StackLayout>
         </ScrollView>
 
-        <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Margin="0,0,0,20">
-            <Label Text="広告" FontSize="Small" HorizontalOptions="Center"/>
-            <ctrl:MTAdView x:Name="AdsArea" AdsId="{OnPlatform Android=ca-app-pub-2633806931583277/2100712905, iOS=ca-app-pub-2633806931583277/8738536773}" WidthRequest="{OnPlatform Android=400, iOS=380}" HeightRequest="80" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
-        </StackLayout>
-        
+        </Grid>
+
     </FlexLayout>
 </ContentPage>
