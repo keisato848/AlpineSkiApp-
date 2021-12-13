@@ -153,8 +153,7 @@
                     <Switch x:Name="Switch_Share" IsToggled="False" Toggled="Switch_Share_Toggled"/>
                     <Label Text="結果を共有" VerticalOptions="Center" TextColor="#ffffff"/>
                     <StackLayout x:Name="PopupLayout_Share" Margin="20,0,0,0" IsVisible="false" HorizontalOptions="Start" Orientation="Horizontal">
-                        <Label Text="大会名" VerticalOptions="Center" VerticalTextAlignment="Center"/>
-                        <Entry x:Name="Entry_TournamentName" WidthRequest="150" />
+                        <Entry x:Name="Entry_TournamentName" WidthRequest="150" Style="{StaticResource TimeEntry}" Placeholder="大会名を入力"/>
                     </StackLayout>
                 </StackLayout>
                 <!--共有選択エリア-->
