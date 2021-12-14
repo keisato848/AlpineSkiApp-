@@ -79,7 +79,7 @@ namespace PointApp.Views
         }
 
         private enum ViewCellRowStyle
-        { Height = 49 }
+        { Height = 40 }
 
         private void UpdateControl()
         {
