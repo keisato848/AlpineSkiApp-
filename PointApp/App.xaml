@@ -3,39 +3,48 @@
     x:Class="PointApp.App"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
-    <!--
-        Define global resources and styles here, that apply to all pages in your app.
-    -->
     <Application.Resources>
+        <!-- アイコンフォント設定 -->
+        <OnPlatform x:Key="MaterialFontFamily" x:TypeArguments="x:String">
+            <On Platform="Android" Value="materialdesignicons-webfont.ttf#Material Design Icons" />
+            <On Platform="iOS" Value="Material Design Icons" />
+        </OnPlatform>
+        <!-- アイコンフォント設定 -->
         <ResourceDictionary>
             <Color x:Key="Primary">#172f71</Color>
             <Color x:Key="Accent">#0073BD</Color>
             <Color x:Key="Alert">tomato</Color>
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="#FFFFFF"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="VerticalTextAlignment" Value="Center"/>
+                <Setter Property="HorizontalOptions" Value="Center"/>
+                <Setter Property="HorizontalTextAlignment" Value="Center"/>
+            </Style>
             <Style x:Key="Heading" TargetType="Label">
-                <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
-                <Setter Property="Margin" Value="0,10" />
-                <Setter Property="FontSize" Value="Medium" />
-                <Setter Property="TextColor" Value="WhiteSmoke" />
-                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="Margin" Value="10" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="TextColor" Value="{StaticResource Primary}" />
+                <Setter Property="HorizontalOptions" Value="Start"/>
             </Style>
             <Style TargetType="Button">
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="VisualStateManager.VisualStateGroups">
-                    <VisualStateGroupList>
-                        <VisualStateGroup x:Name="CommonStates">
-                            <VisualState x:Name="Normal">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
-                                </VisualState.Setters>
-                            </VisualState>
-                            <VisualState x:Name="Disabled">
-                                <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="#332196F3" />
-                                </VisualState.Setters>
-                            </VisualState>
-                        </VisualStateGroup>
-                    </VisualStateGroupList>
-                </Setter>
+                <Setter Property="Background" Value="#FFFFFF" />
+                <Setter Property="TextColor" Value="{StaticResource Primary}" />
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+            </Style>
+            <Style TargetType="ContentPage">
+                <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
+            </Style>
+            <Style TargetType="ActivityIndicator">
+                <Setter Property="IsVisible" Value="False"/>
+                <Style.Triggers>
+                    <Trigger TargetType="ActivityIndicator" Property="IsRunning" Value="True">
+                        <Setter Property="IsVisible" Value="True"/>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
         </ResourceDictionary>
     </Application.Resources>

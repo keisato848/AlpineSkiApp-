@@ -18,8 +18,8 @@ namespace PointApp
 
         private void UpdateFlyItemVisibility()
         {
-            FlyItem_Login.IsVisible = !Application.Current.Resources.TryGetValue("LoginUserId", out _);
-            FlyItem_Signup.IsVisible = !Application.Current.Resources.TryGetValue("LoginUserId", out _);
+            //FlyItem_Login.IsVisible = !Application.Current.Resources.TryGetValue("LoginUserId", out _);
+            //FlyItem_Signup.IsVisible = !Application.Current.Resources.TryGetValue("LoginUserId", out _);
         }
 
         private void FlyItem_Login_Disappearing(object sender, EventArgs e)

@@ -1,192 +1,339 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="PointApp.Views.LiveTimingPage"
-             SelectedTabColor="White" UnselectedTabColor="Gray">
-
-    <ContentPage xmlns:ctrl="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
-             Title="ポイント計算"
-             BackgroundColor="{StaticResource Primary}">
-    <ContentPage.Resources>
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+            xmlns:ctrl="clr-namespace:MarcTron.Plugin.Controls;assembly=Plugin.MtAdmob"
+            x:Class="PointApp.Views.LiveTimingPage"
+            x:Name="TabbedPageMain" BarTextColor="{StaticResource Primary}" BarBackground="#FFFFFF" CurrentPageChanged="TabbedPage_CurrentPageChanged">
+    <TabbedPage.Resources>
         <ResourceDictionary>
-            <DataTemplate x:Key="AllList_ItemTemplate" >
-                <TextCell Text="{Binding JapaneseName, Mode=TwoWay}" TextColor="#FFFFFF"/>
+            <DataTemplate x:Key="AllList_ItemTemplate">
+                <TextCell Text="{Binding JapaneseName, Mode=TwoWay}" TextColor="#FFFFFF" />
             </DataTemplate>
+            <Style x:Key="HeadingFrame" TargetType="Frame">
+                <Setter Property="Background" Value="#FFFFFF" />
+                <Setter Property="Margin" Value="0,10" />
+                <Setter Property="Padding" Value="5" />
+                <Setter Property="HasShadow" Value="True" />
+            </Style>
             <Style x:Key="AllList" TargetType="ListView">
-                <Setter Property="ItemTemplate" Value="{StaticResource AllList_ItemTemplate}"/>
-                <Setter Property="IsVisible" Value="False"/>
-                <Setter Property="HasUnevenRows" Value="False"/>
-                <Setter Property="RowHeight" Value="43"/>
-                <Setter Property="AbsoluteLayout.VerticalOptions" Value="Center"/>
-                <Setter Property="BackgroundColor" Value="Transparent"/>
+                <Setter Property="ItemTemplate" Value="{StaticResource AllList_ItemTemplate}" />
+                <Setter Property="IsVisible" Value="False" />
+                <Setter Property="HasUnevenRows" Value="False" />
+                <Setter Property="RowHeight" Value="43" />
+                <Setter Property="AbsoluteLayout.VerticalOptions" Value="Center" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
             </Style>
             <Style x:Key="TimeEntry" TargetType="Entry">
-                <Setter Property="WidthRequest" Value="70"/>
-                <Setter Property="Keyboard" Value="Numeric"/>
-                <Setter Property="HorizontalTextAlignment" Value="Center"/>
-                <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
-                <Setter Property="VerticalTextAlignment" Value="Center"/>
-                <Setter Property="TextColor" Value="#FFFFFF"/>
-                <Setter Property="PlaceholderColor" Value="#FFFFFF"/>
-                <Setter Property="MaxLength" Value="6"/>
+                <Setter Property="WidthRequest" Value="70" />
+                <Setter Property="Keyboard" Value="Numeric" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+                <Setter Property="TextColor" Value="#FFFFFF" />
+                <Setter Property="PlaceholderColor" Value="#FFFFFF" />
+                <Setter Property="MaxLength" Value="6" />
             </Style>
             <DataTemplate x:Key="TopListView_Items">
                 <ViewCell>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Text="{Binding JapaneseName}" TextColor="#FFFFFF" VerticalOptions="Center" WidthRequest="100" LineBreakMode="NoWrap"/>
-                        <Entry Grid.Column="1" Text="{Binding StrTime, Mode=TwoWay}" Style="{StaticResource TimeEntry}"/>
-                        <Label Grid.Column="2" Text="秒" VerticalOptions="Center" TextColor="#FFFFFF" HorizontalTextAlignment="Start" WidthRequest="50"/>
-                        <Button Grid.Column="3" Text="削除" Background="tomato" TextColor="White" FontAttributes="Bold"
-                                WidthRequest="80" HeightRequest="38" VerticalOptions="Center" Clicked="Button_Clicked"/>
-                    </Grid>
+                    <StackLayout Orientation="Horizontal" Margin="2">
+                        <Label Text="{Binding JapaneseName}" TextColor="#FFFFFF" VerticalOptions="Center" WidthRequest="100" LineBreakMode="NoWrap" />
+                        <Entry Text="{Binding StrTime, Mode=TwoWay}" Style="{StaticResource TimeEntry}" />
+                        <Label Text="秒" VerticalOptions="Center" TextColor="#FFFFFF" HorizontalTextAlignment="Start" WidthRequest="50" />
+                        <Button Text="解除" Background="gray" TextColor="#FFFFFF" WidthRequest="90" Clicked="ButtonUnselect_Clicked" />
+                    </StackLayout>
                 </ViewCell>
             </DataTemplate>
+            <DataTemplate x:Key="LiveTiming_Items">
+                <StackLayout Margin="5">
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+                    </StackLayout.GestureRecognizers>
+                    <xct:Expander VerticalOptions="Center" x:Name="LiveTimingExpander" IsExpanded="{Binding IsExpanded, Mode=TwoWay}">
+                        <xct:Expander.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Text="{Binding Rank}" />
+                                <Label Grid.Column="1" Text="{Binding StartNum}" />
+                                <Label Grid.Column="2" Text="{Binding PlayerName}" HorizontalOptions="Start" />
+                                <Label Grid.Column="3" Text="{Binding Affiliation}" MaxLines="1" LineBreakMode="NoWrap" HorizontalTextAlignment="Start" HorizontalOptions="Start"/>
+                                <Label Grid.Column="4" Text="{Binding PlayerInfo.Diff, StringFormat='+{0:F2}'}" MaxLines="1" LineBreakMode="NoWrap">
+                                    <Label.Style>
+                                        <Style TargetType="Label">
+                                            <Setter Property="IsVisible" Value="True"/>
+                                            <Style.Triggers>
+                                                <Trigger TargetType="Label" Property="Text" Value="+">
+                                                    <Setter Property="IsVisible" Value="False"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Label.Style>
+                                </Label>
+                            </Grid>
+                        </xct:Expander.Header>
+                        <xct:Expander.Content>
+                            <StackLayout Margin="10" HorizontalOptions="Start">
+                                <Label Text="■獲得ポイント" HorizontalOptions="Start" HorizontalTextAlignment="Start" VerticalOptions="Center" LineBreakMode="NoWrap" />
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="SAJ:" HorizontalTextAlignment="Start" VerticalOptions="Center" LineBreakMode="NoWrap" />
+                                    <Label Text="{Binding PlayerInfo.ResultSajPoint}" VerticalOptions="Center" LineBreakMode="NoWrap" />
+                                    <Label Text="FIS:" TextColor="#FFFFFF" VerticalOptions="Center" LineBreakMode="NoWrap" />
+                                    <Label Text="{Binding PlayerInfo.ResultFisPoint}" LineBreakMode="NoWrap" />
+                                </StackLayout>
+                                <Label Text="■保有ポイント" HorizontalOptions="Start" HorizontalTextAlignment="Start" VerticalOptions="Center" LineBreakMode="NoWrap" />
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="SAJ/SL：" HorizontalTextAlignment="Start" TextColor="#FFFFFF" VerticalOptions="Center" LineBreakMode="NoWrap" />
+                                    <Label Text="{Binding PlayerInfo.SajSl}" TextColor="#FFFFFF" VerticalOptions="Center" LineBreakMode="NoWrap" />
+                                    <Label Text="FIS/SL：" HorizontalTextAlignment="Start" TextColor="#FFFFFF" VerticalOptions="Center" LineBreakMode="NoWrap" />
+                                    <Label Text="{Binding PlayerInfo.FisSl}" TextColor="#FFFFFF" VerticalOptions="Center" LineBreakMode="NoWrap" />
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="■１本目" HorizontalOptions="Start" HorizontalTextAlignment="Start" VerticalOptions="Center" LineBreakMode="NoWrap" />
+                                    <Label Text="{Binding FirstTime, StringFormat='　{0}'}" LineBreakMode="NoWrap" />
+                                    <Label Text="{Binding FirstRank, StringFormat='({0:F3})'}" VerticalOptions="Center" LineBreakMode="NoWrap" />
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="■２本目" HorizontalOptions="Start" HorizontalTextAlignment="Start" VerticalOptions="Center" LineBreakMode="NoWrap" />
+                                    <Label Text="{Binding SecondTime, StringFormat='　{0}'}" TextColor="#FFFFFF" VerticalOptions="Center" LineBreakMode="NoWrap" />
+                                    <Label Text="{Binding SecondRank, StringFormat='({0:F3})'}" TextColor="#FFFFFF" VerticalOptions="Center" LineBreakMode="NoWrap" />
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="■合　計" HorizontalOptions="Start" HorizontalTextAlignment="Start" VerticalOptions="Center" LineBreakMode="NoWrap" />
+                                    <Label Text="{Binding TotalTime, StringFormat='　{0}'}" TextColor="#FFFFFF" VerticalOptions="Center" LineBreakMode="NoWrap"/>
+                                    <Label Text="{Binding Rank, StringFormat='({0:F3})'}" TextColor="#FFFFFF" VerticalOptions="Center" LineBreakMode="NoWrap" />
+                                </StackLayout>
+                            </StackLayout>
+                        </xct:Expander.Content>
+                    </xct:Expander>
+                    <BoxView HeightRequest="1" CornerRadius="0" Color="#FFFFFF" />
+                </StackLayout>
+            </DataTemplate>
             <Style x:Key="TopListView" TargetType="ListView">
-                <Setter Property="ItemTemplate" Value="{StaticResource TopListView_Items}"/>
-                <Setter Property="IsVisible" Value="False"/>
-                <Setter Property="HasUnevenRows" Value="True"/>
-                <Setter Property="HorizontalScrollBarVisibility" Value="Never"/>
-                <Setter Property="VerticalOptions" Value="Center"/>
-                <Setter Property="VerticalScrollBarVisibility" Value="Never"/>
-                <Setter Property="SelectionMode" Value="None"/>
-                <Setter Property="SeparatorVisibility" Value="None"/>
-                <Setter Property="BackgroundColor" Value="Transparent"/>
-                <Setter Property="HorizontalOptions" Value="Center"/>
+                <Setter Property="ItemTemplate" Value="{StaticResource TopListView_Items}" />
+                <Setter Property="IsVisible" Value="False" />
+                <Setter Property="HasUnevenRows" Value="True" />
+                <Setter Property="HorizontalScrollBarVisibility" Value="Never" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="VerticalScrollBarVisibility" Value="Never" />
+                <Setter Property="SelectionMode" Value="None" />
+                <Setter Property="SeparatorVisibility" Value="None" />
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="HorizontalOptions" Value="Center" />
             </Style>
-            <Style x:Key="PlayerEntry" TargetType="Entry">
-                <Setter Property="WidthRequest" Value="50"/>
-                <Setter Property="Placeholder" Value="選手名を入力"/>
-                <Setter Property="MaxLength" Value="30"/>
-                <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
-                <Setter Property="FontSize" Value="14"/>
-                <Setter Property="TextColor" Value="#FFFFFF"/>
-                <Setter Property="PlaceholderColor" Value="#FFFFFF"/>
+            <Style TargetType="SearchBar">
+                <Setter Property="Margin" Value="-10,0,0,0" />
+                <Setter Property="HorizontalOptions" Value="StartAndExpand" />
+                <Setter Property="MaxLength" Value="100" />
+                <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="#FFFFFF" />
+                <Setter Property="PlaceholderColor" Value="#FFFFFF" />
+                <Setter Property="Placeholder" Value="選手名で検索" />
             </Style>
             <Style x:Key="RadioBtn" TargetType="RadioButton">
-                <Setter Property="BackgroundColor" Value="Transparent"/>
-                <Setter Property="TextColor" Value="#FFFFFF"/>
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="TextColor" Value="#FFFFFF" />
             </Style>
         </ResourceDictionary>
-    </ContentPage.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <FlexLayout Grid.Column="1" Direction="Column" AlignItems="Start">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-            <ScrollView x:Name="ScrollView_Main" Grid.Row="0" Padding="25" VerticalScrollBarVisibility="Always">
-                <StackLayout>
-                    <!--性別・種目選択-->
-                    <StackLayout>
-                        <!--性別選択-->
-                        <StackLayout>
-                            <Label Text="1. 性別" Style="{StaticResource Heading}"/>
-                            <StackLayout Orientation="Horizontal" RadioButtonGroup.GroupName="EventSex" RadioButtonGroup.SelectedValue="{Binding m_tournament.Sex, Mode=TwoWay}">
-                                <RadioButton ClassId="0" IsChecked="True" Content="男子" Style="{StaticResource RadioBtn}" CheckedChanged="EventSex_RadioButton_CheckedChanged"/>
-                                <RadioButton ClassId="1" Content="女子" Style="{StaticResource RadioBtn}" CheckedChanged="EventSex_RadioButton_CheckedChanged"/>
+    </TabbedPage.Resources>
+    <!--#region速報ページ-->
+    <ContentPage Title="Live Timing">
+        <FlexLayout Direction="Column" AlignItems="Center" VerticalOptions="StartAndExpand">
+            <StackLayout>
+                <Grid Margin="20,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <SearchBar x:Name="Site_SearchBar" Grid.Column="0" Placeholder="URLを入力" Margin="0,10" IsSpellCheckEnabled="True"/>
+                    <Button Grid.Column="1" Text="更新" HorizontalOptions="Center" WidthRequest="80" HeightRequest="40" Clicked="RefreshButton_Clicked" />
+                </Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ActivityIndicator x:Name="Refresh_Indicator" Grid.Row="0" />
+                    <ScrollView Grid.Row="1">
+                        <StackLayout Margin="0,10" IsVisible="{Binding Source={x:Reference LiveTimingResult}, Path=IsVisible}">
+                            <StackLayout.Style>
+                                <Style TargetType="StackLayout">
+                                    <Setter Property="IsEnabled" Value="True" />
+                                    <Style.Triggers>
+                                        <DataTrigger TargetType="StackLayout" Binding="{Binding Source={x:Reference Refresh_Indicator}, Path=IsRunning}" Value="True">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackLayout.Style>
+                            <StackLayout x:Name="ResultInfo_StackLayout" Orientation="Horizontal" Margin="10,5"/>
+                            <BoxView Color="#FFFFFF" HeightRequest="1" />
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                                <CollectionView x:Name="LiveTimingResult" IsVisible="false" ItemTemplate="{StaticResource LiveTiming_Items}" Background="{StaticResource Primary}" SelectionMode="None" />
                             </StackLayout>
                         </StackLayout>
-                        <!--性別選択-->
-
-                        <!--種目選択-->
-                        <StackLayout>
-                            <Label Text="2. 種目" Style="{StaticResource Heading}"/>
-                            <StackLayout Orientation="Horizontal" RadioButtonGroup.GroupName="EventTypes" RadioButtonGroup.SelectedValue="{Binding m_tournament.Types, Mode=TwoWay}">
-                                <RadioButton Content="ＳＧ" Style="{StaticResource RadioBtn}" IsChecked="True" CheckedChanged="RadioButton_CheckedChanged"/>
-                                <RadioButton Content="ＧＳ" Style="{StaticResource RadioBtn}" CheckedChanged="RadioButton_CheckedChanged"/>
-                                <RadioButton Content="ＳＬ" Style="{StaticResource RadioBtn}" CheckedChanged="RadioButton_CheckedChanged"/>
-                            </StackLayout>
-                        </StackLayout>
-                        <!--種目選択-->
-                    </StackLayout>
-                    <!--性別・種目選択-->
-
-                    <!--選手選択-->
-                    <StackLayout>
-                        <!--スタート時のポイント上位5名-->
-                        <StackLayout>
-                            <Label Text="3. スタート時のポイント上位5名" Style="{StaticResource Heading}"/>
-                            <Entry x:Name="StartPlayerEntry" Style="{StaticResource PlayerEntry}" PropertyChanged="PlayerEntry_PropertyChanged"/>
-                            <ListView x:Name="StartAllList" Style="{StaticResource AllList}" ItemSelected="AllList_ItemSelected"/>
-                            <ListView x:Name="StartTopList" Style="{StaticResource TopListView}"/>
-                        </StackLayout>
-                        <!--スタート時のポイント上位5名-->
-
-                        <!--合計タイム上位10名-->
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Label Grid.Row="0" Text="4. 合計タイム上位10名" Style="{StaticResource Heading}"/>
-                            <Entry Grid.Row="1" x:Name="FinishPlayerEntry" Style="{StaticResource PlayerEntry}" PropertyChanged="PlayerEntry_PropertyChanged"/>
-                            <ListView Grid.Row="2" x:Name="FinishAllList" Style="{StaticResource AllList}" ItemSelected="AllList_ItemSelected"/>
-                            <ListView Grid.Row="3" x:Name="FinishTopList" Style="{StaticResource TopListView}" Margin="0,0,0,10"/>
-                            <Label Grid.Row="4" Text="※10名の内、ポイント上位5名の選択でも可。" FontSize="14" TextColor="#FFFFFF"/>
-                        </Grid>
-                        <!--合計タイム上位10名-->
-                    </StackLayout>
-                    <!--選手選択-->
-
-                    <StackLayout HorizontalOptions="Start">
-                        <StackLayout Orientation="Horizontal">
-                            <Label Text="5.あなたのタイム" Style="{StaticResource Heading}" VerticalOptions="Center"/>
-                            <Label Text="※任意" VerticalOptions="Center" TextColor="#FFFFFF" FontSize="12"/>
-                        </StackLayout>
-                        <StackLayout Orientation="Horizontal">
-                            <Entry x:Name="Entry_TargetTime" Style="{StaticResource TimeEntry}" Text="120.00"/>
-                            <Label Text="秒" VerticalOptions="Center" TextColor="#FFFFFF"/>
-                        </StackLayout>
-                    </StackLayout>
-
-                    <!--共有選択エリア-->
-                    <StackLayout Margin="0,20,0,5" Orientation="Horizontal">
-                        <Switch x:Name="Switch_Share" IsToggled="False" Toggled="Switch_Share_Toggled"/>
-                        <Label Text="結果を共有" VerticalOptions="Center" TextColor="#ffffff"/>
-                        <StackLayout x:Name="PopupLayout_Share" IsVisible="false" HorizontalOptions="Start" Orientation="Horizontal">
-                            <Label Text="大会名" VerticalOptions="Center" VerticalTextAlignment="Center"/>
-                            <Entry x:Name="Entry_TournamentName" WidthRequest="150" />
-                        </StackLayout>
-                    </StackLayout>
-                    <!--共有選択エリア-->
-                        <!--計算ボタン-->
-                    <Button x:Name="Btn_Calc" VerticalOptions="Center" Text="計算" FontAttributes="Bold" HeightRequest="50"
-                            BackgroundColor="#FFFFFF" TextColor="{StaticResource Primary}" Clicked="Btn_Calc_Clicked"/>
-                    <!--計算ボタン-->
-                    <Label Grid.Row="11" Margin="0,20,0,0" Text="© Kei Sato" FontSize="Micro" TextColor="WhiteSmoke" HorizontalOptions="Center" BackgroundColor="Transparent"/>
-                </StackLayout>
-            </ScrollView>
-            <StackLayout Grid.Row="1" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" AbsoluteLayout.LayoutBounds="1,1,460,80">
-                    <Label Text="広告" FontSize="Small" HorizontalOptions="Center" TextColor="White"/>
-                    <ctrl:MTAdView x:Name="AdsArea" AdsId="{OnPlatform Android=ca-app-pub-2633806931583277/2100712905, iOS=ca-app-pub-2633806931583277/8738536773}" WidthRequest="{OnPlatform Android=400, iOS=380}" HeightRequest="80" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+                    </ScrollView>
+                </Grid>
+                <!--#region広告-->
+                <Label Grid.Row="2" Text="広告" FontSize="Small" HorizontalOptions="Center" Margin="0,10,0,0" />
+                <ctrl:MTAdView  AdsId="{OnPlatform Android=ca-app-pub-2633806931583277/8770625081, iOS=ca-app-pub-2633806931583277/2747843492}" VerticalOptions="StartAndExpand" HorizontalOptions="StartAndExpand" Margin="0,10" />
+                <!--#endregion広告-->
             </StackLayout>
-            </Grid>
-
         </FlexLayout>
-    </Grid>
-</ContentPage>
+    </ContentPage>
+    <!--#endregion速報ページ-->
+    <!--#region計算ページ-->
+    <ContentPage Title="Calculate Point">
+        <FlexLayout Direction="Column">
+            <StackLayout>
+                <ScrollView x:Name="ScrollView_Main" VerticalScrollBarVisibility="Always">
+                    <StackLayout>
+                        <!--#region性別・種目選択-->
+                        <StackLayout>
+                            <StackLayout>
+                                <Frame Style="{StaticResource HeadingFrame}">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="性別" Style="{StaticResource Heading}" />
+                                        <Label Text="※必須" TextColor="red" FontAttributes="Bold" Margin="10,0,0,0" />
+                                    </StackLayout>
+                                </Frame>
+                                <StackLayout Margin="10,0" Orientation="Horizontal" RadioButtonGroup.GroupName="EventSex" RadioButtonGroup.SelectedValue="{Binding m_Competition.Sex, Mode=TwoWay}">
+                                    <RadioButton ClassId="0" Content="男子" Style="{StaticResource RadioBtn}" CheckedChanged="EventSex_RadioButton_CheckedChanged" />
+                                    <RadioButton ClassId="1" Content="女子" Style="{StaticResource RadioBtn}" CheckedChanged="EventSex_RadioButton_CheckedChanged" />
+                                </StackLayout>
+                            </StackLayout>
+                            <StackLayout>
+                                <Frame Style="{StaticResource HeadingFrame}">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="種目" Style="{StaticResource Heading}" />
+                                        <Label Text="※必須" TextColor="red" FontAttributes="Bold" Margin="10,0,0,0" />
+                                    </StackLayout>
+                                </Frame>
+                                <StackLayout Margin="10,0" Orientation="Horizontal" RadioButtonGroup.GroupName="EventTypes" RadioButtonGroup.SelectedValue="{Binding m_Competition.Types, Mode=TwoWay}">
+                                    <RadioButton Content="ＳＧ" Style="{StaticResource RadioBtn}" CheckedChanged="CompetitionType_RadioButton_CheckedChanged" />
+                                    <RadioButton Content="ＧＳ" Style="{StaticResource RadioBtn}" CheckedChanged="CompetitionType_RadioButton_CheckedChanged" />
+                                    <RadioButton Content="ＳＬ" Style="{StaticResource RadioBtn}" CheckedChanged="CompetitionType_RadioButton_CheckedChanged" />
+                                </StackLayout>
+                            </StackLayout>
+                        </StackLayout>
+                        <!--#endregion性別・種目選択-->
+                        <!--#region選手選択-->
+                        <StackLayout>
+                            <!--スタート時のポイント上位5名-->
+                            <StackLayout>
+                                <Frame Style="{StaticResource HeadingFrame}">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="スタート時のポイント上位5名" Style="{StaticResource Heading}" />
+                                        <Label Text="※必須" TextColor="red" FontAttributes="Bold" Margin="10,0,0,0" />
+                                    </StackLayout>
+                                </Frame>
+                                <StackLayout Margin="10,0">
+                                    <SearchBar x:Name="StartPlayerSearchBar" SearchButtonPressed="SearchBar_SearchButtonPressed" />
+                                    <StackLayout Orientation="Horizontal">
+                                        <Switch x:Name="StartPlayerDisplaySwitch" IsVisible="False" IsToggled="True" />
+                                        <StackLayout Orientation="Horizontal" IsVisible="{Binding Source={x:Reference StartPlayerDisplaySwitch}, Path=IsVisible}">
+                                            <Label WidthRequest="50">
+                                                <Label.Style>
+                                                    <Style TargetType="Label">
+                                                        <Setter Property="Text" Value="表示" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference StartPlayerDisplaySwitch}, Path=IsToggled}" Value="False">
+                                                                <Setter Property="Text" Value="非表示" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Label.Style>
+                                            </Label>
+                                            <Label Text="選択:" Margin="20,0,0,0" />
+                                            <Label Text="{Binding Source={x:Reference StartTopList}, Path=ItemsSource.Count}" />
+                                        </StackLayout>
+                                    </StackLayout>
+                                    <ListView x:Name="StartAllList" Style="{StaticResource AllList}" ItemSelected="AllList_ItemSelected" />
+                                    <xct:Expander x:Name="StartExpander" IsExpanded="{Binding Source={x:Reference StartPlayerDisplaySwitch}, Path=IsToggled}">
+                                        <ListView x:Name="StartTopList" Style="{StaticResource TopListView}" />
+                                    </xct:Expander>
+                                </StackLayout>
+                            </StackLayout>
+                            <!--スタート時のポイント上位5名-->
 
-    <ContentPage Title="Live Timing" Appearing="ContentPage_Appearing" BackgroundColor="{StaticResource Primary}">
-      <FlexLayout Direction="Column" AlignItems="Center">
-            <StackLayout HorizontalOptions="Center">
-                <Label Style="{StaticResource Heading}" Text="Coming Soon!" HorizontalTextAlignment="Center"/>
-                <Label Style="{StaticResource Heading}" Text="機能追加までしばらくお待ちください。" HorizontalTextAlignment="Center"/>
+                            <!--合計タイム上位10名-->
+                            <StackLayout>
+                                <Frame Style="{StaticResource HeadingFrame}">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="合計タイム上位10名" Style="{StaticResource Heading}" />
+                                        <Label Text="※必須" TextColor="red" FontAttributes="Bold" Margin="10,0,0,0" />
+                                    </StackLayout>
+                                </Frame>
+                                <StackLayout Margin="10,0">
+                                    <SearchBar x:Name="FinishPlayerSearchBar" SearchButtonPressed="SearchBar_SearchButtonPressed" />
+                                    <StackLayout Orientation="Horizontal">
+                                        <Switch x:Name="FinishPlayerDisplaySwitch" IsVisible="False" IsToggled="True" />
+                                        <StackLayout Orientation="Horizontal" IsVisible="{Binding Source={x:Reference FinishPlayerDisplaySwitch}, Path=IsVisible}">
+                                            <Label WidthRequest="50">
+                                                <Label.Style>
+                                                    <Style TargetType="Label">
+                                                        <Setter Property="Text" Value="表示" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference FinishPlayerDisplaySwitch}, Path=IsToggled}" Value="False">
+                                                                <Setter Property="Text" Value="非表示" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Label.Style>
+                                            </Label>
+                                            <Label Text="選択:" Margin="20,0,0,0" />
+                                            <Label Text="{Binding Source={x:Reference FinishTopList}, Path=ItemsSource.Count}" />
+                                        </StackLayout>
+                                    </StackLayout>
+                                    <ListView x:Name="FinishAllList" Style="{StaticResource AllList}" ItemSelected="AllList_ItemSelected" />
+                                    <xct:Expander x:Name="FinishExpander" IsExpanded="{Binding Source={x:Reference FinishPlayerDisplaySwitch}, Path=IsToggled}">
+                                        <ListView x:Name="FinishTopList" Style="{StaticResource TopListView}" />
+                                    </xct:Expander>
+                                </StackLayout>
+                                <!--<Label Text="※10名の内、ポイント上位5名の選択でも可。" FontSize="14" />-->
+                            </StackLayout>
+                            <!--合計タイム上位10名-->
+                        </StackLayout>
+                        <!--#endregion選手選択-->
+                        <!--#regionタイム選択-->
+                        <StackLayout>
+                            <Frame Style="{StaticResource HeadingFrame}">
+                                <Label Text="あなたのタイム" Style="{StaticResource Heading}" />
+                            </Frame>
+                            <StackLayout Orientation="Horizontal" Margin="20,0,0,20">
+                                <Entry x:Name="Entry_TargetTime" Style="{StaticResource TimeEntry}" Text="120.00" />
+                                <Label Text="(秒)" />
+                            </StackLayout>
+                        </StackLayout>
+                        <!--#endregionタイム選択-->
+                        <!--#region共有-->
+                        <!--<StackLayout Margin="0,20,0,5" Orientation="Horizontal" IsVisible="false">
+                                <Switch x:Name="Switch_Share" IsToggled="False" Toggled="Switch_Share_Toggled" />
+                                <Label Text="結果を共有" />
+                                <StackLayout x:Name="PopupLayout_Share" IsVisible="false" HorizontalOptions="Start" Orientation="Horizontal">
+                                    <Label Text="大会名" />
+                                    <Entry x:Name="Entry_CompetitionName" WidthRequest="150" />
+                                </StackLayout>
+                            </StackLayout>-->
+                        <!--#endregion共有-->
+                        <Button x:Name="Btn_Calc" Text="計算" Margin="0,15,0,30" WidthRequest="100" HorizontalOptions="Center" Clicked="Btn_Calc_Clicked" />
+                    </StackLayout>
+                </ScrollView>
+                <!--#region広告-->
+                <Label Text="広告" FontSize="Small" HorizontalOptions="Center" Margin="0,10,0,0" />
+                <ctrl:MTAdView x:Name="AdsArea" AdsId="{OnPlatform Android=ca-app-pub-2633806931583277/8770625081, iOS=ca-app-pub-2633806931583277/2747843492}" VerticalOptions="StartAndExpand" HorizontalOptions="StartAndExpand" Margin="0,10" />
+                <!--<Label Margin="0,0,0,5" Text="© Kei Sato" FontSize="Micro" TextColor="WhiteSmoke" HorizontalOptions="Center" BackgroundColor="Transparent" />-->
+                <!--#endregion広告-->
             </StackLayout>
-      </FlexLayout>
-  </ContentPage>
+        </FlexLayout>
+    </ContentPage>
+    <!--#endregion計算ページ-->
 </TabbedPage>
