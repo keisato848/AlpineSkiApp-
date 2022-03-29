@@ -1247,8 +1247,7 @@ namespace PointApp.Views
             if (sender is StackLayout stackLayout)
             {
                 var children = stackLayout.Children;
-                var expander = children.FirstOrDefault(child => child is Xamarin.CommunityToolkit.UI.Views.Expander) as Xamarin.CommunityToolkit.UI.Views.Expander;
-                if (expander != null)
+                if (children.FirstOrDefault(child => child is Xamarin.CommunityToolkit.UI.Views.Expander) is Xamarin.CommunityToolkit.UI.Views.Expander expander)
                 {
                     expander.IsExpanded = !expander.IsExpanded;
                 }
