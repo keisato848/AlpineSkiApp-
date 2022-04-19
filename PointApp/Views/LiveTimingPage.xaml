@@ -142,8 +142,8 @@
             </Style>
         </ResourceDictionary>
     </TabbedPage.Resources>
-    <!--#region速報ページ-->
-    <ContentPage Title="Live Timing">
+    <!--#region 速報ページ-->
+    <ContentPage Title="Live Timing"> 
         <FlexLayout Direction="Column" AlignItems="Center" VerticalOptions="StartAndExpand">
             <StackLayout>
                 <BoxView HeightRequest="1" CornerRadius="0" Color="#FFFFFF" Margin="0,0,0,15" />
