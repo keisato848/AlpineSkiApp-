@@ -12,8 +12,8 @@
             </DataTemplate>
             <Style x:Key="HeadingFrame" TargetType="Frame">
                 <Setter Property="Background" Value="#FFFFFF" />
-                <Setter Property="Margin" Value="0,10" />
-                <Setter Property="Padding" Value="5" />
+                <Setter Property="Margin" Value="10,10" />
+                <Setter Property="Padding" Value="2" />
                 <Setter Property="HasShadow" Value="True" />
             </Style>
             <Style x:Key="AllList" TargetType="ListView">
@@ -146,6 +146,7 @@
     <ContentPage Title="Live Timing">
         <FlexLayout Direction="Column" AlignItems="Center" VerticalOptions="StartAndExpand">
             <StackLayout>
+                <BoxView HeightRequest="1" CornerRadius="0" Color="#FFFFFF" Margin="0,0,0,15" />
                 <Grid Margin="20,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -199,6 +200,7 @@
     <ContentPage Title="Calculate Point">
         <FlexLayout Direction="Column">
             <StackLayout>
+                <BoxView HeightRequest="1" CornerRadius="0" Color="#FFFFFF" Margin="0,0,0,15" />
                 <ScrollView x:Name="ScrollView_Main" VerticalScrollBarVisibility="Always">
                     <StackLayout>
                         <!--#region性別・種目選択-->
@@ -311,7 +313,7 @@
                         <!--#regionタイム選択-->
                         <StackLayout>
                             <Frame Style="{StaticResource HeadingFrame}">
-                                <Label Text="あなたのタイム" Style="{StaticResource Heading}" />
+                                <Label Text="計算対象選手のタイム" Style="{StaticResource Heading}" />
                             </Frame>
                             <StackLayout Orientation="Horizontal" Margin="20,0,0,20">
                                 <Entry x:Name="Entry_TargetTime" Style="{StaticResource TimeEntry}" Text="120.00" />
