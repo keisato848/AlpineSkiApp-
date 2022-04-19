@@ -115,25 +115,21 @@
             </Grid>
         </DataTemplate>
     </Shell.ItemTemplate>
-    <!--
-        When the Flyout is visible this defines the content to display in the flyout.
-        FlyoutDisplayOptions="AsMultipleItems" will create a separate flyout item for each child element
-        https://docs.microsoft.com/dotnet/api/xamarin.forms.shellgroupitem.flyoutdisplayoptions?view=xamarin-forms
-    -->
-    <FlyoutItem Title="ポイント計算">
-        <ShellContent ContentTemplate="{DataTemplate local:CalcPoint}" Route="CalcPoint" />
+    <FlyoutItem Title="ホーム">
+        <ShellContent ContentTemplate="{DataTemplate local:LiveTimingPage}" Route="LiveTimingPage" />
     </FlyoutItem>
+
     <!--
     <FlyoutItem Title="結果一覧" Icon="icon_feed.png">
         <ShellContent Route="ItemsPage" ContentTemplate="{DataTemplate local:ItemsPage}" />
     </FlyoutItem>
     -->
-    <FlyoutItem Title="ログイン" x:Name="FlyItem_Login" Disappearing="FlyItem_Login_Disappearing">
+    <!--<FlyoutItem Title="ログイン" x:Name="FlyItem_Login" Disappearing="FlyItem_Login_Disappearing">
         <ShellContent ContentTemplate="{DataTemplate local:LoginPage}" Route="LoginPage" />
     </FlyoutItem>
     <FlyoutItem Title="新規登録" x:Name="FlyItem_Signup" Disappearing="FlyItem_Signup_Disappearing">
         <ShellContent ContentTemplate="{DataTemplate local:SignUpPage}" Route="SignUpPage" />
-    </FlyoutItem>
+    </FlyoutItem>-->
     <FlyoutItem Title="問い合わせ">
         <ShellContent ContentTemplate="{DataTemplate local:ContactPage}" Route="ContactPage" />
     </FlyoutItem>

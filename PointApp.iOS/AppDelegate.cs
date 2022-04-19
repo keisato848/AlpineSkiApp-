@@ -9,6 +9,7 @@ using MarcTron;
 using MarcTron.Plugin;
 using Xamarin;
 using Xamarin.Forms;
+using AppTrackingTransparency;
 
 namespace PointApp.iOS
 {
@@ -35,5 +36,30 @@ namespace PointApp.iOS
             return base.FinishedLaunching(app, options);
         }
         private void CompletionHandler(InitializationStatus status) { }
+
+        /// <summary>
+        /// アプリが再びアクティブになった場合
+        /// </summary>
+        /// <param name="uiApplication"></param>
+        public override void OnActivated(UIApplication uiApplication)
+        {
+            base.OnActivated(uiApplication);
+
+            //IDFAの使用要求
+            //iOS15 以降ではOnActivatedイベントで実行しないとダイアログが表示されない
+            this.RequestIDFA();
+        }
+
+        /// <summary>
+        /// IDFAの使用要求
+        /// </summary>
+        private void RequestIDFA()
+        {
+            ATTrackingManager.RequestTrackingAuthorization((status) =>
+            {
+                // Tracking authorization completed. Start loading ads here.
+                // loadAd();
+            });
+        }
     }
 }

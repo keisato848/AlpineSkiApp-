@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.1">
+<plist version="1.0">
 <dict>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
+	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>materialdesignicons-webfont.ttf</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
@@ -20,7 +24,7 @@
 	<key>MinimumOSVersion</key>
 	<string>8.0</string>
 	<key>CFBundleDisplayName</key>
-	<string>Point App For Alpine Skier</string>
+	<string>Alpine Point</string>
 	<key>CFBundleIdentifier</key>
 	<string>ksato.PointApp</string>
 	<key>CFBundleVersion</key>
@@ -37,6 +41,10 @@
 			<key>CFBundleTypeName</key>
 			<string>None</string>
 		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>ドキュメントの種類 1</string>
+		</dict>
 	</array>
 	<key>UIStatusBarStyle</key>
 	<string>UIStatusBarStyleLightContent</string>
@@ -50,5 +58,28 @@
 	<string>ca-app-pub-2633806931583277~9098146345</string>
 	<key>GADIsAdManagerApp</key>
 	<true/>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeDescription</key>
+			<string>UTI 宣言 1</string>
+		</dict>
+	</array>
+	<key>NSAppTransportSecurity</key>
+    <dict>
+    	<key>NSAllowsArbitraryLoads</key>
+    	<true/>
+  	</dict>
+	<!-- Google Ads 対応-->
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Please allow the app to use identifiers (IDFAs) to serve personalized ads.</string>
+	<key>SKAdNetworkItems</key>
+	<array>
+		<!--Admob-->
+		<dict>
+		<key>SKAdNetworkIdentifier</key>
+		<string>cstr6suwn9.skadnetwork</string>
+		</dict>
+	</array>
 </dict>
 </plist>

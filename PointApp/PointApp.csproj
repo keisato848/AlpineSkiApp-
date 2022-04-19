@@ -20,6 +20,9 @@
     <None Remove="Views\新しいフォルダー\**" />
     <None Remove="PointList_L.json" />
     <None Remove="Xamarin.Forms.Visual.Material" />
+    <None Remove="AngleSharp" />
+    <EmbeddedResource Remove="Views\CalcPoint.xaml" />
+    <Compile Remove="Views\CalcPoint.xaml.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,12 +30,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="GettingStarted.txt" />
     <None Remove="Settings.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="GettingStarted.txt" />
     <EmbeddedResource Include="PointList_L.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -45,14 +46,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MarcTron.Admob" Version="1.6.8" />
-    <PackageReference Include="Npgsql" Version="6.0.1" />
+    <PackageReference Include="AngleSharp" Version="0.16.1" />
+    <PackageReference Include="MarcTron.Admob" Version="1.6.9" />
+    <PackageReference Include="Portable.Text.Encoding" Version="0.8.3" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
     <PackageReference Include="System.DirectoryServices" Version="6.0.0" />
-    <PackageReference Include="System.Text.Json" Version="6.0.0" />  
-    <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />  
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2244" />
-    <PackageReference Include="Xamarin.Forms.Visual.Material" Version="4.8.0.1821" />
+    <PackageReference Include="System.Text.Json" Version="6.0.3" />
+    <PackageReference Include="Xamarin.CommunityToolkit" Version="2.0.1" />  
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.2" />  
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2401" />
+    <PackageReference Include="Xamarin.Forms.Visual.Material" Version="5.0.0.2401" />
   </ItemGroup>
 
   <ItemGroup>
@@ -60,16 +63,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\CalcPoint.xaml.cs">
-      <DependentUpon>CalcPoint.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Update="Views\ResultPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\SignUpPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
