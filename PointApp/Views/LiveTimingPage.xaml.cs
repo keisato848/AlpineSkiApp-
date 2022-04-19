@@ -247,21 +247,13 @@ namespace PointApp.Views
                 if (!string.IsNullOrEmpty(url))
                 {
                     var resultInfo = await GetResultAsync(url);
-                    Label competitionNameLabel = new Label
+                    if (resultInfo != null)
                     {
-                        Text = resultInfo.Name,
-                        FontSize = 16
-                    };
-                    Label pointLabel = new Label
-                    {
-                        Text = $"FISペナルティ：{resultInfo.FISPenaltyPoint} SAJペナルティ：{resultInfo.SAJPenaltyPoint} レースポイント： {resultInfo.RacePointPerSec} / 秒",
-                        FontSize = 16
-                    };
-                    ResultInfo_StackLayout.Children.Clear();
-                    ResultInfo_StackLayout.Children.Add(competitionNameLabel);
-                    ResultInfo_StackLayout.Children.Add(pointLabel);
-                    LiveTimingResult.ItemsSource = resultInfo.ListResultPlayerInfos;
-                    LiveTimingResult.IsVisible = true;
+                        LiveTimingResult.ItemsSource = resultInfo.ListResultPlayerInfos;
+                        LiveTimingResult.IsVisible = true;
+                        DisplayPoint(resultInfo);
+                    }
+
                 }
             }
             else
@@ -269,6 +261,14 @@ namespace PointApp.Views
                 DisplayErrorMessage(ErrorCode.InvalidNetwork);
             }
             Refresh_Indicator.IsRunning = false;
+        }
+
+        private void DisplayPoint(ResultInfo resultInfo)
+        {
+            RaceNameLabel.Text = resultInfo.Name;
+            FISPenaltyPointLabel.Text = resultInfo.FISPenaltyPoint.ToString();
+            SAJPenaltyPointLabel.Text = resultInfo.SAJPenaltyPoint.ToString();
+            RacePointLabel.Text = resultInfo.RacePointPerSec.ToString();
         }
 
         /// <summary>
@@ -476,7 +476,7 @@ namespace PointApp.Views
                     return resultInfo;
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }

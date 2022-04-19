@@ -174,7 +174,12 @@
                                     </Style.Triggers>
                                 </Style>
                             </StackLayout.Style>
-                            <StackLayout x:Name="ResultInfo_StackLayout" Orientation="Horizontal" Margin="10,5"/>
+                            <StackLayout x:Name="ResultInfo_StackLayout" Orientation="Vertical" HorizontalOptions="Start" Margin="10,5">
+                                <Label x:Name="RaceNameLabel"/>
+                                <Label x:Name="FISPenaltyPointLabel" HorizontalOptions="Start" HorizontalTextAlignment="Start" WidthRequest="50"/>
+                                <Label x:Name="SAJPenaltyPointLabel" />
+                                <Label x:Name="RacePointLabel" />
+                            </StackLayout>
                             <BoxView Color="#FFFFFF" HeightRequest="1" />
                             <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                                 <CollectionView x:Name="LiveTimingResult" IsVisible="false" ItemTemplate="{StaticResource LiveTiming_Items}" Background="{StaticResource Primary}" SelectionMode="None" />
