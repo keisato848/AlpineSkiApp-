@@ -33,6 +33,7 @@ namespace PointApp.Views
             m_finishDefPlayers = new ObservableCollection<PlayerInfo>();
             m_allPlayers = new List<PlayerInfo>();
             SetUpCalcPoint();
+            SetUpImages();
 #if DEBUG
             Site_SearchBar.Text = "http://www.sports-event-is.com/php/pc/rank.php?GTID=6681&kumi=00&nendo=2022&kubun=1&Gpg=0&Gpg2=50";
 #endif
@@ -49,6 +50,12 @@ namespace PointApp.Views
         private static readonly HttpClient m_httpClient = new HttpClient();
 
         private const int VIEW_CELL_ROW_HEIGHT = 53;
+
+        private void SetUpImages()
+        {
+            LiveTimingContentPage.IconImageSource = ImageSource.FromResource("PointApp.Images.outline_bolt_white_24dp.png");
+            CalculatePointContentPage.IconImageSource = ImageSource.FromResource("PointApp.Images.outline_calculate_white_24dp.png");
+        }
 
         #region イベントハンドラー
 
