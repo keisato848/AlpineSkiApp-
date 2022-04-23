@@ -11,6 +11,8 @@ namespace PointApp
 
 		public App()
 		{
+			//Register Syncfusion license  
+			Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NjIzMDg4QDMyMzAyZTMxMmUzMFJacnh4c2pjZmNwL0cyVlZ0YU9yYUhId2ZPb0hMcUNIUWE5K2NTdUxzWXM9");
 			InitializeComponent();
 
 			DependencyService.Register<MockDataStore>();
