@@ -15,19 +15,19 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using Xamarin.Forms.PlatformConfiguration;
-using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
 using Xamarin.Forms.Xaml;
+using PointApp.Models;
+using PointApp.Utilities;
+
 
 namespace PointApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class LiveTimingPage : Xamarin.Forms.TabbedPage
+    public partial class LiveTimingPage : TabbedPage
     {
         public LiveTimingPage()
         {
             InitializeComponent();
-            On<Android>().SetToolbarPlacement(ToolbarPlacement.Bottom).SetIsSmoothScrollEnabled(true);
             m_Competition = new CompetitionInfo();
             m_startDefPlayers = new ObservableCollection<PlayerInfo>();
             m_finishDefPlayers = new ObservableCollection<PlayerInfo>();
@@ -40,59 +40,15 @@ namespace PointApp.Views
 
         private List<PlayerInfo> m_allPlayers;
 
-        private ObservableCollection<PlayerInfo> m_finishDefPlayers;
+        private readonly ObservableCollection<PlayerInfo> m_finishDefPlayers;
 
-        private ObservableCollection<PlayerInfo> m_startDefPlayers;
+        private readonly ObservableCollection<PlayerInfo> m_startDefPlayers;
 
         private readonly CompetitionInfo m_Competition;
 
         private static readonly HttpClient m_httpClient = new HttpClient();
 
-        private enum ErrorCode
-        {
-            UserDuplicated = 0,
-            OverUserCount = 1,
-            LackStartUser = 2,
-            LackFinishUser = 3,
-            CalcError = 4,
-            IdEmpty = 5,
-            PwdEmpty = 6,
-            CompetitionNameEmpty = 7,
-            InvalidNetwork = 8,
-        }
-
-        public enum SexType
-        {
-            Men = 0,
-            Women = 1,
-        }
-
-        private enum FValue
-        {
-            SL = 730,
-            GS = 1010,
-            SG = 1190,
-            DH = 1250,
-            AC = 1360
-        }
-
-        private enum MaximumPoint
-        {
-            SL = 165,
-            GS = 220,
-            SG = 270,
-            AC = 270,
-            DH = 330
-        }
-
-        private enum ViewCellRowStyle
-        { Height = 53 }
-
-        private bool IsConnective()
-        {
-            return Connectivity.NetworkAccess == Xamarin.Essentials.NetworkAccess.Internet
-                    ? true : false;
-        }
+        private const int VIEW_CELL_ROW_HEIGHT = 53;
 
         #region イベントハンドラー
 
@@ -105,7 +61,7 @@ namespace PointApp.Views
         {
             if (sender is RadioButton radioButton && radioButton?.ClassId != null)
             {
-                m_Competition.Sex = (SexType)Enum.ToObject(typeof(SexType), Convert.ToInt32(radioButton.ClassId));
+                m_Competition.Sex = (CompetitionInfo.SexType)Enum.ToObject(typeof(CompetitionInfo.SexType), Convert.ToInt32(radioButton.ClassId));
                 SetUpCalcPoint();
             }
         }
@@ -152,14 +108,14 @@ namespace PointApp.Views
             {
                 if (m_startDefPlayers.Count == 5)
                 {
-                    DisplayErrorMessage(ErrorCode.OverUserCount);
+                    NotifyUtility.DisplayErrorMessage(this, NotifyUtility.ErrorCode.OverUserCount);
                     return;
                 }
                 if (StartAllList.SelectedItem is PlayerInfo selectedPlayer)
                 {
-                    if (selectedPlayer != null && m_startDefPlayers.Count(player => player.JapaneseName.Equals(selectedPlayer.JapaneseName)) > 0)
+                    if (selectedPlayer != null && m_startDefPlayers.Any(player => player.JapaneseName.Equals(selectedPlayer.JapaneseName)))
                     {
-                        DisplayErrorMessage(ErrorCode.UserDuplicated);
+                        NotifyUtility.DisplayErrorMessage(this, NotifyUtility.ErrorCode.UserDuplicated);
                         return;
                     }
                     var copyPlayer = selectedPlayer.DeepCopy();
@@ -172,13 +128,13 @@ namespace PointApp.Views
             {
                 if (m_finishDefPlayers.Count == 10)
                 {
-                    DisplayErrorMessage(ErrorCode.OverUserCount);
+                    NotifyUtility.DisplayErrorMessage(this, NotifyUtility.ErrorCode.OverUserCount);
                 }
                 if (FinishAllList.SelectedItem is PlayerInfo selectedPlayer)
                 {
-                    if (m_finishDefPlayers.Count(player => player.JapaneseName.Equals(selectedPlayer.JapaneseName)) > 0)
+                    if (m_finishDefPlayers.Any(player => player.JapaneseName.Equals(selectedPlayer.JapaneseName)))
                     {
-                        DisplayErrorMessage(ErrorCode.UserDuplicated);
+                        NotifyUtility.DisplayErrorMessage(this, NotifyUtility.ErrorCode.UserDuplicated);
                         return;
                     }
                     var copyPlayer = selectedPlayer.DeepCopy();
@@ -216,16 +172,16 @@ namespace PointApp.Views
 
             listView.IsVisible = players.Count > 0;
             listView.ItemsSource = players;
-            listView.HeightRequest = players.Count * (int)ViewCellRowStyle.Height;
+            listView.HeightRequest = players.Count * VIEW_CELL_ROW_HEIGHT;
             listView.SelectedItem = null;
             searchBar.Text = string.Empty;
             if (isStart)
             {
-                StartExpander.ForceUpdateSize();
+                //StartExpander.ForceUpdateSize();
             }
             else
             {
-                FinishExpander.ForceUpdateSize();
+                //FinishExpander.ForceUpdateSize();
             }
             StartPlayerDisplaySwitch.IsVisible = StartTopList.ItemsSource != null;
             FinishPlayerDisplaySwitch.IsVisible = FinishTopList.ItemsSource != null;
@@ -241,7 +197,7 @@ namespace PointApp.Views
         private async void RefreshButton_Clicked(object sender, EventArgs e)
         {
             Refresh_Indicator.IsRunning = true;
-            if (IsConnective())
+            if (Utilities.DeviceUtility.IsNetworkConnect())
             {
                 var url = Site_SearchBar.Text;
                 if (!string.IsNullOrEmpty(url))
@@ -258,7 +214,7 @@ namespace PointApp.Views
             }
             else
             {
-                DisplayErrorMessage(ErrorCode.InvalidNetwork);
+                NotifyUtility.DisplayErrorMessage(this, NotifyUtility.ErrorCode.InvalidNetwork);
             }
             Refresh_Indicator.IsRunning = false;
         }
@@ -278,17 +234,17 @@ namespace PointApp.Views
         {
             try
             {
-                if (m_startDefPlayers.Count() < 5)
+                if (m_startDefPlayers.Count < 5)
                 {
-                    DisplayErrorMessage(ErrorCode.LackStartUser);
+                    NotifyUtility.DisplayErrorMessage(this, NotifyUtility.ErrorCode.LackStartUser);
                     return;
                 }
-                if (m_finishDefPlayers.Count() < 5)
+                if (m_finishDefPlayers.Count < 5)
                 {
-                    DisplayErrorMessage(ErrorCode.LackFinishUser);
+                    NotifyUtility.DisplayErrorMessage(this, NotifyUtility.ErrorCode.LackFinishUser);
                     return;
                 }
-                (var fisPenalty, var sajPenalty) = GetPenaltyPoints(m_Competition.Type, m_startDefPlayers.ToList(), m_finishDefPlayers.ToList());
+                (var fisPenalty, var sajPenalty) = PointUtility.GetPenaltyPoints(m_Competition.Type, m_startDefPlayers.ToList(), m_finishDefPlayers.ToList());
                 if (fisPenalty != null && sajPenalty != null)
                 {
                     //string CompetitionName = Entry_CompetitionName.Text;
@@ -299,7 +255,7 @@ namespace PointApp.Views
                     var winner = m_finishDefPlayers.OrderBy(player => player.Time).First();
                     if (!string.IsNullOrWhiteSpace(Entry_TargetTime.Text))
                     {
-                        var racePoint = GetRacePoint(m_Competition.Type, new PlayerInfo { Time = double.Parse(Entry_TargetTime.Text) }, winner);
+                        var racePoint = PointUtility.GetRacePoint(m_Competition.Type, new PlayerInfo { Time = double.Parse(Entry_TargetTime.Text) }, winner);
                         if (!double.IsNaN(racePoint))
                         {
                             userFisPoint = (double.Parse(fisPoint) + racePoint).ToString();
@@ -313,7 +269,6 @@ namespace PointApp.Views
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                throw ex;
             }
         }
 
@@ -356,7 +311,7 @@ namespace PointApp.Views
                         string info = list[0].TextContent;
                         var splitInfo = info.Split(' ');
                         resultInfo.Name = splitInfo[2];
-                        resultInfo.Sex = info.Contains("男子") ? SexType.Men : SexType.Women;
+                        resultInfo.Sex = info.Contains("男子") ? CompetitionInfo.SexType.Men : CompetitionInfo.SexType.Women;
                         resultInfo.IsFis = info.ToLower().Contains("fis");
                     }
                     // 種目の判定
@@ -389,7 +344,7 @@ namespace PointApp.Views
                         List<IEnumerable<IElement>> chunks = tableDatas.Select((v, i) => new { v, i })
                             .GroupBy(x => x.i / splitSize)
                             .Select(g => g.Select(x => x.v)).ToList();
-                        var pointList = GetPointList(resultInfo.Sex);
+                        var pointList = PointUtility.GetPointList(resultInfo.Sex);
 
                         foreach (var chunk in chunks)
                         {
@@ -437,7 +392,7 @@ namespace PointApp.Views
                         List<PlayerInfo> resultFinishDefPlayers = results.Where(result => result.PlayerInfo != null && result.PlayerInfo.Time != null).Select(result => result.PlayerInfo).ToList();
                         if (results != null)
                         {
-                            (var fisPenalty, var sajPenalty) = GetPenaltyPoints(resultInfo.Type, resultStartDefPlayers, resultFinishDefPlayers);
+                            (var fisPenalty, var sajPenalty) = PointUtility.GetPenaltyPoints(resultInfo.Type, resultStartDefPlayers, resultFinishDefPlayers);
                             if (fisPenalty != null && sajPenalty != null)
                             {
                                 var winner = resultFinishDefPlayers.OrderBy(player => player.Time).First();
@@ -448,7 +403,7 @@ namespace PointApp.Views
                                     {
                                         continue;
                                     }
-                                    var racePoint = GetRacePoint(resultInfo.Type, targetPlayerInfo, winner);
+                                    var racePoint = PointUtility.GetRacePoint(resultInfo.Type, targetPlayerInfo, winner);
                                     if (racePoint >= 0)
                                     {
                                         targetPlayerInfo.ResultSajPoint = sajPenalty + racePoint;
@@ -517,9 +472,9 @@ namespace PointApp.Views
         {
             string name = targetResult.PlayerName.Replace(" ", string.Empty);
             var matchedPlayers = playerInfos.Where(player => player.JapaneseName.Equals(name));
-            if (matchedPlayers != null && matchedPlayers.Count() > 0)
+            if (matchedPlayers != null && matchedPlayers.Any())
             {
-                if (matchedPlayers.Count() > 0)
+                if (matchedPlayers.Any())
                 {
                     targetResult.PlayerInfo = matchedPlayers.FirstOrDefault();
                     string strTime = targetResult.TotalTime;
@@ -555,169 +510,6 @@ namespace PointApp.Views
 
         #region 計算
 
-        private double? CalcPenaltyPoint(CompetitionInfo.EventType type, double sumFinishFivePenaltyPoint, double sumStartFivePenaltyPoint, double sumFinishFiveRacePoint)
-        {
-            decimal def = decimal.Add(Convert.ToDecimal(sumFinishFivePenaltyPoint), Convert.ToDecimal(sumStartFivePenaltyPoint));
-            decimal def2 = decimal.Subtract(def, Convert.ToDecimal(sumFinishFiveRacePoint));
-
-            var penaltyPoint = Math.Round((Convert.ToInt32(sumFinishFivePenaltyPoint * 100) + Convert.ToInt32(sumStartFivePenaltyPoint * 100) - Convert.ToInt32(sumFinishFiveRacePoint * 100)) * 0.001, 2, MidpointRounding.AwayFromZero);
-            switch (type)
-            {
-                case CompetitionInfo.EventType.SG:
-                    if (penaltyPoint > (double)MaximumPoint.SG) { penaltyPoint = (double)MaximumPoint.SG; }
-                    break;
-
-                case CompetitionInfo.EventType.GS:
-                    if (penaltyPoint > (double)MaximumPoint.GS) { penaltyPoint = (double)MaximumPoint.GS; }
-                    break;
-
-                case CompetitionInfo.EventType.SL:
-                    if (penaltyPoint > (double)MaximumPoint.SL) { penaltyPoint = (double)MaximumPoint.SL; }
-                    break;
-            }
-            return penaltyPoint + 3;
-        }
-
-        private string ConvKanaFromHiragana(string str)
-        {
-            StringBuilder sb = new StringBuilder();
-            char[] target = str.ToCharArray();
-            char c;
-            for (int i = 0; i < target.Length; i++)
-            {
-                c = target[i];
-                if (c >= 'ぁ' && c <= 'ん')
-                {
-                    c = (char)(c - 'ぁ' + 'ァ');  //-> 変換
-                }
-                sb.Append(c);
-            }
-            return sb.ToString();
-        }
-
-        private async void DisplayErrorMessage(ErrorCode errorCode)
-        {
-            switch (errorCode)
-            {
-                case ErrorCode.UserDuplicated:
-                    await DisplayAlert("通知", "選手が重複しています。", "OK");
-                    break;
-
-                case ErrorCode.OverUserCount:
-                    await DisplayAlert("通知", "これ以上選択できません。", "OK");
-                    break;
-
-                case ErrorCode.LackStartUser:
-                    await DisplayAlert("通知", "項番３は５人選択してください。", "OK");
-                    break;
-
-                case ErrorCode.LackFinishUser:
-                    await DisplayAlert("通知", "項番４は５人以上選択してください。", "OK");
-                    break;
-
-                case ErrorCode.CalcError:
-                    await DisplayAlert("通知", "管理者に報告してください。", "OK");
-                    break;
-
-                case ErrorCode.IdEmpty:
-                    await DisplayAlert("通知", "IDを入力してください。", "OK");
-                    break;
-
-                case ErrorCode.PwdEmpty:
-                    await DisplayAlert("通知", "パスワードを入力してください。", "OK");
-                    break;
-
-                case ErrorCode.CompetitionNameEmpty:
-                    await DisplayAlert("通知", "大会名を入力してください。", "OK");
-                    break;
-
-                case ErrorCode.InvalidNetwork:
-                    await DisplayAlert("通知", "ネットワークに接続されていません。", "OK");
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        private ObservableCollection<PlayerInfo> GetPlayersFromKana(string kana)
-        {
-            return new ObservableCollection<PlayerInfo>(from player in m_allPlayers
-                                                        where player.KanaName.StartsWith(kana)
-                                                        orderby player.FisGs
-                                                        select player);
-        }
-
-        private ObservableCollection<PlayerInfo> GetPlayersFromKanji(string kanji)
-        {
-            return new ObservableCollection<PlayerInfo>(from player in m_allPlayers
-                                                        where player.JapaneseName.StartsWith(kanji)
-                                                        select player);
-        }
-
-        private double GetPoint(CompetitionInfo.EventType type, bool isFIS, PlayerInfo player)
-        {
-            switch (type)
-            {
-                case CompetitionInfo.EventType.DH:
-                    return isFIS ? player.FisDh : player.SajDh;
-
-                case CompetitionInfo.EventType.SG:
-                    return isFIS ? player.FisSg : player.SajSg;
-
-                case CompetitionInfo.EventType.GS:
-                    return isFIS ? player.FisGs : player.SajGs;
-
-                case CompetitionInfo.EventType.SL:
-                    return isFIS ? player.FisSl : player.SajSl;
-
-                default:
-                    return double.NaN;
-            }
-        }
-
-        private double GetRacePoint(CompetitionInfo.EventType type, PlayerInfo targetPlayer, PlayerInfo winner)
-        {
-            // Ｐ＝（Ｆ値×当該選手のタイム）÷ラップライム －Ｆ値 またはＰ＝（当該選手のタイム÷ラップタイム－１）×Ｆ値
-            if (targetPlayer.Time == winner.Time)
-            {
-                return 0;
-            }
-            decimal fValue = 0;
-            switch (type)
-            {
-                case CompetitionInfo.EventType.SG:
-                    fValue = Convert.ToDecimal((int)FValue.SG);
-                    break;
-
-                case CompetitionInfo.EventType.GS:
-                    fValue = Convert.ToDecimal((int)FValue.GS);
-                    break;
-
-                case CompetitionInfo.EventType.SL:
-                    fValue = Convert.ToDecimal((int)FValue.SL);
-                    break;
-
-                default:
-                    break;
-            }
-            decimal dTargetTime = Convert.ToDecimal(targetPlayer.Time);
-            decimal dWinnerTime = Convert.ToDecimal(winner.Time);
-            decimal dDividedTime = decimal.Divide(dTargetTime, dWinnerTime) - 1;
-
-            return Convert.ToDouble(decimal.Multiply(dDividedTime, fValue));
-        }
-
-        private bool IsHiragana(string str)
-        {
-            return Regex.IsMatch(str, @"^\p{IsHiragana}*$");
-        }
-
-        private bool IsKatakana(string str)
-        {
-            return Regex.IsMatch(str, @"^\p{IsKatakana}*$");
-        }
-
         private void SearchBar_SearchButtonPressed(object sender, EventArgs e)
         {
             var matchedPlayers = new ObservableCollection<PlayerInfo>();
@@ -725,11 +517,11 @@ namespace PointApp.Views
             if (sender is SearchBar searchBar && searchBar.Text is string searchText && !string.IsNullOrEmpty(searchText))
             {
                 searchBar.Text = string.Empty;
-                if (IsHiragana(searchText))
+                if (PointUtility.IsHiragana(searchText))
                 {
-                    searchText = ConvKanaFromHiragana(searchText);
+                    searchText = PointUtility.ConvKanaFromHiragana(searchText);
                 }
-                matchedPlayers = IsKatakana(searchText) ? GetPlayersFromKana(searchText) : GetPlayersFromKanji(searchText);
+                matchedPlayers = PointUtility.IsKatakana(searchText) ? PointUtility.GetPlayersFromKana(searchText, m_allPlayers) : PointUtility.GetPlayersFromKanji(searchText, m_allPlayers);
             }
 
             Xamarin.Forms.ListView allList = (sender == StartPlayerSearchBar) ? StartAllList : FinishAllList;
@@ -792,94 +584,6 @@ namespace PointApp.Views
             return listPlayerInfos.Where(playerInfo => playerInfo.Time != null).OrderBy(playerInfo => playerInfo.Time).ToList();
         }
 
-        private (double?, double?) GetPenaltyPoints(CompetitionInfo.EventType type, List<PlayerInfo> startDefPlayers, List<PlayerInfo> finishDefPlayers)
-        {
-            //   A + B - C
-            // （A)上位10名の中のポイントトップ5の所持ポイントの合計
-            // （B)スタート時のトップ5の所持ポイント合計
-            //  (C)上位10名の中のポイントトップ5 のレースポイントの合計　/ 10
-
-            if (type == CompetitionInfo.EventType.NONE || startDefPlayers.Count < 5 || finishDefPlayers.Count < 5)
-            {
-                return (null, null);
-            }
-
-            var sortedFisStartDefPlayers = OrderByPoint(type, true, startDefPlayers);
-            var sortedFisFinishDefPlayers = OrderByPoint(type, true, OrderByTime(finishDefPlayers).Take(10));
-            var sortedSajStartDefPlayers = OrderByPoint(type, false, startDefPlayers);
-            var sortedSajFinishDefPlayers = OrderByPoint(type, false, OrderByTime(finishDefPlayers).Take(10));
-
-            var fisStartTopfive = sortedFisStartDefPlayers.Take(5).ToList();
-            var fisFinishTopFive = sortedFisFinishDefPlayers.Take(5).ToList();
-
-            var sajStartTopfive = sortedSajStartDefPlayers.Take(5).ToList();
-            var sajFinishTopfive = sortedSajFinishDefPlayers.Take(5).ToList();
-
-            var winner = finishDefPlayers.OrderBy(player => player.Time).First();
-
-            double fisA, sajA, fisB, sajB, fisC, sajC;
-            fisA = GetSumPoints(type, true, fisFinishTopFive);
-            sajA = GetSumPoints(type, false, sajFinishTopfive);
-            fisB = GetSumPoints(type, true, fisStartTopfive);
-            sajB = GetSumPoints(type, false, sajStartTopfive);
-            fisC = SumRacePoint(type, fisFinishTopFive, winner);
-            sajC = SumRacePoint(type, sajFinishTopfive, winner);
-
-            if (double.IsNaN(fisA) && double.IsNaN(fisB) && double.IsNaN(fisC) && double.IsNaN(sajA) && double.IsNaN(sajB) && double.IsNaN(sajC))
-            {
-                return (null, null);
-            }
-
-            return (CalcPenaltyPoint(type, fisA, fisB, fisC), CalcPenaltyPoint(type, sajA, sajB, sajC));
-        }
-
-        private void SetTestAds()
-        {
-            //string testId = "{OnPlatform Android=ca-app-pub-2633806931583277/2100712905, iOS=ca-app-pub-2633806931583277/8738536773}";
-            //AdsArea.AdsId = testId;
-        }
-
-        private string ReadPointList(SexType sexType)
-        {
-            string strJson = null;
-            try
-            {
-                var assembly = Assembly.GetExecutingAssembly();
-                var jsonResource = assembly.GetManifestResourceNames();
-                if (jsonResource != null)
-                {
-                    var file = sexType == SexType.Men
-                        ? assembly.GetManifestResourceStream(jsonResource.First(json => json.Equals("PointApp.PointList_M.json")))
-                        : assembly.GetManifestResourceStream(jsonResource.First(json => json.Equals("PointApp.PointList_L.json")));
-                    if (file != null)
-                    {
-                        using (var sr = new StreamReader(file))
-                        {
-                            strJson = sr.ReadToEnd();
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return strJson;
-        }
-
-        private void RemoveEmptyInName(List<PlayerInfo> listPlayer)
-        {
-            var listPlayerTemp = new List<PlayerInfo>(listPlayer);
-            if (listPlayerTemp == null)
-            {
-                return;
-            }
-
-            foreach (var player in listPlayerTemp)
-            {
-                player.JapaneseName = Regex.Replace(player.JapaneseName, @"\s", "");
-            }
-        }
 
         private void SetUpCalcPoint()
         {
@@ -887,81 +591,8 @@ namespace PointApp.Views
             m_finishDefPlayers.Clear();
             StartTopList.HeightRequest = 0;
             FinishTopList.HeightRequest = 0;
-            m_allPlayers = GetPointList(m_Competition.Sex);
+            m_allPlayers = PointUtility.GetPointList(m_Competition.Sex);
         }
-
-        private List<PlayerInfo> GetPointList(SexType sexType)
-        {
-            var strJson = ReadPointList(sexType);
-            if (strJson is string)
-            {
-                try
-                {
-                    var listPlayers = JsonSerializer.Deserialize<List<PlayerInfo>>(strJson);
-                    if (listPlayers is List<PlayerInfo>)
-                    {
-                        RemoveEmptyInName(listPlayers);
-                        return listPlayers;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message.ToString());
-                }
-            }
-            return null;
-        }
-
-        private double GetSumPoints(CompetitionInfo.EventType type, bool isFIS, IEnumerable<PlayerInfo> listPlayer)
-        {
-            decimal result = 0;
-            foreach (var player in listPlayer)
-            {
-                var point = GetPoint(type, isFIS, player);
-                if (!double.IsNaN(point))
-                {
-                    decimal dPoint = Convert.ToDecimal(point);
-                    result = decimal.Add(result, dPoint);
-                }
-            }
-            return Convert.ToDouble(result);
-        }
-
-        private double SumRacePoint(CompetitionInfo.EventType type, IEnumerable<PlayerInfo> listPlayer, PlayerInfo winner)
-        {
-            double sumRacePoint = 0;
-            foreach (var player in listPlayer)
-            {
-                sumRacePoint += GetRacePoint(type, player, winner);
-            }
-            return sumRacePoint;
-        }
-
-        //private void RegisterCompetition(string Competition_name, string fis_penalty, string saj_penalty, string per_sec_race_point)
-        //{
-        //    try
-        //    {
-        //        string user_id = Application.Current.Resources["LoginUserId"].ToString();
-        //        if (!string.IsNullOrEmpty(user_id))
-        //        {
-        //            using (var connection = DatabaseUtility.ConnectDataBase())
-        //            {
-        //                connection.Open();
-        //                var time = DateTime.Now.ToString().Replace('/', '-');
-        //                using (var transaction = connection.BeginTransaction())
-        //                {
-        //                    var sql = $"INSERT INTO Competitions_table (Competition_name, fis_penarty, saj_penarty, per_sec_race_point, user_id, created_at, updated_at) VALUES('{Competition_name}', '{fis_penalty}', '{saj_penalty}', '{per_sec_race_point}', '{user_id}', '{time}', '{time}');";
-        //                    DatabaseUtility.ExecuteSqlNonquery(sql, connection);
-        //                    transaction.Commit();
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
 
         #endregion 計算
 
@@ -969,228 +600,6 @@ namespace PointApp.Views
 
         #region クラス定義
 
-        public class PlayerInfo
-        {
-            private double ConvertStrPointToDouble(string strPoint)
-            {
-                string strValue = strPoint;
-                int pos = strPoint.Length - 2;
-                if (strPoint.Length == 4 && pos > 0 && strPoint[pos] != '.')
-                {
-                    strValue = strPoint.Insert(pos, ".");
-                }
-                return double.Parse(strValue);
-            }
-
-            public double FisDh
-            {
-                get
-                {
-                    double dValue = 330.00;
-                    if (!string.IsNullOrWhiteSpace(StrFisDh))
-                    {
-                        dValue = ConvertStrPointToDouble(StrFisDh);
-                    }
-                    return dValue;
-                }
-            }
-
-            public double FisGs
-            {
-                get
-                {
-                    double dValue = 220.00;
-                    if (!string.IsNullOrWhiteSpace(StrFisGs))
-                    {
-                        dValue = ConvertStrPointToDouble(StrFisGs);
-                    }
-                    return dValue;
-                }
-            }
-
-            public double FisSc
-            {
-                get
-                {
-                    double dValue = 270.00;
-                    if (!string.IsNullOrWhiteSpace(StrFisSc))
-                    {
-                        dValue = ConvertStrPointToDouble(StrFisSc);
-                    }
-                    return dValue;
-                }
-            }
-
-            public double FisSg
-            {
-                get
-                {
-                    double dValue = 270.00;
-                    if (!string.IsNullOrWhiteSpace(StrFisSg))
-                    {
-                        dValue = ConvertStrPointToDouble(StrFisSg);
-                    }
-                    return dValue;
-                }
-            }
-
-            public double FisSl
-            {
-                get
-                {
-                    double dValue = 165.00;
-                    if (!string.IsNullOrWhiteSpace(StrFisSl))
-                    {
-                        dValue = ConvertStrPointToDouble(StrFisSl);
-                    }
-                    return dValue;
-                }
-            }
-
-            public string JapaneseName { get; set; } = string.Empty;
-
-            public string KanaName { get; set; } = string.Empty;
-
-            public double SajDh
-            {
-                get
-                {
-                    double dValue = 330.00;
-                    if (!string.IsNullOrWhiteSpace(StrSajDh))
-                    {
-                        dValue = ConvertStrPointToDouble(StrSajDh);
-                    }
-                    return dValue;
-                }
-            }
-
-            public double SajGs
-            {
-                get
-                {
-                    double dValue = 220.00;
-                    if (!string.IsNullOrWhiteSpace(StrSajGs))
-                    {
-                        dValue = ConvertStrPointToDouble(StrSajGs);
-                    }
-                    return dValue;
-                }
-            }
-
-            public double SajSc
-            {
-                get
-                {
-                    double dValue = 270.00;
-                    if (!string.IsNullOrWhiteSpace(StrSajSc))
-                    {
-                        dValue = ConvertStrPointToDouble(StrSajSc);
-                    }
-                    return dValue;
-                }
-            }
-
-            public double SajSg
-            {
-                get
-                {
-                    double dValue = 270.00;
-                    if (!string.IsNullOrWhiteSpace(StrSajSg))
-                    {
-                        dValue = ConvertStrPointToDouble(StrSajSg);
-                    }
-                    return dValue;
-                }
-            }
-
-            public double SajSl
-            {
-                get
-                {
-                    double dValue = 165.00;
-                    if (!string.IsNullOrWhiteSpace(StrSajSl))
-                    {
-                        dValue = ConvertStrPointToDouble(StrSajSl);
-                    }
-                    return dValue;
-                }
-            }
-
-            public string StrFisDh { get; set; } = string.Empty;
-            public string StrFisSl { get; set; } = string.Empty;
-
-            public string StrFisGs { get; set; } = string.Empty;
-
-            public string StrFisSc { get; set; } = string.Empty;
-
-            public string StrFisSg { get; set; } = string.Empty;
-
-            public string StrSajDh { get; set; } = string.Empty;
-
-            public string StrSajGs { get; set; } = string.Empty;
-
-            public string StrSajSc { get; set; } = string.Empty;
-
-            public string StrSajSg { get; set; } = string.Empty;
-
-            public string StrSajSl { get; set; } = string.Empty;
-            private double? _ResultSajPoint = null;
-
-            public double? ResultSajPoint
-            {
-                get
-                {
-                    if (_ResultSajPoint == null)
-                    {
-                        return null;
-                    }
-                    else
-                    {
-                        return (double)Math.Round((decimal)_ResultSajPoint, 2);
-                    }
-                }
-                set { _ResultSajPoint = value; }
-            }
-
-            private double? _ResultFisPoint = null;
-
-            public double? ResultFisPoint
-            {
-                get
-                {
-                    if (_ResultFisPoint == null)
-                    {
-                        return null;
-                    }
-                    else
-                    {
-                        return (double)Math.Round((decimal)_ResultFisPoint, 2);
-                    }
-                }
-                set { _ResultFisPoint = value; }
-            }
-
-            public double? Time { get; set; } = 120.00;
-
-            public double? Diff { get; set; } = null;
-
-
-            public PlayerInfo DeepCopy()
-            {
-                var player = MemberwiseClone() as PlayerInfo;
-                return player;
-            }
-        }
-
-        public class CompetitionInfo
-        {
-            public enum EventType
-            { NONE, DH, SG, GS, SL }
-
-            public string Name { get; set; } = string.Empty;
-            public SexType Sex { get; set; } = SexType.Men;
-            public EventType Type { get; set; } = EventType.SG;
-        }
 
         public class ResultInfo : CompetitionInfo
         {

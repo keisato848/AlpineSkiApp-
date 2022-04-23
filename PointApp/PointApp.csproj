@@ -1,42 +1,62 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
-    <Authors>Kei Sato</Authors>
-    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
-    <Configurations>Release;Debug</Configurations>
+	<ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+	<Authors>Kei Sato</Authors>
+	<RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+	<Configurations>Release;Debug</Configurations>
+	<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+	<EnableNETAnalyzers>True</EnableNETAnalyzers>
+	<AnalysisLevel>latest</AnalysisLevel>
+	<TargetFramework>netstandard2.1</TargetFramework>
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <Optimize>true</Optimize>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <WarningsAsErrors />
+	<Optimize>true</Optimize>
+	<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+	<WarningsAsErrors />
+	<CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+	<WarningLevel>0</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	<Optimize>True</Optimize>
+	<CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+	<WarningLevel>0</WarningLevel>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Views\新しいフォルダー\**" />
-    <EmbeddedResource Remove="Views\新しいフォルダー\**" />
-    <None Remove="Views\新しいフォルダー\**" />
-    <None Remove="PointList_L.json" />
-    <None Remove="Xamarin.Forms.Visual.Material" />
-    <None Remove="AngleSharp" />
-    <EmbeddedResource Remove="Views\CalcPoint.xaml" />
-    <Compile Remove="Views\CalcPoint.xaml.cs" />
+	<None Remove="Images\outline_bolt_white_24dp.png" />
+	<None Remove="Images\outline_calculate_white_24dp.png" />
+	<None Remove="PointList_L.json" />
+	<None Remove="Views\Resources\Images\outline_calculate_black_24dp.png" />
+	<None Remove="Xamarin.Forms.Visual.Material" />
+	<None Remove="AngleSharp" />
+	<EmbeddedResource Remove="Views\CalcPoint.xaml" />
+	<Compile Remove="Utilities\DatabaseUtility.cs" />
+	<Compile Remove="Views\CalcPoint.xaml.cs" />
+	<Compile Remove="Views\ContactPage.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Views\Result.xaml.cs" />
+	<Compile Remove="Views\Result.xaml.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Settings.json" />
+	<None Remove="Settings.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="PointList_L.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+	<EmbeddedResource Include="Images\outline_bolt_white_24dp.png">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</EmbeddedResource>
+	<EmbeddedResource Include="Images\outline_calculate_white_24dp.png">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</EmbeddedResource>
+	<EmbeddedResource Include="PointList_L.json">
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</EmbeddedResource>
 	<EmbeddedResource Include="PointList_M.json">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</EmbeddedResource>
@@ -46,25 +66,34 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AngleSharp" Version="0.16.1" />
-    <PackageReference Include="MarcTron.Admob" Version="1.6.9" />
-    <PackageReference Include="Portable.Text.Encoding" Version="0.8.3" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
-    <PackageReference Include="System.DirectoryServices" Version="6.0.0" />
-    <PackageReference Include="System.Text.Json" Version="6.0.3" />
-    <PackageReference Include="Xamarin.CommunityToolkit" Version="2.0.1" />  
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.2" />  
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2401" />
-    <PackageReference Include="Xamarin.Forms.Visual.Material" Version="5.0.0.2401" />
+	<PackageReference Include="AngleSharp" Version="0.16.1" />
+	<PackageReference Include="MarcTron.Admob" Version="1.6.9" />
+	<PackageReference Include="Portable.Text.Encoding" Version="0.8.3" />
+	<PackageReference Include="System.DirectoryServices" Version="6.0.0" />
+	<PackageReference Include="System.Text.Json" Version="6.0.3" />
+	<PackageReference Include="Xamarin.CommunityToolkit" Version="2.0.1" />  
+	<PackageReference Include="Xamarin.Essentials" Version="1.7.2" />  
+	<PackageReference Include="Xamarin.Forms" Version="5.0.0.2401" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Remove="Views\Result.xaml" />
+	<EmbeddedResource Remove="Views\Result.xaml" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Views\ResultPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
+	<Resource Include="Views\ContactPage.cs" />
+	<Resource Include="Views\Resources\Images\outline_calculate_black_24dp.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<EmbeddedResource Update="Views\CalculatePoint.xaml">
+	  <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+	</EmbeddedResource>
+	<EmbeddedResource Update="Views\LiveTimingPage.xaml">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</EmbeddedResource>
+	<EmbeddedResource Update="Views\ResultPage.xaml">
+	  <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+	</EmbeddedResource>
   </ItemGroup>
 </Project>
