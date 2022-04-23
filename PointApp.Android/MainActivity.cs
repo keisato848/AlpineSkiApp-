@@ -19,7 +19,6 @@ namespace PointApp.Droid
 
                 Xamarin.Essentials.Platform.Init(this, savedInstanceState);
                 global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-                FormsMaterial.Init(this, savedInstanceState);
                 MobileAds.Initialize(ApplicationContext);
                 LoadApplication(new App());
             }

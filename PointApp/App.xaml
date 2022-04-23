@@ -23,7 +23,7 @@
                 <Setter Property="Margin" Value="10" />
                 <Setter Property="FontSize" Value="18" />
                 <Setter Property="FontAttributes" Value="Bold"/>
-                <Setter Property="TextColor" Value="{StaticResource Primary}" />
+                <Setter Property="TextColor" Value="#FFFFFF" />
                 <Setter Property="HorizontalOptions" Value="Start"/>
             </Style>
             <Style TargetType="Button">

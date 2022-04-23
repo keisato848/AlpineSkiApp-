@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Shell
+    Title="PointApp"
     x:Class="PointApp.AppShell"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:PointApp.Views"
-    Title="PointApp"
-    FlyoutBackgroundColor="#87ceeb">
+    FlyoutBackgroundColor="{StaticResource Primary}">
 
     <!--
         The overall app visual hierarchy is defined here, along with navigation.
@@ -98,8 +98,8 @@
         <DataTemplate>
             <Grid Style="{StaticResource FloutItemStyle}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.2*" />
-                    <ColumnDefinition Width="0.8*" />
+                    <ColumnDefinition Width="0.1*" />
+                    <ColumnDefinition Width="0.9*" />
                 </Grid.ColumnDefinitions>
                 <Image
                     Margin="5"
@@ -109,7 +109,7 @@
                 <Label
                     Grid.Column="1"
                     FontAttributes="Bold"
-                    FontSize="14"
+                    FontSize="16"
                     Text="{Binding Title}"
                     VerticalTextAlignment="Center" />
             </Grid>
@@ -131,7 +131,7 @@
         <ShellContent ContentTemplate="{DataTemplate local:SignUpPage}" Route="SignUpPage" />
     </FlyoutItem>-->
     <FlyoutItem Title="問い合わせ">
-        <ShellContent ContentTemplate="{DataTemplate local:ContactPage}" Route="ContactPage" />
+        <!--<ShellContent ContentTemplate="{DataTemplate local:ContactPage}" Route="ContactPage" />-->
     </FlyoutItem>
 
     <!--  When the Flyout is visible this will be a menu item you can tie a click behavior to  -->
